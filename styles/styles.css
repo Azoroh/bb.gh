@@ -370,9 +370,8 @@ main{
 
 /* VIDEO  */
 .video-container {
-  position: relative;
   display: inline-block;
-  width: 100%;
+  width: 90%;
   max-width: 640px;
   margin: 0 auto;
   border-radius: 10px;
