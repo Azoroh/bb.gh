@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beyond Borders - It’s the journey, not the destination</title>
+
+    <link rel="stylesheet" href="./styles/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="./styles/styles.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+  </head>
+  <body>
+    <header class="header" id="header">
+      <nav class="nav container">
+        <a href="index.html" class="nav_logo">
+          <img src="./img/logo/bb full white.png" alt="image logo" />
+        </a>
+
+        <!-- nav links -->
+        <div class="nav_menu" id="nav-menu">
+          <ul class="menu">
+            <li><a href="#home" class="nav_link">Home</a></li>
+            <li><a href="#about" class="nav_link">About</a></li>
+            <li><a href="#services" class="nav_link">Services</a></li>
+            <li><a href="#gallery" class="nav_link">Gallery</a></li>
+            <li><a href="#contact" class="nav_link">Contact</a></li>
+          </ul>
+
+          <!-- close button -->
+          <div class="nav_close" id="nav-close">
+            <i class="ri-close-large-line"></i>
+          </div>
+        </div>
+
+        <!-- nav buttons -->
+        <div class="nav_buttons">
+          <!-- toggle button -->
+          <div class="nav_toggle" id="nav-toggle">
+            <i class="ri-menu-5-line"></i>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="main">
+      <section class="home section" id="home">
+        <img src="./img/IMG_4991.webp" alt="home bg img" class="home_bg" />
+        <div class="home_blur"></div>
+
+        <div class="home_container container grid">
+          <div class="home_data">
+            <h1 class="home_title">It’s the journey, not the destination</h1>
+
+            <p class="home_description">
+              Discover the world with our curated travel experiences that
+              connect you to cultures, landscapes, and adventures like never
+              before.
+            </p>
+
+            <div class="home_btn_grid">
+              <a href="#plan" class="button button_opa-30">
+                Plan Your Trip
+                <i class="ri-arrow-right-long-line"></i>
+              </a>
+              <a href="#plan" class="button button_opa-30">
+                Contact Us
+                <i class="ri-customer-service-2-line"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="home_swiper swiper">
+            <div class="swiper-wrapper">
+              <article class="home_article swiper-slide">
+                <img
+                  src="./img/IMG_0153.webp"
+                  alt="home image"
+                  class="home_img" />
+              </article>
+
+              <article class="home_article swiper-slide">
+                <img
+                  src="./img/IMG_2283.webp"
+                  alt="home image"
+                  class="home_img" />
+              </article>
+
+              <article class="home_article swiper-slide">
+                <img
+                  src="./img/IMG_3334.webp"
+                  alt="home image"
+                  class="home_img" />
+              </article>
+
+              <article class="home_article swiper-slide">
+                <img
+                  src="./img/IMG_4910.webp"
+                  alt="home image"
+                  class="home_img" />
+              </article>
+            </div>
+
+            <!-- swiper button navigation -->
+            <!-- <div class="swiper-button-prev">
+              <i class="ri-arrow-left-line"></i>
+            </div>
+
+            <div class="swiper-button-next">
+              <i class="ri-arrow-right-line"></i>
+            </div> -->
+          </div>
+        </div>
+      </section>
+
+      <section class="about section" id="about">
+        <h2 class="section_title">Who Are We?</h2>
+        <p class="about">
+          Beyond Borders is a Ghana based travel agency that handles logistics,
+          bookings, and on-ground support for visitors. From arrival to
+          departure, our team coordinates accommodation, transport, and curated
+          experiences so clients can focus on enjoying their trip.
+        </p>
+
+        <div class="services">
+          <div>
+            <i class="ri-24-hours-line"></i>
+            <div class="service_info">
+              <h4>24/7 On-Ground Support</h4>
+              <p>
+                Dedicated support throughout your entire journey
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <i class="ri-earth-line"></i>
+            <div class="service_info">
+              <h4>Local Expertise</h4>
+              <p>
+                Deep knowledge of Ghana's hidden gems and cultural experiences
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <i class="ri-group-3-line"></i>
+            <div class="service_info">
+              <h4>Personalized Services</h4>
+              <p>
+                Each client gets a dedicated Journey Partner from booking to
+                departure
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="video-container">
+          <video
+            muted
+            playsinline
+            loop
+            poster="./img/IMG_0153.webp"
+            loading="lazy">
+            <source src="./img/vid/ghana.mp4" type="video/mp4">
+            Sorry, your browser doesn’t support embedded videos.
+          </video>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- infinite partners carousel -->
+    <!-- <div class="slider">
+      <div class="slide-track">
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/1.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/2.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/3.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/4.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/5.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/6.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/7.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/1.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/2.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/3.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/4.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/5.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/6.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/7.png"
+            height="100"
+            width="250"
+            alt />
+        </div>
+        <div class="slide">
+          <h2>hello</h2>
+        </div>
+      </div>
+    </div> -->
+
+    <script src="./scripts/swiper-bundle.min.js"></script>
+    <script type="module" src="./scripts/index.js"></script>
+  </body>
+</html>
