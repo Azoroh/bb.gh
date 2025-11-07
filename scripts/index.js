@@ -1,3 +1,69 @@
+import { packages } from "./packages.js";
+
+const container = document.querySelector('.packages_container');
+const dotsContainer = document.querySelector('.indicator_dots');
+
+// container.innerHTML = ''
+
+packages.forEach((pkg, i) => {
+  const card = document.createElement('div');
+  card.classList.add('package_card');
+  card.innerHTML = `
+    <div class="package_image">
+      <img src="${pkg.img}" loading="lazy" alt="${pkg.title}">
+    </div>
+    <div class="package_info">
+      <div class="package_header">
+        <div>
+          <h3>${pkg.title}</h3>
+          <p class="package_meta">${pkg.duration} | ${pkg.location}</p>
+        </div>
+        <p class="package_price">From <br><strong>${pkg.price}</strong></p>
+      </div>
+      <p class="package_description">${pkg.summary}</p>
+      <div class="package_action">
+        <a href="#" class="button primary">View Details</a>
+        <a href="#" class="button secondary">Plan Trip</a>
+      </div>
+    </div>
+  `;
+  container.appendChild(card);
+
+  // Add dot for each package
+  const dot = document.createElement('span');
+  dot.classList.add('dot');
+  if (i === 0) dot.classList.add('active');
+  dotsContainer.appendChild(dot);
+});
+
+const cards = document.querySelectorAll('.package_card');
+
+// HORIZONTAL PACKAGES SCROLL
+const dots = document.querySelectorAll('.dot');
+let currentIndex = 0;
+let isScrolling;
+
+function scrollToCard(index) {
+  const cardWidth = cards[0].offsetWidth + 16;
+  container.scrollTo({ left: cardWidth * index, behavior: 'smooth' });
+  dots.forEach(dot => dot.classList.remove('active'));
+  dots[index].classList.add('active');
+  cards.forEach(card => card.classList.remove('bounce'));
+  cards[index].classList.add('bounce');
+}
+
+container.addEventListener('scroll', () => {
+  clearTimeout(isScrolling);
+  isScrolling = setTimeout(() => {
+    const cardWidth = cards[0].offsetWidth + 16;
+    const newIndex = Math.round(container.scrollLeft / cardWidth);
+    if (newIndex !== currentIndex) {
+      currentIndex = newIndex;
+      scrollToCard(currentIndex);
+    }
+  }, 50);
+});
+
 /*=============== SHOW MENU ===============*/
 const navMenu = document.getElementById("nav-menu"),
   navToggle = document.getElementById("nav-toggle"),
@@ -81,3 +147,46 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.5 });
 
 observer.observe(video);
+
+
+
+// // HORIZONTAL PACKAGES SCROLL
+
+// // Create dots dynamically
+// cards.forEach((_, i) => {
+//   const dot = document.createElement('span');
+//   dot.classList.add('dot');
+//   if (i === 0) dot.classList.add('active'); // first one active
+//   dotsContainer.appendChild(dot);
+// });
+
+// const dots = document.querySelectorAll('.dot');
+// let currentIndex = 0;
+// let isScrolling;
+
+// // Scroll to a card and update indicators
+// function scrollToCard(index) {
+//   const cardWidth = cards[0].offsetWidth + 16; // card + gap
+//   container.scrollTo({ left: cardWidth * index, behavior: 'smooth' });
+
+//   dots.forEach(dot => dot.classList.remove('active'));
+//   dots[index].classList.add('active');
+
+//   cards.forEach(card => card.classList.remove('bounce'));
+//   cards[index].classList.add('bounce');
+// }
+
+// // Update dots when user scrolls
+// container.addEventListener('scroll', () => {
+//   clearTimeout(isScrolling);
+//   isScrolling = setTimeout(() => {
+//     const cardWidth = cards[0].offsetWidth + 16;
+//     const newIndex = Math.round(container.scrollLeft / cardWidth);
+
+//     if (newIndex !== currentIndex) {
+//       currentIndex = newIndex;
+//       dots.forEach(dot => dot.classList.remove('active'));
+//       dots[currentIndex].classList.add('active');
+//     }
+//   }, 2);
+// });
