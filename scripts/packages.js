@@ -51,7 +51,7 @@ export const packages = [
         "Family-friendly activities & bonfire night",
       ],
       price: "$980",
-      img: "./img//IMG_3439_compressed.webp",
+      img: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyA4_O3ZgXYE-trnN88dp9YcDNS7ilnojTSVqkxGJtYOqXJQ9GGChK3v3nKRchOC9hSstk_bAmDlD8bZoAj-3OoUOFDsJ3nn2oR5NfSEL-hg33rE9IGV5jlsDCzEVvvMddbQBp_cg=s680-w680-h510-rw",
     },
     {
       id: "northern-safari",
