@@ -207,9 +207,7 @@ nav {
   filter: invert(100%);
 }
 
-main{
-  height: 2000px;
-}
+
 
 /* HOME SECTION */
 .home {
@@ -415,11 +413,11 @@ main{
   max-height: 419.22px;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   overflow: hidden;
   margin: 0 auto;
   width: 90%;
   max-width: 500px;
+  /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.08); */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -427,7 +425,7 @@ main{
 @media (min-width: 1024px) {
   .package_card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
   }
 }
 
@@ -568,9 +566,10 @@ main{
   scroll-snap-align: center;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  /* box-shadow: 2px 4px 8px 0 rgba(0,0,0,0.2); */
   overflow: hidden;
   transition: transform 0.3s ease;
+  border: solid 1px #c5c5c5;
 }
 
 .package_card img {
