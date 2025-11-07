@@ -230,8 +230,8 @@ nav {
 
 .home_blur {
   background-color: var(--opacity-color-20);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   transition: background-color 0.4s;
 }
 
