@@ -1,4 +1,5 @@
-import { packages } from "./packages.js";
+import { packages, addons } from "./packages.js";
+
 
 const container = document.querySelector('.packages_container');
 const dotsContainer = document.querySelector('.indicator_dots');
@@ -36,6 +37,7 @@ packages.forEach((pkg, i) => {
   dotsContainer.appendChild(dot);
 });
 
+
 const cards = document.querySelectorAll('.package_card');
 
 // HORIZONTAL PACKAGES SCROLL
@@ -63,6 +65,19 @@ container.addEventListener('scroll', () => {
     }
   }, 50);
 });
+
+
+//Add-on
+const addonBody = document.querySelector('.add-on_body')
+
+  addonBody.innerHTML = addons.map(ad =>
+    `
+    <div class="add-on_option" id="${ad.id}">
+      <p>${ad.label}</p>
+    </div>
+  `).join('');
+
+
 
 /*=============== SHOW MENU ===============*/
 const navMenu = document.getElementById("nav-menu"),
