@@ -112,6 +112,7 @@ navLink.forEach((n) => n.addEventListener("click", linkAction));
 const swiperHome = new Swiper(".home_swiper", {
   loop: true,
   slidesPerView: "auto",
+  grabCursor: true,
 
   // Navigation arrows
   navigation: {
@@ -134,7 +135,28 @@ const bgHeader = () =>{
 }
 window.addEventListener('scroll', bgHeader)
 
+//SWIPER TESTIMONIAL
+const swiperTestimonial = new Swiper(".testimonial_swiper", {
+  loop: true,
+  slidesPerView: "auto",
+  spaceBetween: 48,
+  grabCursor: true,
 
+  // Navigation arrows
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false,
+      reverseDirection: true,
+    },
+    speed: 1500,
+    easing: 'linear',
+    loop: true,
+});
 
 
 
@@ -163,45 +185,3 @@ const observer = new IntersectionObserver(entries => {
 
 observer.observe(video);
 
-
-
-// // HORIZONTAL PACKAGES SCROLL
-
-// // Create dots dynamically
-// cards.forEach((_, i) => {
-//   const dot = document.createElement('span');
-//   dot.classList.add('dot');
-//   if (i === 0) dot.classList.add('active'); // first one active
-//   dotsContainer.appendChild(dot);
-// });
-
-// const dots = document.querySelectorAll('.dot');
-// let currentIndex = 0;
-// let isScrolling;
-
-// // Scroll to a card and update indicators
-// function scrollToCard(index) {
-//   const cardWidth = cards[0].offsetWidth + 16; // card + gap
-//   container.scrollTo({ left: cardWidth * index, behavior: 'smooth' });
-
-//   dots.forEach(dot => dot.classList.remove('active'));
-//   dots[index].classList.add('active');
-
-//   cards.forEach(card => card.classList.remove('bounce'));
-//   cards[index].classList.add('bounce');
-// }
-
-// // Update dots when user scrolls
-// container.addEventListener('scroll', () => {
-//   clearTimeout(isScrolling);
-//   isScrolling = setTimeout(() => {
-//     const cardWidth = cards[0].offsetWidth + 16;
-//     const newIndex = Math.round(container.scrollLeft / cardWidth);
-
-//     if (newIndex !== currentIndex) {
-//       currentIndex = newIndex;
-//       dots.forEach(dot => dot.classList.remove('active'));
-//       dots[currentIndex].classList.add('active');
-//     }
-//   }, 2);
-// });
