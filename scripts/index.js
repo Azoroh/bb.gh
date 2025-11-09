@@ -149,11 +149,11 @@ const swiperTestimonial = new Swiper(".testimonial_swiper", {
   },
 
     autoplay: {
-      delay: 2500,
+      delay: 5000,
       disableOnInteraction: false,
       reverseDirection: true,
     },
-    speed: 1500,
+    speed: 500,
     easing: 'linear',
     loop: true,
 });
