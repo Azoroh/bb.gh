@@ -1,4 +1,4 @@
-import { packages, addons } from "./data.js";
+import { packages, addons, destinations } from "./data.js";
 
 
 const container = document.querySelector('.packages_container');

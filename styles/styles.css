@@ -741,18 +741,108 @@ nav {
 
 
 /* BOOKING SECTION  */
+.destination_label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
 
+.destination_wrapper {
+  position: relative;
+}
 
+.destination_input {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
 
+.destination_input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
 
+.dropdown-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #666;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
 
+.dropdown-icon.open {
+  transform: translateY(-50%) rotate(180deg);
+}
 
+.options-list {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  margin-top: 4px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin-left: 0;
+}
 
+.options-list.hidden {
+  display: none;
+}
 
+/* Option Item */
+.dropdown-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.1s;
+  font-size: 16px;
+}
 
+.dropdown-option:hover {
+  background-color: #e6f7ff;
+}
 
+/* Highlighted State (Keyboard/Active) */
+.dropdown-option.highlighted {
+  background-color: #007bff;
+  color: white;
+}
 
+/* Disabled/Unavailable State */
+.dropdown-option.disabled {
+  color: #999;
+  cursor: not-allowed;
+  background-color: #f7f7f7;
+  opacity: 0.7;
+}
 
+.dropdown-option.disabled:hover {
+  background-color: #f7f7f7;
+  /* Prevent hover effect on disabled */
+}
+
+/* No Results Message */
+.no-results {
+  padding: 10px 15px;
+  color: #666;
+  font-style: italic;
+}
 
 
 
