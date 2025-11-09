@@ -269,16 +269,25 @@
           </p>
 
           <form action="" class="booking_form">
-            <label for="Destination">Destination</label><br>
-            <div class="dropdown">
-              <input type="text" id="destination" name="destination" class="booking_input" autocomplete="off" required>
+            <label for="destination" class="destination_label">Destination</label><br>
 
-              <ul class="dropdown_list">
-                <li data-value="ghana">Ghana</li>
-                <li data-value="south-africa" class="disabled">South Africa</li>
-              </ul>
+            <div class="destination">
+              <input type="text" id="destination-dropdown" name="destination" class="destination_input"
+                placeholder="Search destination..." autocomplete="off" aria-haspopup="listbox" aria-expanded="false"
+                aria-controls="options-list" required />
 
+              <!-- Dropdown Arrow Icon (SVG for better control) -->
+              <svg id="dropdown-icon" class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
             </div>
+
+            <!-- Options list  -->
+            <div id="options-list" class="options-list hidden" role="listbox">
+              <!-- Options will be rendered here by JavaScript -->
+            </div>
+
 
             <label for="firstName">First Name</label>
             <input type="text" id="firstName" name="firstName" class="booking_input" required>

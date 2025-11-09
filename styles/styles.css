@@ -696,7 +696,7 @@ nav {
 
 .testimonial_card {
   /* padding: 2.5rem 2rem 3rem 1.25rem; */
-  padding: 2.5rem 2rem 3rem 1rem;
+  padding: 2.5rem 1.5rem 3rem 1rem;
 }
 
 .testimonial_title {
@@ -741,52 +741,25 @@ nav {
 
 
 /* BOOKING SECTION  */
-label {
-  display: block;
-  /* margin-bottom: 8px; */
-  font-weight: 600;
-}
 
-.dropdown {
-  position: relative;
-}
 
-.dropdown input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
 
-.dropdown-list {
-  list-style: none;
-  padding: 0;
-  margin: 5px 0 0 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  max-height: 150px;
-  overflow-y: auto;
-  position: absolute;
-  width: 100%;
-  background: #fff;
-  display: none;
-  z-index: 10;
-}
 
-.dropdown-list li {
-  padding: 10px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
 
-.dropdown-list li:hover:not(.disabled) {
-  background: #f0f0f0;
-}
 
-.dropdown-list li.disabled {
-  color: #999;
-  cursor: not-allowed;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
