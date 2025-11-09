@@ -686,14 +686,17 @@ nav {
 
 .testimonial_swiper {
   max-width: 300px;
-  background-color: var(--container-color);
+  background-color: var(--white-color);
   border-radius: 0 0 1.5rem 1.5rem;
   margin-inline: initial;
   transition: background-color .4s;
+  border: solid 1px #c5c5c5;
+  border-top: none;
 }
 
 .testimonial_card {
-  padding: 2.5rem 2rem 3rem 1.25rem;
+  /* padding: 2.5rem 2rem 3rem 1.25rem; */
+  padding: 2.5rem 2rem 3rem 1rem;
 }
 
 .testimonial_title {
@@ -740,7 +743,7 @@ nav {
 /* BOOKING SECTION  */
 label {
   display: block;
-  margin-bottom: 8px;
+  /* margin-bottom: 8px; */
   font-weight: 600;
 }
 
