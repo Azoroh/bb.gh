@@ -74,6 +74,7 @@ const addonDropdown = document.querySelector('.add-on-dropdown')
 const defaultAddon = document.createElement('option')
 
 defaultAddon.textContent = 'Add-on'
+defaultAddon.value = ''
 defaultAddon.disabled = true
 defaultAddon.selected = true
 defaultAddon.hidden = true
