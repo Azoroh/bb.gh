@@ -69,13 +69,27 @@ container.addEventListener('scroll', () => {
 
 //Add-on
 const addonBody = document.querySelector('.add-on_body')
+const addonDropdown = document.querySelector('.add-on-dropdown')
 
-  addonBody.innerHTML = addons.map(ad =>
-    `
+const defaultAddon = document.createElement('option')
+
+defaultAddon.textContent = 'Add-on'
+defaultAddon.value = ''
+defaultAddon.disabled = true
+defaultAddon.selected = true
+defaultAddon.hidden = true
+addonDropdown.appendChild(defaultAddon)
+
+
+
+addonBody.innerHTML = addons.map(ad =>
+  `
     <div class="add-on_option" id="${ad.id}">
       <p>${ad.label}</p>
     </div>
   `).join('');
+
+
 
 
 
@@ -127,11 +141,11 @@ const swiperHome = new Swiper(".home_swiper", {
 });
 
 /*=============== CHANGE BACKGROUND HEADER ===============*/
-const bgHeader = () =>{
-    const header = document.getElementById('header')
-    // Add a class if the bottom offset is greater than 50 of the viewport
-    window.scrollY >= 50 ? header.classList.add('bg-header') 
-                       : header.classList.remove('bg-header')
+const bgHeader = () => {
+  const header = document.getElementById('header')
+  // Add a class if the bottom offset is greater than 50 of the viewport
+  window.scrollY >= 50 ? header.classList.add('bg-header')
+    : header.classList.remove('bg-header')
 }
 window.addEventListener('scroll', bgHeader)
 
@@ -148,14 +162,14 @@ const swiperTestimonial = new Swiper(".testimonial_swiper", {
     prevEl: ".swiper-button-prev",
   },
 
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false,
-      reverseDirection: true,
-    },
-    speed: 500,
-    easing: 'linear',
-    loop: true,
+  autoplay: {
+    delay: 5000,
+    disableOnInteraction: false,
+    reverseDirection: true,
+  },
+  speed: 500,
+  easing: 'linear',
+  loop: true,
 });
 
 
@@ -185,3 +199,36 @@ const observer = new IntersectionObserver(entries => {
 
 observer.observe(video);
 
+
+
+
+
+
+
+
+// render destination dropdown
+const selectDropdown = document.querySelector('.dropdown-options')
+
+// Optional: Add a default, disabled 'Choose...' option
+const defaultOption = document.createElement('option');
+defaultOption.textContent = 'Select a Destination'
+defaultOption.value = ''
+defaultOption.disabled = true
+defaultOption.selected = true
+defaultOption.hidden = true
+selectDropdown.appendChild(defaultOption)
+
+
+destinations.forEach(dest => {
+  const newOption = document.createElement('option')
+
+  newOption.textContent = dest.location
+  newOption.value = dest.value
+
+  if (!dest.available) {
+    newOption.disabled = true;
+    newOption.textContent += ' (Unavailable)';
+  }
+
+  selectDropdown.appendChild(newOption)
+})

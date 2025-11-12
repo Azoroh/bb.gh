@@ -269,28 +269,45 @@
           </p>
 
           <form action="" class="booking_form">
-            <label for="destination" class="destination_label">Destination</label><br>
-
-            <div class="destination_wrapper">
-              <input type="text" id="destination-dropdown" name="destination" class="destination_input"
-                placeholder="Search destination..." autocomplete="off" aria-haspopup="listbox" aria-expanded="false"
-                aria-controls="options-list" required />
-
-              <!-- Dropdown Arrow Icon (SVG for better control) -->
-              <svg id="dropdown-icon" class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+            <div>
+              <label for="destination-dropdown" class="destination_label">Destination</label><br>
+              <select name="destination" id="destination-dropdown" class="dropdown-options">
+                <!-- render options list here -->
+              </select>
             </div>
 
-            <!-- Options list  -->
-            <div id="options-list" class="options-list hidden" role="listbox">
-              <!-- Options will be rendered here by JavaScript -->
+            <div class="start-end-date">
+              <div>
+                <label for="start-date" class="start-date-label">Start Date</label>
+                <input type="date" id="start-date"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              </div>
+              <div>
+                <label for="end-date" class="end-date-label">End Date</label>
+                <input type="date" id="end-date"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              </div>
             </div>
 
+            <div>
+              <label for="travelers">Number of Travelers</label>
+              <input type="number" id="travelers"
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-            <!-- <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" class="booking_input" required> -->
+            <div class="add-on-choice">
+              <label for="add-on-options" class="add-on-label">Add on</label><br>
+              <select name="add-on-options" id="add-on-dropdown" class="dropdown-options">
+                <!-- render add-on options here -->
+              </select>
+            </div>
+
+            <div>
+              <label for="message">Special Requests or Questions</label>
+              <textarea id="message" rows="4"
+                placeholder="Tell us about any special requirements, dietary restrictions, or questions you have..."></textarea>
+            </div>
+
           </form>
         </div>
       </div>
