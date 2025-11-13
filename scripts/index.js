@@ -69,25 +69,45 @@ container.addEventListener('scroll', () => {
 
 //Add-on
 const addonBody = document.querySelector('.add-on_body')
-const addonDropdown = document.querySelector('.add-on-dropdown')
+// const addonDropdown = document.querySelector('.add-on-dropdown')
 
-const defaultAddon = document.createElement('option')
+// const defaultAddon = document.createElement('option')
 
-defaultAddon.textContent = 'Add-on'
-defaultAddon.value = ''
-defaultAddon.disabled = true
-defaultAddon.selected = true
-defaultAddon.hidden = true
-addonDropdown.appendChild(defaultAddon)
+// defaultAddon.textContent = 'Add-on'
+// defaultAddon.value = ''
+// defaultAddon.disabled = true
+// defaultAddon.selected = true
+// defaultAddon.hidden = true
+// addonDropdown.appendChild(defaultAddon)
+
+// addons.forEach(addon => {
+//   const newAddonOption = document.createElement('option')
+
+//   newAddonOption.textContent = addon.label
+//   newAddonOption.value = addon.id
+
+//   addonDropdown.appendChild(newAddonOption)
+// })
 
 
+addons.forEach(addon => {
+  const addonOption = document.createElement('div')
+  addonOption.classList.add('add-on_option')
+  addonOption.id = addon.id
 
-addonBody.innerHTML = addons.map(ad =>
+  addonOption.innerHTML = `
+  <p>${addon.label}</p>
   `
-    <div class="add-on_option" id="${ad.id}">
-      <p>${ad.label}</p>
-    </div>
-  `).join('');
+
+  addonBody.appendChild('addonOption')
+})
+
+// addonBody.innerHTML = addons.map(ad =>
+//   `
+//     <div class="add-on_option" id="${ad.id}">
+//       <p>${ad.label}</p>
+//     </div>
+//   `).join('');
 
 
 
