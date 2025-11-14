@@ -69,25 +69,6 @@ container.addEventListener('scroll', () => {
 
 //Add-on
 const addonBody = document.querySelector('.add-on_body')
-// const addonDropdown = document.querySelector('.add-on-dropdown')
-
-// const defaultAddon = document.createElement('option')
-
-// defaultAddon.textContent = 'Add-on'
-// defaultAddon.value = ''
-// defaultAddon.disabled = true
-// defaultAddon.selected = true
-// defaultAddon.hidden = true
-// addonDropdown.appendChild(defaultAddon)
-
-// addons.forEach(addon => {
-//   const newAddonOption = document.createElement('option')
-
-//   newAddonOption.textContent = addon.label
-//   newAddonOption.value = addon.id
-
-//   addonDropdown.appendChild(newAddonOption)
-// })
 
 
 addons.forEach(addon => {
@@ -99,15 +80,28 @@ addons.forEach(addon => {
   <p>${addon.label}</p>
   `
 
-  addonBody.appendChild('addonOption')
+  addonBody.appendChild(addonOption)
 })
 
-// addonBody.innerHTML = addons.map(ad =>
-//   `
-//     <div class="add-on_option" id="${ad.id}">
-//       <p>${ad.label}</p>
-//     </div>
-//   `).join('');
+const addonDropdown = document.querySelector('.add-on-dropdown')
+
+const defaultAddon = document.createElement('option')
+
+defaultAddon.textContent = 'Add-on'
+defaultAddon.value = ''
+defaultAddon.disabled = true
+defaultAddon.selected = true
+defaultAddon.hidden = true
+addonDropdown.appendChild(defaultAddon)
+
+addons.forEach(addon => {
+  const newAddonOption = document.createElement('option')
+
+  newAddonOption.textContent = addon.label
+  newAddonOption.value = addon.id
+
+  addonDropdown.appendChild(newAddonOption)
+})
 
 
 
@@ -229,7 +223,7 @@ observer.observe(video);
 // render destination dropdown
 const selectDropdown = document.querySelector('.dropdown-options')
 
-// Optional: Add a default, disabled 'Choose...' option
+// Add a default, disabled 'Choose...' option
 const defaultOption = document.createElement('option');
 defaultOption.textContent = 'Select a Destination'
 defaultOption.value = ''
