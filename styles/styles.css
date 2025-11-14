@@ -751,9 +751,9 @@ nav {
   overflow: hidden;
 }
 
-/* .booking_data p {
-  text-align: center;
-} */
+.booking_data {
+  padding: .5rem;
+}
 
 .booking_form {
   display: grid;
