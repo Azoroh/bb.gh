@@ -326,6 +326,7 @@ nav {
   transition: background-color 0.4s;
   min-width: 203px;
   max-width: 203px;
+  cursor: pointer;
 }
 
 
@@ -742,15 +743,8 @@ nav {
 
 /* BOOKING SECTION  */
 
-label {
-  /* display: block; */
-  /* font-size: 14px; */
-  font-weight: 600;
-  color: #333;
-  /* margin-bottom: 5px; */
-}
-
-.dropdown-options {
+.dropdown-options,
+input {
   width: 100%;
   padding: 10px 40px 10px 15px;
   border: 1px solid #ccc;
@@ -761,7 +755,9 @@ label {
 }
 
 .dropdown-options:focus,
-.dropdown-options:hover {
+.dropdown-options:hover,
+input:hover,
+input:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
@@ -790,6 +786,24 @@ option {
   cursor: pointer;
   /* transition: background-color .3s; */
 }
+
+
+@media screen and (max-width: 950px) {
+  label {
+    display: block;
+    /* font-size: 14px; */
+    font-weight: 600;
+    color: #333;
+    /* margin-bottom: 5px; */
+  }
+
+  .start-end-date {
+    display: flex;
+    justify-content: space-between;
+  }
+
+}
+
 
 
 

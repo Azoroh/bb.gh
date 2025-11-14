@@ -83,11 +83,12 @@ addons.forEach(addon => {
   addonBody.appendChild(addonOption)
 })
 
-const addonDropdown = document.querySelector('.add-on-dropdown')
+//Addon form dropdown
+const addonDropdown = document.querySelector('#add-on-dropdown')
 
 const defaultAddon = document.createElement('option')
 
-defaultAddon.textContent = 'Add-on'
+defaultAddon.textContent = 'Add-on (Optional)'
 defaultAddon.value = ''
 defaultAddon.disabled = true
 defaultAddon.selected = true

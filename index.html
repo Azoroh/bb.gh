@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="./styles/styles.css" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+  <!-- intl-tel-input cdn css -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/css/intlTelInput.css">
 </head>
 
 <body>
@@ -265,10 +268,30 @@
             Fill out the form below and we'll assign you a dedicated Journey Partner
           </p>
 
-          <form action="" class="booking_form">
+          <form action="" class="booking_form" id="booking-form" method="post">
             <div>
-              <label for="destination-dropdown" class="destination_label">Destination</label><br>
-              <select name="destination" id="destination-dropdown" class="dropdown-options">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+
+            <div>
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" required>
+            </div>
+
+            <div>
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+
+            <div>
+              <label for="phoneNumber">Phone Number</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div>
+              <label for="destination-dropdown" class="destination_label">Destination</label>
+              <select name="destination" id="destination-dropdown" class="dropdown-options" required>
                 <!-- render options list here -->
               </select>
             </div>
@@ -276,25 +299,22 @@
             <div class="start-end-date">
               <div>
                 <label for="start-date" class="start-date-label">Start Date</label>
-                <input type="date" id="start-date"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="date" id="start-date">
               </div>
               <div>
                 <label for="end-date" class="end-date-label">End Date</label>
-                <input type="date" id="end-date"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="date" id="end-date" required>
               </div>
             </div>
 
             <div>
               <label for="travelers">Number of Travelers</label>
-              <input type="number" id="travelers"
-                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              <input type="number" id="travelers" required>
             </div>
 
             <div class="add-on-choice">
-              <label for="add-on-options" class="add-on-label">Add on</label><br>
-              <select name="add-on-options" id="add-on-dropdown" class="dropdown-options">
+              <label for="add-on-options" class="add-on-label">Add on</label>
+              <select name="add-on-options" id="add-on-dropdown" class="dropdown-options dropdown-options">
                 <!-- render add-on options here -->
               </select>
             </div>
@@ -304,6 +324,15 @@
               <textarea id="message" rows="4"
                 placeholder="Tell us about any special requirements, dietary restrictions, or questions you have..."></textarea>
             </div>
+
+            <!-- submit  -->
+            <div>
+              <button type="submit" href="#" class="button">
+                Request Booking
+                <i class="ri-send-plane-fill"></i>
+              </button>
+            </div>
+
 
           </form>
         </div>
@@ -422,6 +451,15 @@
 
   <script src="./scripts/swiper-bundle.min.js"></script>
   <script type="module" src="./scripts/index.js"></script>
+
+  <!-- intl-tel-input scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/intlTelInput.min.js"></script>
+  <script>
+    const input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+      loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/utils.js"),
+    });
+  </script>
 </body>
 
 </html>
