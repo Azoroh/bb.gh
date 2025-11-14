@@ -747,7 +747,7 @@ nav {
   justify-content: center;
   gap: 3rem;
   padding: 0 auto;
-  border-radius: 3rem;
+  border-radius: 2rem;
   overflow: hidden;
 }
 
@@ -828,6 +828,11 @@ option {
 @media screen and (max-width: 950px) {
   .booking-img {
     display: none;
+  }
+
+  .booking_container {
+    width: 90%;
+    margin: 0 auto;
   }
 
 }
