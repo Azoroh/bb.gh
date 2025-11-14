@@ -765,12 +765,13 @@ label {
   /* font-size: 14px; */
   font-weight: 600;
   color: #333;
-  /* margin-bottom: 5px; */
+  margin-bottom: 0.5rem;
 }
 
 
 .dropdown-options,
-input {
+input,
+textarea {
   width: 100%;
   padding: 10px 40px 10px 15px;
   border: 1px solid #ccc;
@@ -783,7 +784,9 @@ input {
 .dropdown-options:focus,
 .dropdown-options:hover,
 input:hover,
-input:focus {
+input:focus,
+textarea:hover,
+textarea:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
