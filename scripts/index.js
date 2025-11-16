@@ -247,3 +247,65 @@ destinations.forEach(dest => {
 
   selectDropdown.appendChild(newOption)
 })
+
+
+// FORM OUTPUT
+const BookingForm = document.querySelector('#booking-form')
+const submitBtn = BookingForm.querySelector('button[type="submit"]')
+
+
+/**
+ * Small toast helper (inline styles so no CSS edit required now)
+ */
+function showToast(message, success = true) {
+  const toast = document.createElement('div')
+  toast.textContent = message
+  toast.style.position = 'fixed'
+  toast.style.bottom = '1.5rem'
+  toast.style.left = '50%'
+  toast.style.transform = 'translateX(-50%)'
+  toast.style.background = success ? '#2ecc71' : '#e74c3c'
+  toast.style.color = '#fff'
+  toast.style.padding = '0.75rem 1rem'
+  toast.style.borderRadius = '6px'
+  toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'
+  toast.style.zIndex = '9999'
+  document.body.appendChild(toast)
+  setTimeout(() => toast.remove(), 4000)
+}
+
+BookingForm.addEventListener('submit', async (e) => {
+  e.preventDefault()
+  if (submitBtn.disabled) return;
+
+  const originalHTML = submitBtn.innerHTML
+
+  try {
+    // disable button while processing
+    submitBtn.disabled = true
+    submitBtn.innerHTML = 'Submitting...'
+
+    const formData = new FormData(BookingForm)
+    const payload = Object.fromEntries(formData.entries())
+
+    // send to backend endpoint (create server endpoint in next steps)
+    const res = await fetch('https://formspree.io/f/mgvrnqbl', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+
+    if (!res.ok) throw new Error('Request failed')
+
+    showToast("Trip booked successfully, we'll get right back to Soon!", true)
+    BookingForm.reset()
+  } catch (err) {
+    console.error(err)
+    showToast('Unsuccessful, try again later', false)
+  } finally {
+    submitBtn.disabled = false
+    submitBtn.innerHTML = originalHTML
+  }
+
+
+})
