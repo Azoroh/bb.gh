@@ -606,7 +606,7 @@ nav {
 }
 
 /* Optional bounce */
-@keyframes bounce {
+/* @keyframes bounce {
 
   0%,
   100% {
@@ -616,11 +616,11 @@ nav {
   50% {
     transform: translateX(-4px);
   }
-}
+} */
 
-.package_card.bounce {
+/* .package_card.bounce {
   animation: bounce 0.25s ease;
-}
+} */
 
 
 /* Add -on section  */
@@ -751,15 +751,20 @@ nav {
   padding: 0 auto;
   border-radius: 2rem;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 .booking_data {
   padding: .5rem;
+  width: 100%;
+  max-width: 500px;
 }
 
 .booking_form {
   display: grid;
   row-gap: 1rem;
+  margin: 2rem 0;
 }
 
 label {
@@ -836,6 +841,24 @@ option {
     width: 90%;
     margin: 0 auto;
     border-radius: 0;
+    gap: 1rem;
+  }
+
+  .booking_data {
+    width: 100%;
+    padding: 0;
+  }
+
+  .booking_form {
+    padding: 0;
+  }
+
+  label,
+  input,
+  textarea,
+  .dropdown-options {
+    width: 100%;
+    box-sizing: border-box;
   }
 
 }
@@ -848,10 +871,12 @@ option {
 }
 
 .footer_container {
-  /* min-width: 90%; */
+  margin: 0 auto;
+  width: 90%;
   display: flex;
   flex-direction: column;
   row-gap: 3rem;
+  /* border: solid red; */
 
 
 }
@@ -861,6 +886,7 @@ option {
   align-items: center;
   column-gap: .25rem;
   justify-self: flex-start;
+  align-self: flex-start;
 
   /* height: 100%; */
   width: 100px;
@@ -891,6 +917,7 @@ option {
 
 .footer_link {
   color: var(--white-color);
+  font-weight: 100;
 }
 
 .footer_social {
@@ -921,62 +948,28 @@ option {
 
 
 
-
-/* infinite partner carousel */
-
-/* Animation */
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(calc(-250px * 7));
-  }
-}
-
-/* Styling */
-.slider {
-  background-color: #fcf5eb;
-  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.03);
-  height: 100px;
-  margin: auto;
-  overflow: hidden;
-  position: relative;
-  /* width: 960px; */
-}
-
-.slider::before,
-.slider::after {
-  background: linear-gradient(to right,
-      rgba(252, 245, 235, 1) 0%,
-      rgba(255, 255, 255, 0) 100%);
-  content: "";
-  height: 100px;
-  position: absolute;
-  width: 200px;
-  z-index: 2;
-}
-
-.slider::after {
-  right: 0;
-  top: 0;
-  transform: rotateZ(180deg);
-}
-
-.slider::before {
-  left: 0;
-  top: 0;
-}
-
-.slider .slide-track {
-  animation: scroll 40s linear infinite;
+/* WHATSAPP FLOATING BUTTON */
+.whatsapp_btn i {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 60px;
+  height: 60px;
+  /* background-color: #25d366; */
+  /* color: var(--white-color); */
+  color: #25d366;
+  border-radius: 50%;
   display: flex;
-  /* width: calc(250px * 14); */
-  /* border: black solid 1px; */
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  z-index: 99;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-decoration: none;
 }
 
-.slider .slide {
-  height: 100px;
-  width: 250px;
+.whatsapp_btn:hover i {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
 }
