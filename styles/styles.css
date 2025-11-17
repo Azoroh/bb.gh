@@ -947,6 +947,23 @@ option {
   font-size: var(--small-font-size);
 }
 
+/* SCROLL BAR  */
+
+::-webkit-scrollbar {
+  width: .6rem;
+  background-color: hsl(220, 6%, 80%);
+}
+
+::-webkit-scrollbar-thumb {
+  width: .6rem;
+  background-color: hsl(220, 6%, 60%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  width: .6rem;
+  background-color: hsl(220, 6%, 50%);
+}
+
 
 
 
