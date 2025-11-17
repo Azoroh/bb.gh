@@ -947,29 +947,28 @@ option {
 
 
 
-
+/* WHATSAPP BUTTON  */
 /* WHATSAPP FLOATING BUTTON */
-.whatsapp_btn i {
+.whatsapp_btn {
   position: fixed;
   bottom: 1rem;
   right: 1rem;
   width: 60px;
   height: 60px;
-  /* background-color: #25d366; */
-  /* color: var(--white-color); */
-  color: #25d366;
+  background-color: #25d366;
+  color: var(--white-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
+  font-size: 1.8rem;
   z-index: 99;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s, box-shadow 0.3s;
   text-decoration: none;
 }
 
-.whatsapp_btn:hover i {
+.whatsapp_btn:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
 }
