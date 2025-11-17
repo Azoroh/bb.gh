@@ -347,6 +347,10 @@ nav {
   background-color: var(--opacity-color-30);
 }
 
+.contact-button {
+  background-color: #25d366;
+}
+
 
 /* ABOUT SECTION */
 .about {
