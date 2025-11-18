@@ -1007,7 +1007,9 @@ option {
 
 
 
-
+.testimonial-lg {
+  display: none;
+}
 
 
 
@@ -1025,6 +1027,9 @@ option {
   }
 
 
+  .testimonial-lg {
+    display: none;
+  }
 
 
 }
