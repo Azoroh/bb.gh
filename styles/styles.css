@@ -212,6 +212,11 @@ nav {
   filter: invert(100%);
 }
 
+/* Active Link  */
+.active-link::after {
+  width: 60%;
+}
+
 
 
 /* HOME SECTION */
@@ -399,7 +404,7 @@ nav {
 }
 
 .video-container video {
-  opacity: 0;
+  opacity: 1;
   transition: opacity .4s ease-in;
   width: 100%;
   height: auto;
@@ -688,6 +693,7 @@ nav {
 
 .testimonial_img {
   width: 300px;
+  height: 100%;
   border-radius: 1.5rem 1.5rem 0 0;
 
 }
@@ -754,16 +760,17 @@ nav {
   justify-content: center;
   gap: 3rem;
   padding: 0 auto;
+  margin: 0 auto;
   border-radius: 2rem;
   overflow: hidden;
-  width: 100%;
-  max-width: 100%;
+  width: 90%;
+  /* max-width: 100%; */
 }
 
 .booking_data {
-  padding: .5rem;
+  /* padding: .5rem; */
   width: 100%;
-  max-width: 500px;
+  /* max-width: 500px; */
 }
 
 .booking_form {
@@ -993,4 +1000,369 @@ option {
 .whatsapp_btn:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*=============== BREAKPOINTS ===============*/
+/* For small devices */
+@media screen and (max-width: 320px) {
+  .container {
+    margin-inline: 1rem;
+  }
+
+  .home_title {
+    font-size: 2.5rem;
+  }
+
+
+
+
+}
+
+/* For medium devices */
+@media screen and (min-width:576px) {
+
+  .home_container {
+    grid-template-columns: 400px;
+    justify-content: center;
+  }
+
+
+  .testimonial_img {
+    width: 400px;
+  }
+
+  .testimonial_swiper {
+    max-width: 400px;
+  }
+
+  .testimonial-lg {
+    display: none;
+  }
+
+  .booking_container {
+    justify-content: center;
+    width: 70%;
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  .booking-img {
+    display: none;
+  }
+
+  .footer_container {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .footer_content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+
+
+}
+
+@media screen and (min-width: 760px) {
+
+  /* hide the horizontal scroll indicators on wide screens */
+  .indicator_dots {
+    display: none !important;
+  }
+
+  .testimonial-lg {
+    display: none;
+  }
+}
+
+/* For large devices */
+
+@media screen and (min-width: 1150px) {
+  .container {
+    margin-inline: auto;
+  }
+
+  .section {
+    padding-block: 7rem 2rem;
+  }
+
+  .section_title {
+    margin-bottom: 4rem;
+    font-size: 3rem;
+  }
+
+  .nav {
+    height: calc(var(--header-height) + 2rem);
+    column-gap: 4rem;
+  }
+
+  .nav_toggle,
+  .nav_close {
+    display: none;
+  }
+
+  .nav_menu {
+    margin-left: auto;
+  }
+
+  .menu {
+    flex-direction: row;
+    column-gap: 4rem;
+  }
+
+  .nav_link {
+    color: var(--white-color);
+    font-size: 1.2rem;
+  }
+
+  .nav_link::after {
+    background-color: var(--white-color);
+  }
+
+  .bg-header .nav_link {
+    color: var(--title-color);
+  }
+
+  .bg-header .nav_link::after {
+    background-color: var(--title-color);
+  }
+
+  .home_container {
+    display: grid;
+    grid-template-columns: 520px 700px;
+    align-items: center;
+    padding-block: 6rem 9rem;
+    gap: 2rem;
+    padding: 0 auto;
+  }
+
+  .home_data {
+    text-align: initial;
+    transform: translateX(3rem);
+    z-index: 5;
+    width: 800px;
+  }
+
+  .home_description {
+    padding-right: 5rem;
+    margin-bottom: 2rem;
+    width: 80%;
+    font-size: 1.5rem;
+
+  }
+
+  .home_swiper {
+    max-width: 780px;
+    /* height: 20rem; */
+    transform: translateX(-3rem);
+    /* transform: translateY(7rem); */
+    /* border: solid; */
+    /* padding: 4rem; */
+  }
+
+  .home_article {
+    height: 600px;
+  }
+
+  .home_btn_grid {
+    justify-content: start;
+  }
+
+  .home_title {
+    font-size: 5rem;
+  }
+
+  .services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+  }
+
+  .about {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .about_bio {
+    width: 60%;
+    margin: 0 auto;
+    font-size: 1.5rem;
+  }
+
+  .services {
+    /* border: solid; */
+    align-self: center;
+    justify-self: center;
+    margin: 0 auto;
+  }
+
+  .services .service_info {
+    font-size: 1.5rem;
+  }
+
+  .packages_wrapper {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .packages_container h3 {
+    font-size: 1.2rem;
+  }
+
+  .packages_container p {
+    font-size: 1.2rem;
+  }
+
+  .packages_container .button {
+    font-size: 1.2rem;
+  }
+
+  .add-on_card {
+    min-width: 500px;
+  }
+
+  .add-on_card .add-on_title {
+    font-size: 3rem;
+  }
+
+  .add-on_card .add-on_subtitle {
+    font-size: 1.5rem;
+  }
+
+  .add-on_body p {
+    font-size: 1.3rem;
+    padding: 0 2rem;
+  }
+
+  .testimonial-card-lg .testimonial_img {}
+
+  .testimonial-lg {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    column-gap: 1rem;
+    width: 90%;
+  }
+
+  .testimonial_container.grid {
+    display: none;
+  }
+
+  .testimonial_swiper>div {
+    height: 300px;
+  }
+
+  .testimonial_swiper>div .testimonial_description {
+    height: 100px;
+    font-size: 1.2rem;
+  }
+
+  .booking_container {
+    /* border: solid; */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* width: 60%; */
+    gap: 0;
+    padding: 0;
+    /* align-items: stretch; */
+  }
+
+  .booking_container img {
+    display: inline;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .booking_data {
+    /* border: solid; */
+    /* overflow: visible; */
+    padding: 1rem;
+    /* margin: auto; */
+  }
+
+
+  .footer {
+    padding-top: 4.5rem;
+  }
+
+  .footer_container {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: space-between;
+  }
+
+  .footer_logo {
+    align-self: flex-start;
+
+  }
+
+  .footer_content {
+    column-gap: 4.5rem;
+  }
+
+  .footer_title {
+    margin-bottom: 1.5rem;
+  }
+
+}
+
+/* treat all viewports <=1149px as mobile for the nav: keep menu hidden until toggled */
+@media screen and (max-width: 1149px) {
+  .nav_menu {
+    position: fixed;
+    top: -120%;
+    left: 0;
+    background-color: var(--white-color);
+    width: 100%;
+    padding-block: 4rem;
+    box-shadow: 0 8px 16px hsla(0, 0%, 0%, 0.1);
+    border-radius: 0 0 1.5rem 1.5rem;
+    transition: top 0.4s;
+    z-index: calc(var(--z-fixed) + 1);
+  }
+
+  /* make the menu items stack for these viewports */
+  .menu {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+
+  /* ensure the toggle is visible on these sizes */
+  .nav_toggle {
+    display: inline-flex;
+  }
+
+  /* when JS adds show-menu, bring it into view */
+  .show-menu {
+    top: 0;
+  }
+
+  /* keep close button visible inside the off-canvas menu */
+  .nav_close {
+    display: inline-flex;
+  }
+}
+
+/* for 2k resolutions  */
+@media screen and (min-width: 2048px) {
+  body {
+    zoom: 1.4;
+  }
 }

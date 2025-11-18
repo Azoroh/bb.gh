@@ -149,10 +149,10 @@ const swiperHome = new Swiper(".home_swiper", {
     prevEl: ".swiper-button-prev",
   },
 
-  //   autoplay: {
-  //     delay: 2000,
-  //     disableOnInteraction: false,
-  //   },
+  autoplay: {
+    delay: 2000,
+    disableOnInteraction: false,
+  },
 });
 
 /*=============== CHANGE BACKGROUND HEADER ===============*/
@@ -196,25 +196,34 @@ const swiperTestimonial = new Swiper(".testimonial_swiper", {
 // AUTO PLAY ON SCROLL
 const video = document.querySelector('.video-container video');
 
-// Fade in when the video starts playing
-video.addEventListener('playing', () => {
-  video.classList.add('loaded');
-});
-
-// Autoplay when visible
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      video.play();
-    } else {
-      video.pause();
-    }
+if (video) {
+  // Show video immediately once metadata is loaded
+  video.addEventListener('loadedmetadata', () => {
+    video.classList.add('loaded');
   });
-}, { threshold: 0.5 });
 
-observer.observe(video);
+  // Fallback: show video after a short delay if metadata event doesn't fire
+  setTimeout(() => {
+    video.classList.add('loaded');
+  }, 100);
 
+  // Autoplay when visible
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Video is in view - play it
+        video.play().catch(err => {
+          console.log('Video autoplay failed:', err);
+        });
+      } else {
+        // Video is out of view - pause it
+        video.pause();
+      }
+    });
+  }, { threshold: 0.5 }); // Video needs to be 50% visible to trigger
 
+  observer.observe(video);
+}
 
 
 
@@ -255,7 +264,7 @@ const submitBtn = BookingForm.querySelector('button[type="submit"]')
 
 
 /**
- * Small toast helper (inline styles so no CSS edit required now)
+ * Small toast helper (with inline css)
  */
 function showToast(message, success = true) {
   const toast = document.createElement('div')
@@ -309,3 +318,48 @@ BookingForm.addEventListener('submit', async (e) => {
 
 
 })
+
+
+
+/*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
+const sections = document.querySelectorAll('section[id], footer[id]')
+
+const scrollActive = () => {
+  const scrollDown = window.scrollY
+
+  sections.forEach(current => {
+    const sectionHeight = current.offsetHeight,
+      sectionTop = current.offsetTop - 58,
+      sectionId = current.getAttribute('id')
+
+    // select ALL nav links that point to this id
+    const navAnchors = document.querySelectorAll('.nav_menu a[href*="#' + sectionId + '"]')
+    if (!navAnchors.length) return
+
+    if (scrollDown > sectionTop && scrollDown <= sectionTop + sectionHeight) {
+      navAnchors.forEach(a => a.classList.add('active-link'))
+    } else {
+      navAnchors.forEach(a => a.classList.remove('active-link'))
+    }
+  })
+}
+window.addEventListener('scroll', scrollActive)
+
+
+
+
+
+
+// SCROLL REVEAL ANIMATION 
+const sr = ScrollReveal({
+  origin: 'top',
+  distance: '60px',
+  duration: 2000,
+  delay: 300,
+  // reset: true, //Animation repeat
+})
+
+sr.reveal(`.home_container`)
+sr.reveal(`.home_title`, { delay: 600 })
+sr.reveal(`.home_description`, { delay: 900 })
+sr.reveal(`.home_data .button`, { delay: 1100 })
