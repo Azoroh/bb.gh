@@ -1,10 +1,10 @@
 import { packages, addons, destinations } from "./data.js";
 
-
 const container = document.querySelector('.packages_container');
 const dotsContainer = document.querySelector('.indicator_dots');
 
-// container.innerHTML = ''
+//wait for page to finish loading then render dropdowns n list
+document.addEventListener('DOMContentLoaded', initializeApp)
 
 packages.forEach((pkg, i) => {
   const card = document.createElement('div');
@@ -65,46 +65,6 @@ container.addEventListener('scroll', () => {
     }
   }, 50);
 });
-
-
-//Add-on
-const addonBody = document.querySelector('.add-on_body')
-
-
-addons.forEach(addon => {
-  const addonOption = document.createElement('div')
-  addonOption.classList.add('add-on_option')
-  addonOption.id = addon.id
-
-  addonOption.innerHTML = `
-  <p>${addon.label}</p>
-  `
-
-  addonBody.appendChild(addonOption)
-})
-
-//Addon form dropdown
-const addonDropdown = document.querySelector('#add-on-dropdown')
-
-const defaultAddon = document.createElement('option')
-
-defaultAddon.textContent = 'Add-on (Optional)'
-defaultAddon.value = ''
-defaultAddon.disabled = true
-defaultAddon.selected = true
-defaultAddon.hidden = true
-addonDropdown.appendChild(defaultAddon)
-
-addons.forEach(addon => {
-  const newAddonOption = document.createElement('option')
-
-  newAddonOption.textContent = addon.label
-  newAddonOption.value = addon.id
-
-  addonDropdown.appendChild(newAddonOption)
-})
-
-
 
 
 
@@ -230,37 +190,90 @@ if (video) {
 
 
 
-// render destination dropdown
-const selectDropdown = document.querySelector('.dropdown-options')
-
-// Add a default, disabled 'Choose...' option
-const defaultOption = document.createElement('option');
-defaultOption.textContent = 'Select a Destination'
-defaultOption.value = ''
-defaultOption.disabled = true
-defaultOption.selected = true
-defaultOption.hidden = true
-selectDropdown.appendChild(defaultOption)
-
-
-destinations.forEach(dest => {
-  const newOption = document.createElement('option')
-
-  newOption.textContent = dest.location
-  newOption.value = dest.value
-
-  if (!dest.available) {
-    newOption.disabled = true;
-    newOption.textContent += ' (Unavailable)';
+// =============== DESTINATION DROPDOWN RENDERING ===============
+function renderDestinationDropdown() {
+  const dropdown = document.getElementById('destination-dropdown')
+  if (!dropdown) {
+    console.error("Destination dropdown element not found.");
+    return;
   }
 
-  selectDropdown.appendChild(newOption)
-})
+  // Clear any existing options (for safety)
+  dropdown.innerHTML = '';
+
+  // Add a default, disabled option as a placeholder
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'Select a Destination';
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  dropdown.appendChild(defaultOption);
+
+  // Iterate over the imported 'destinations' array
+  destinations.forEach(dest => {
+    const option = document.createElement('option');
+    option.value = dest.value;
+    option.textContent = dest.label;
+
+    // Disable the option if 'available' is false
+    if (!dest.available) {
+      option.disabled = true;
+      option.textContent += ' (Coming Soon)'; // Visual cue for the user
+    }
+
+    dropdown.appendChild(option);
+  });
+}
+
+//====================== ADD ON & ADD ON DROPDOWN =======================
+function renderAddons() {
+
+  //Add-on
+  const addonBody = document.querySelector('.add-on_body')
 
 
-// FORM OUTPUT
-const BookingForm = document.querySelector('#booking-form')
-const submitBtn = BookingForm.querySelector('button[type="submit"]')
+  addons.forEach(addon => {
+    const addonOption = document.createElement('div')
+    addonOption.classList.add('add-on_option')
+    addonOption.id = addon.id
+
+    addonOption.innerHTML = `
+    <p>${addon.label}</p>
+    `
+
+    addonBody.appendChild(addonOption)
+  })
+
+  //Addon form dropdown
+  const addonDropdown = document.querySelector('#add-on-dropdown')
+
+  const defaultAddon = document.createElement('option')
+
+  defaultAddon.textContent = 'Add-on (Optional)'
+  defaultAddon.value = ''
+  defaultAddon.disabled = true
+  defaultAddon.selected = true
+  defaultAddon.hidden = true
+  addonDropdown.appendChild(defaultAddon)
+
+  addons.forEach(addon => {
+    const newAddonOption = document.createElement('option')
+
+    newAddonOption.textContent = addon.label
+    newAddonOption.value = addon.id
+
+    addonDropdown.appendChild(newAddonOption)
+  })
+
+}
+
+function initializeApp() {
+  renderDestinationDropdown()
+  renderAddons()
+
+  dateValidation()
+  bookingFormHandler()
+}
 
 
 /**
@@ -283,41 +296,82 @@ function showToast(message, success = true) {
   setTimeout(() => toast.remove(), 4000)
 }
 
-BookingForm.addEventListener('submit', async (e) => {
-  e.preventDefault()
-  if (submitBtn.disabled) return;
+// FORM OUTPUT
 
-  const originalHTML = submitBtn.innerHTML
-
-  try {
-    // disable button while processing
-    submitBtn.disabled = true
-    submitBtn.innerHTML = 'Submitting...'
-
-    const formData = new FormData(BookingForm)
-    const payload = Object.fromEntries(formData.entries())
-
-    // send to backend endpoint (create server endpoint in next steps)
-    const res = await fetch('https://formspree.io/f/mgvrnqbl', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-
-    if (!res.ok) throw new Error('Request failed')
-
-    showToast("Trip booked successfully, we'll get right back to Soon!", true)
-    BookingForm.reset()
-  } catch (err) {
-    console.error(err)
-    showToast('Unsuccessful, try again later', false)
-  } finally {
-    submitBtn.disabled = false
-    submitBtn.innerHTML = originalHTML
-  }
+function bookingFormHandler() {
+  const BookingForm = document.querySelector('#booking-form')
+  const submitBtn = BookingForm ? BookingForm.querySelector('button[type="submit"]') : null
 
 
-})
+  BookingForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    if (submitBtn.disabled) return;
+
+    const originalHTML = submitBtn.innerHTML
+
+    try {
+      // disable button while processing
+      submitBtn.disabled = true
+      submitBtn.innerHTML = `
+    <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+      <svg class="spinner" width="16" height="16" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" 
+                stroke-width="3" fill="none" 
+                stroke-dasharray="31.4 31.4" 
+                style="animation: rotate 1s linear infinite">
+        </circle>
+      </svg>
+      Submitting...
+    </span>
+  `
+
+      const formData = new FormData(BookingForm)
+      const payload = Object.fromEntries(formData.entries())
+
+      // send to backend endpoint (create server endpoint in next steps)
+      const res = await fetch('https://formspree.io/f/xqanelpn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) throw new Error('Request failed')
+
+      showToast("Trip booked successfully, we'll get right back to Soon!", true)
+      BookingForm.reset()
+    } catch (err) {
+      console.error(err)
+      showToast('Unsuccessful, try again later', false)
+    } finally {
+      submitBtn.disabled = false
+      submitBtn.innerHTML = originalHTML
+    }
+
+
+  })
+}
+
+// Date Validation
+function dateValidation() {
+  const startDateInput = document.querySelector('#start-date');
+  const endDateInput = document.querySelector('#end-date');
+
+  // Set minimum date to today
+  const today = new Date().toISOString().split('T')[0];
+  startDateInput.setAttribute('min', today);
+  endDateInput.setAttribute('min', today);
+
+  // Update end date minimum when start date changes
+  startDateInput.addEventListener('change', (e) => {
+    endDateInput.setAttribute('min', e.target.value);
+    if (endDateInput.value && endDateInput.value < e.target.value) {
+      endDateInput.value = '';
+    }
+  });
+
+
+}
+
 
 
 

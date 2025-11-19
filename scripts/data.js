@@ -99,6 +99,6 @@ export const addons = [
 ];
 
 export const destinations = [
-  { location: 'Ghana', value: 'ghana', available: true },
-  { location: 'South Africa', value: 'south-africa', available: false }
+  { label: 'Ghana', value: 'ghana', available: true },
+  { label: 'South Africa', value: 'south-africa', available: false }
 ]
