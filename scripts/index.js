@@ -328,26 +328,37 @@ function bookingFormHandler() {
       const formData = new FormData(BookingForm)
       const payload = Object.fromEntries(formData.entries())
 
-      // send to backend endpoint (create server endpoint in next steps)
-      const res = await fetch('https://formspree.io/f/xqanelpn', {
+      // Validate required fields
+      const requiredFields = ['firstName', 'lastName', 'email', 'phone'];
+      const missingFields = requiredFields.filter(field => !payload[field]);
+
+      if (missingFields.length > 0) {
+        throw new Error(`Please fill in: ${missingFields.join(', ')}`);
+      }
+
+      // send to backend endpoint
+      const res = await fetch('https://formspree.io/f/mgvrnqbl', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
 
-      if (!res.ok) throw new Error('Request failed')
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server error: ${res.status}`);
+
+        // throw new Error('Request failed')
+      }
 
       showToast("Trip booked successfully, we'll get right back to Soon!", true)
       BookingForm.reset()
     } catch (err) {
-      console.error(err)
-      showToast('Unsuccessful, try again later', false)
+      console.error('Booking error:', err)
+      showToast(err.message || 'Unsuccessful, try again later', false)
     } finally {
       submitBtn.disabled = false
       submitBtn.innerHTML = originalHTML
     }
-
-
   })
 }
 
