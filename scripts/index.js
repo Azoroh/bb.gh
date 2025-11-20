@@ -271,6 +271,8 @@ function initializeApp() {
   renderDestinationDropdown()
   renderAddons()
 
+
+  travelerValidation()
   dateValidation()
   bookingFormHandler()
 }
@@ -292,6 +294,8 @@ function showToast(message, success = true) {
   toast.style.borderRadius = '6px'
   toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'
   toast.style.zIndex = '9999'
+  toast.style.textAlign = 'center'
+
   document.body.appendChild(toast)
   setTimeout(() => toast.remove(), 4000)
 }
@@ -328,12 +332,16 @@ function bookingFormHandler() {
       const formData = new FormData(BookingForm)
       const payload = Object.fromEntries(formData.entries())
 
+      console.log('form payload: ', payload);
+
       // Validate required fields
-      const requiredFields = ['firstName', 'lastName', 'email', 'phone'];
-      const missingFields = requiredFields.filter(field => !payload[field]);
+      const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'destination-dropdown', 'start-date', 'end-date', 'travelers'];
+      const missingFields = requiredFields.filter(field => !payload[field] || payload[field].trim() === '');
+
+      console.log('missing fields:', missingFields);
 
       if (missingFields.length > 0) {
-        throw new Error(`Please fill in: ${missingFields.join(', ')}`);
+        throw new Error(`Please fill in all required fields`);
       }
 
       // send to backend endpoint
@@ -346,8 +354,8 @@ function bookingFormHandler() {
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message || `Server error: ${res.status}`);
-
         // throw new Error('Request failed')
+
       }
 
       showToast("Trip booked successfully, we'll get right back to Soon!", true)
@@ -383,6 +391,69 @@ function dateValidation() {
 
 }
 
+// TRAVELER COUNT VALIDATION
+function travelerValidation() {
+
+  // Get the travelers input field
+  const travelersInput = document.querySelector('#travelers');
+
+  // Set minimum value attribute
+  travelersInput.setAttribute('min', '1');
+  travelersInput.setAttribute('value', '1'); // Set default value
+  travelersInput.setAttribute('step', '1'); // Only allow whole numbers
+
+  // Prevent negative numbers and zero from being typed or pasted
+  travelersInput.addEventListener('input', (e) => {
+    // Remove any non-numeric characters except for the minus sign temporarily
+    let value = e.target.value.replace(/[^0-9]/g, '');
+
+    // Convert to number
+    let numValue = parseInt(value, 10);
+
+    // If less than 1 or NaN, set to 1
+    if (isNaN(numValue) || numValue < 1) {
+      e.target.value = '1';
+    } else {
+      e.target.value = numValue;
+    }
+  });
+
+  // Also prevent manual entry of invalid values on blur
+  travelersInput.addEventListener('blur', (e) => {
+    let value = parseInt(e.target.value, 10);
+
+    if (isNaN(value) || value < 1) {
+      e.target.value = '1';
+    }
+  });
+
+  // Prevent keyboard shortcuts that might create negative numbers
+  travelersInput.addEventListener('keydown', (e) => {
+    // Prevent minus key and 'e' (scientific notation)
+    if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '.') {
+      e.preventDefault();
+    }
+  });
+
+  // Prevent pasting negative numbers
+  travelersInput.addEventListener('paste', (e) => {
+    e.preventDefault();
+
+    // Get pasted data
+    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+
+    // Extract only positive numbers
+    const numValue = parseInt(pastedText.replace(/[^0-9]/g, ''), 10);
+
+    // Set value if valid, otherwise set to 1
+    if (!isNaN(numValue) && numValue >= 1) {
+      e.target.value = numValue;
+    } else {
+      e.target.value = '1';
+    }
+  });
+
+}
 
 
 
