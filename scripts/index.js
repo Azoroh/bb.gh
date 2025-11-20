@@ -14,7 +14,7 @@ function initializePhoneInput() {
 
   if (phoneInput) {
     itiInstance = window.intlTelInput(phoneInput, {
-      initialCountry: "gh", // Set Ghana as default
+      initialCountry: "auto", // Set Ghana as default
       geoIpLookup: callback => {
         fetch("https://ipapi.co/json")
           .then(res => res.json())
