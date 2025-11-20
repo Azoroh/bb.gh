@@ -410,6 +410,12 @@ function travelerValidation() {
     // Convert to number
     let numValue = parseInt(value, 10);
 
+    // Allow temporary empty string
+    if (value === '') {
+      e.target.value = '';
+      return;
+    }
+
     // If less than 1 or NaN, set to 1
     if (isNaN(numValue) || numValue < 1) {
       e.target.value = '1';
