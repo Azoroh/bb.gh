@@ -520,16 +520,14 @@
   <script src="./scripts/scrollreveal.min.js"></script>
 
   <script src="./scripts/swiper-bundle.min.js"></script>
-  <script type="module" src="./scripts/index.js"></script>
 
   <!-- intl-tel-input scripts -->
   <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/intlTelInput.min.js"></script>
-  <script>
-    const input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-      loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/utils.js"),
-    });
-  </script>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/utils.js"></script> -->
+
+  <script type="module" src="./scripts/index.js"></script>
+
 </body>
 
 </html>

@@ -1,10 +1,35 @@
 import { packages, addons, destinations } from "./data.js";
 
+let itiInstance = null; // Store the intl-tel-input instance
+
 const container = document.querySelector('.packages_container');
 const dotsContainer = document.querySelector('.indicator_dots');
 
 //wait for page to finish loading then render dropdowns n list
 document.addEventListener('DOMContentLoaded', initializeApp)
+
+// INITIALIZE PHONE INPUT WITH COUNTRY CODE
+function initializePhoneInput() {
+  const phoneInput = document.querySelector("#phone");
+
+  if (phoneInput) {
+    itiInstance = window.intlTelInput(phoneInput, {
+      initialCountry: "gh", // Set Ghana as default
+      geoIpLookup: callback => {
+        fetch("https://ipapi.co/json")
+          .then(res => res.json())
+          .then(data => callback(data.country_code))
+          .catch(() => callback("gh")); // Default to Ghana if lookup fails
+      },
+      utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/utils.js",
+      separateDialCode: true,
+      preferredCountries: ["gh", "ng", "us", "gb"],
+      autoPlaceholder: "polite",
+      strictMode: false,
+      formatOnDisplay: true
+    });
+  }
+}
 
 packages.forEach((pkg, i) => {
   const card = document.createElement('div');
@@ -271,7 +296,7 @@ function initializeApp() {
   renderDestinationDropdown()
   renderAddons()
 
-
+  initializePhoneInput()
   travelerValidation()
   dateValidation()
   bookingFormHandler()
@@ -305,6 +330,7 @@ function showToast(message, success = true) {
 function bookingFormHandler() {
   const BookingForm = document.querySelector('#booking-form')
   const submitBtn = BookingForm ? BookingForm.querySelector('button[type="submit"]') : null
+  const phoneInput = document.querySelector('#phone');
 
 
   BookingForm.addEventListener('submit', async (e) => {
@@ -316,19 +342,6 @@ function bookingFormHandler() {
     try {
       // disable button while processing
       submitBtn.disabled = true
-      //     submitBtn.innerHTML = `
-      //   <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
-      //     <svg class="spinner" width="16" height="16" viewBox="0 0 24 24">
-      //       <circle cx="12" cy="12" r="10" stroke="currentColor" 
-      //               stroke-width="3" fill="none" 
-      //               stroke-dasharray="31.4 31.4" 
-      //               style="animation: rotate 1s linear infinite">
-      //       </circle>
-      //     </svg>
-      //     Submitting...
-      //   </span>
-      // `
-
       submitBtn.innerHTML = `
       <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
       <div class="spinner"></div>
@@ -338,17 +351,48 @@ function bookingFormHandler() {
       const formData = new FormData(BookingForm)
       const payload = Object.fromEntries(formData.entries())
 
-      console.log('form payload: ', payload);
+      console.log('Initial payload:', payload); // Debug log
 
-      // Validate required fields
+      // Validate required fields FIRST (before modifying payload)
       const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'destination-dropdown', 'start-date', 'end-date', 'travelers'];
-      const missingFields = requiredFields.filter(field => !payload[field] || payload[field].trim() === '');
+      const missingFields = requiredFields.filter(field => {
+        const value = payload[field];
+        return !value || String(value).trim() === '';
+      });
 
-      console.log('missing fields:', missingFields);
+      console.log('Missing fields:', missingFields); // Debug log
 
       if (missingFields.length > 0) {
-        throw new Error(`Please fill in all required fields`);
+        throw new Error('Please fill in all required fields');
       }
+
+      // NOW process phone number AFTER validation
+      if (itiInstance && phoneInput) {
+        const phoneValue = phoneInput.value.trim()
+
+        // Check if any number was entered
+        if (!phoneValue) {
+          throw new Error('Please enter a phone number');
+        }
+
+        // Get the full number with country code
+        const fullNumber = itiInstance.getNumber();
+        const countryData = itiInstance.getSelectedCountryData();
+
+        // Just check that we got some digits (very lenient - at least 5 digits)
+        const digitCount = phoneValue.replace(/\D/g, '').length;
+        if (digitCount < 5) {
+          throw new Error('Please enter a valid phone number');
+        }
+
+        // Send all phone data to email
+        payload.phone = fullNumber; // e.g., "+233245302636"
+        payload.phoneCountry = countryData.name; // e.g., "Ghana"
+        payload.phoneCountryCode = '+' + countryData.dialCode; // e.g., "+233"
+        payload.phoneLocalNumber = phoneValue; // What user typed
+      }
+
+      console.log('Final payload:', payload); // Debug log
 
       // send to backend endpoint
       const res = await fetch('https://formspree.io/f/mgvrnqbl', {
@@ -360,12 +404,14 @@ function bookingFormHandler() {
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message || `Server error: ${res.status}`);
-        // throw new Error('Request failed')
 
       }
 
       showToast("Trip booked successfully, we'll get right back to Soon!", true)
-      // BookingForm.reset()
+      BookingForm.reset()
+      if (itiInstance) {
+        itiInstance.setNumber(""); // Reset the phone input
+      }
     } catch (err) {
       console.error('Booking error:', err)
       showToast(err.message || 'Unsuccessful, try again later', false)
