@@ -316,18 +316,24 @@ function bookingFormHandler() {
     try {
       // disable button while processing
       submitBtn.disabled = true
+      //     submitBtn.innerHTML = `
+      //   <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+      //     <svg class="spinner" width="16" height="16" viewBox="0 0 24 24">
+      //       <circle cx="12" cy="12" r="10" stroke="currentColor" 
+      //               stroke-width="3" fill="none" 
+      //               stroke-dasharray="31.4 31.4" 
+      //               style="animation: rotate 1s linear infinite">
+      //       </circle>
+      //     </svg>
+      //     Submitting...
+      //   </span>
+      // `
+
       submitBtn.innerHTML = `
-    <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
-      <svg class="spinner" width="16" height="16" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" 
-                stroke-width="3" fill="none" 
-                stroke-dasharray="31.4 31.4" 
-                style="animation: rotate 1s linear infinite">
-        </circle>
-      </svg>
+      <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+      <div class="spinner"></div>
       Submitting...
-    </span>
-  `
+      `
 
       const formData = new FormData(BookingForm)
       const payload = Object.fromEntries(formData.entries())
@@ -359,7 +365,7 @@ function bookingFormHandler() {
       }
 
       showToast("Trip booked successfully, we'll get right back to Soon!", true)
-      BookingForm.reset()
+      // BookingForm.reset()
     } catch (err) {
       console.error('Booking error:', err)
       showToast(err.message || 'Unsuccessful, try again later', false)

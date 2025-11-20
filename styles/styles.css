@@ -842,6 +842,33 @@ option {
 
 [type=submit] {
   min-width: 100%;
+  height: 70px;
+  transition: all .3s ease;
+
+  background-color: transparent;
+  color: var(--black-color);
+  border: 3px solid var(--black-color);
+  position: relative;
+}
+
+[type=submit]::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: var(--black-color);
+  transition: width 0.3s ease;
+  z-index: -1;
+}
+
+[type=submit]:hover::after {
+  width: 100%;
+}
+
+[type=submit]:hover {
+  color: var(--white-color);
 }
 
 @media screen and (max-width: 950px) {
@@ -1253,7 +1280,6 @@ option {
     padding: 0 2rem;
   }
 
-  .testimonial-card-lg .testimonial_img {}
 
   .testimonial-lg {
     display: flex;
@@ -1376,31 +1402,19 @@ option {
 
 
 
-/* Add to styles.css */
-@keyframes rotate {
+/* SUBMIT BUTTON LOADING STATE ANIMATION */
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
   to {
     transform: rotate(360deg);
-  }
-}
-
-.spinner circle {
-  stroke-dashoffset: 0;
-  animation: dash 1.5s ease-in-out infinite;
-}
-
-@keyframes dash {
-  0% {
-    stroke-dasharray: 1, 150;
-    stroke-dashoffset: 0;
-  }
-
-  50% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -35;
-  }
-
-  100% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -124;
   }
 }
