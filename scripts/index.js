@@ -459,7 +459,7 @@ function createPackageModal() {
             <div class="thank-you-message" id="thank-you-message" style="display: none;">
               <div class="happy-face">😊</div>
               <h3>Thank You!</h3>
-              <p>Your booking request has been submitted successfully. We'll get back to you soon!</p>
+              <p>Your booking has been submitted successfully. We'll get back to you soon!</p>
             </div>
           </div>
         </div>
