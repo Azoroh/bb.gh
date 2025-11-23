@@ -707,7 +707,7 @@ function initializeModalForm() {
       }
 
       // Send to Formspree
-      const res = await fetch('https://formspree.io/f/mgvrnqbl', {
+      const res = await fetch('https://formspree.io/f/xqanelpn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -832,7 +832,7 @@ function bookingFormHandler() {
       console.log('Final payload:', payload); // Debug log
 
       // send to backend endpoint
-      const res = await fetch('https://formspree.io/f/mgvrnqbl', {
+      const res = await fetch('https://formspree.io/f/xqanelpn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
