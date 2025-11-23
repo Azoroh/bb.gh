@@ -1494,7 +1494,7 @@ option {
 .modal-tabs {
   display: flex;
   border-bottom: 1px solid #e0e0e0;
-  background-color: rgb(53, 53, 53);
+  background-color: rgb(86, 86, 86);
 }
 
 .tab-button {
