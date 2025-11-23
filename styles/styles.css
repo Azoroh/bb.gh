@@ -1289,6 +1289,7 @@ option {
     transition: background-color .4s;
     border: solid 1px #c5c5c5;
     border-top: none;
+    width: 400px;
   }
 
   .testimonial_swiper-lg>div {
