@@ -35,25 +35,24 @@ function initializePhoneInput() {
 // PACKAGES CARDS 
 function renderPackageCards() {
 
-  console.log('renderPackageCards called');
 
   // Get the containers INSIDE the function after DOM is loaded
   container = document.querySelector('.packages_container');
   dotsContainer = document.querySelector('.indicator_dots');
 
-  console.log('Container:', container);
-  console.log('Dots container:', dotsContainer);
+  // console.log('Container:', container);
+  // console.log('Dots container:', dotsContainer);
 
 
   if (!container || !dotsContainer) {
-    console.error('Package containers not found!');
+    // console.error('Package containers not found!');
     return;
   }
 
-  console.log('About to render', packages.length, 'packages');
+  // console.log('About to render', packages.length, 'packages');
 
   packages.forEach((pkg, i) => {
-    console.log('Rendering package:', pkg.title);
+    // console.log('Rendering package:', pkg.title);
 
     const card = document.createElement('div');
     card.classList.add('package_card');
@@ -188,12 +187,12 @@ function initializeVideo() {
 
 // INITIALIZE SWIPER AND HEADER
 function initializeSwiperAndHeader() {
-  console.log('initializeSwiperAndHeader called');
+  // console.log('initializeSwiperAndHeader called');
 
   // SWIPER HOME - only initialize if element exists
   const homeSwiperEl = document.querySelector(".home_swiper");
   if (homeSwiperEl) {
-    console.log('Initializing home swiper');
+    // console.log('Initializing home swiper');
     const swiperHome = new Swiper(".home_swiper", {
       loop: true,
       slidesPerView: "auto",
@@ -226,7 +225,7 @@ function initializeSwiperAndHeader() {
   // SWIPER TESTIMONIAL - only initialize if element exists
   const testimonialSwiperEl = document.querySelector(".testimonial_swiper");
   if (testimonialSwiperEl) {
-    console.log('initializing testimonial swiper');
+    // console.log('initializing testimonial swiper');
     const swiperTestimonial = new Swiper(".testimonial_swiper", {
       loop: true,
       slidesPerView: "auto",
@@ -252,7 +251,7 @@ function initializeSwiperAndHeader() {
     console.warn('Testimonial swiper element not found');
   }
 
-  console.log('initializeSwiperAndHeader completed');
+  // console.log('initializeSwiperAndHeader completed');
 };
 
 
@@ -338,10 +337,10 @@ function renderAddons() {
 
 function initializeApp() {
 
-  console.log('=== INITIALIZE APP STARTED ===');
-  console.log('Packages:', packages);
-  console.log('Addons:', addons);
-  console.log('Destinations:', destinations);
+  // console.log('=== INITIALIZE APP STARTED ===');
+  // console.log('Packages:', packages);
+  // console.log('Addons:', addons);
+  // console.log('Destinations:', destinations);
 
 
   // Initialize UI components
@@ -367,7 +366,7 @@ function initializeApp() {
   dateValidation()
   bookingFormHandler()
 
-  console.log('=== INITIALIZE APP COMPLETED ===');
+  // console.log('=== INITIALIZE APP COMPLETED ===');
 
 }
 
@@ -615,29 +614,29 @@ function closeModal() {
 }
 
 function initializePackageButtons() {
-  console.log('initializePackageButtons called');
+  // console.log('initializePackageButtons called');
 
   // Event delegation for package buttons
   document.addEventListener('click', (e) => {
-    console.log('Document clicked:', e.target);
+    // console.log('Document clicked:', e.target);
 
     if (e.target.classList.contains('view-details-btn') || e.target.closest('.view-details-btn')) {
-      console.log('View Details button clicked!');
+      // console.log('View Details button clicked!');
 
       const btn = e.target.classList.contains('view-details-btn') ? e.target : e.target.closest('.view-details-btn');
       const packageId = btn.dataset.packageId;
 
-      console.log('Package ID:', packageId);
+      // console.log('Package ID:', packageId);
       openModal(packageId, false);
     }
 
     if (e.target.classList.contains('plan-trip-btn') || e.target.closest('.plan-trip-btn')) {
-      console.log('Plan Trip button clicked!');
+      // console.log('Plan Trip button clicked!');
 
       const btn = e.target.classList.contains('plan-trip-btn') ? e.target : e.target.closest('.plan-trip-btn');
       const packageId = btn.dataset.packageId;
 
-      console.log('Package ID:', packageId);
+      // console.log('Package ID:', packageId);
       openModal(packageId, true);
     }
   });
@@ -788,7 +787,7 @@ function bookingFormHandler() {
       const formData = new FormData(BookingForm)
       const payload = Object.fromEntries(formData.entries())
 
-      console.log('Initial payload:', payload); // Debug log
+      // console.log('Initial payload:', payload); // Debug log
 
       // Validate required fields FIRST (before modifying payload)
       const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'destination-dropdown', 'start-date', 'end-date', 'travelers'];
@@ -797,7 +796,7 @@ function bookingFormHandler() {
         return !value || String(value).trim() === '';
       });
 
-      console.log('Missing fields:', missingFields); // Debug log
+      // console.log('Missing fields:', missingFields); // Debug log
 
       if (missingFields.length > 0) {
         throw new Error('Please fill in all required fields');
@@ -829,7 +828,7 @@ function bookingFormHandler() {
         payload.phoneLocalNumber = phoneValue; // What user typed
       }
 
-      console.log('Final payload:', payload); // Debug log
+      // console.log('Final payload:', payload); // Debug log
 
       // send to backend endpoint
       const res = await fetch('https://formspree.io/f/xqanelpn', {
@@ -844,7 +843,7 @@ function bookingFormHandler() {
 
       }
 
-      showToast("Trip booked successfully, we'll get right back to Soon!", true)
+      showToast("Trip booked successfully, we'll get back to you Soon!", true)
       BookingForm.reset()
       if (itiInstance) {
         itiInstance.setNumber(""); // Reset the phone input
