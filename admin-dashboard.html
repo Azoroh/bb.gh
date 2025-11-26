@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Beyond Borders</title>
+
+    <link rel="shortcut icon" href="./img/logo/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="./styles/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+</head>
+
+<body>
+
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="./img/logo/bb full.png" alt="logo" class="logo-img">
+        </div>
+        <div class="user-info">
+            <div>
+                <span class="user-name" id="user-name">Name</span>
+                <span class="user-role">Admin</span>
+            </div>
+            <button class="logout-btn" id="logout-btn">
+                <i class="ri-logout-box-line"></i>
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-title">Overview</div>
+                    <div class="nav-item active" data-section="overview">
+                        <i class="ri-dashboard-line"></i>
+                        <span>Dashboard</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Management</div>
+                    <div class="nav-item" data-section="bookings">
+                        <i class="ri-calendar-check-line"></i>
+                        <span>Bookings</span>
+                    </div>
+                    <div class="nav-item" data-section="clients">
+                        <i class="ri-user-3-line"></i>
+                        <span>Clients</span>
+                    </div>
+                    <div class="nav-item" data-section="drivers">
+                        <i class="ri-car-line"></i>
+                        <span>Drivers</span>
+                    </div>
+                    <div class="nav-item" data-section="tasks">
+                        <i class="ri-task-line"></i>
+                        <span>Tasks</span>
+                    </div>
+                    <div class="nav-item" data-section="payments">
+                        <i class="ri-money-dollar-circle-line"></i>
+                        <span>Payments</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Bookings</h3>
+                            <div class="value" id="total-bookings">0</div>
+                        </div>
+                        <div class="stat-icon icon-blue">
+                            <i class="ri-calendar-check-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Active Clients</h3>
+                            <div class="value" id="total-clients">0</div>
+                        </div>
+                        <div class="stat-icon icon-green">
+                            <i class="ri-user-3-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Active Drivers</h3>
+                            <div class="value" id="total-drivers">0</div>
+                        </div>
+                        <div class="stat-icon icon-orange">
+                            <i class="ri-car-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Pending Tasks</h3>
+                            <div class="value" id="total-tasks">0</div>
+                        </div>
+                        <div class="stat-icon icon-purple">
+                            <i class="ri-task-line"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h2 class="section-title">Recent Bookings</h2>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Package</th>
+                                <th>Dates</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-bookings-table">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="spinner"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Bookings Section -->
+            <section id="bookings-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">All Bookings</h2>
+                    <button class="btn-primary" id="add-booking-btn">
+                        <i class="ri-add-line"></i>
+                        New Booking
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Package</th>
+                                <th>Dates</th>
+                                <th>Travelers</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-table">
+                            <tr>
+                                <td colspan="8">
+                                    <div class="spinner"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Clients</h2>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Total Bookings</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="spinner"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Drivers Section -->
+            <section id="drivers-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Drivers</h2>
+                    <button class="btn-primary" id="add-driver-btn">
+                        <i class="ri-add-line"></i>
+                        Add Driver
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="drivers-table">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state">
+                                        <i class="ri-car-line"></i>
+                                        <p>No drivers yet. Click "Add Driver" to create one.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tasks Section -->
+            <section id="tasks-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Tasks</h2>
+                    <button class="btn-primary" id="add-task-btn">
+                        <i class="ri-add-line"></i>
+                        Create Task
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Assigned To</th>
+                                <th>Booking</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tasks-table">
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <i class="ri-task-line"></i>
+                                        <p>No tasks yet. Click "Create Task" to assign work to drivers.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Payments Section -->
+            <section id="payments-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Payments</h2>
+                    <button class="btn-primary" id="add-payment-btn">
+                        <i class="ri-add-line"></i>
+                        Record Payment
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking</th>
+                                <th>Client</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table">
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <i class="ri-money-dollar-circle-line"></i>
+                                        <p>No payment records yet.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+
+
+
+
+
+    <script type="module" src="./scripts/admin.js"></script>
+
+</body>
+
+</html>
