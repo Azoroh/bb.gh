@@ -1,11 +1,48 @@
 import { packages, addons, destinations } from "./data.js";
 
+import { db } from './firebase-config.js';
+import { collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
 let itiInstance = null; // Store the intl-tel-input instance
 let container = null;
 let dotsContainer = null;
 
 //wait for page to finish loading then render dropdowns n list
 document.addEventListener('DOMContentLoaded', initializeApp)
+
+
+// SAVE BOOKING TO FIREBASE FIRESTORE
+async function saveToDashboard(formData) {
+  try {
+    // Create booking object
+    const booking = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      phoneCountry: formData.phoneCountry || '',
+      phoneCountryCode: formData.phoneCountryCode || '',
+      phoneLocalNumber: formData.phoneLocalNumber || '',
+      packageName: formData['destination-dropdown'] || formData.packageName,
+      startDate: formData['start-date'] || formData.startDate,
+      endDate: formData['end-date'] || formData.endDate,
+      travelers: parseInt(formData.travelers),
+      addon: formData['add-on-dropdown'] || formData.addon || 'None',
+      message: formData.message || '',
+      status: 'pending',
+      createdAt: serverTimestamp()
+    };
+
+    // Save to Firestore
+    await addDoc(collection(db, 'bookings'), booking);
+
+    console.log('✅ Booking saved to Firebase');
+  } catch (err) {
+    console.error('❌ Error saving to Firebase:', err);
+    // Don't throw error - booking email was already sent via Formspree
+  }
+}
+
 
 // INITIALIZE PHONE INPUT WITH COUNTRY CODE
 function initializePhoneInput() {
@@ -717,6 +754,9 @@ function initializeModalForm() {
         throw new Error(errorData.message || `Server error: ${res.status}`);
       }
 
+      // ✅ SAVE TO FIREBASE DASHBOARD
+      await saveToDashboard(payload);
+
       // Show thank you message
       form.style.display = 'none';
       document.getElementById('thank-you-message').style.display = 'block';
@@ -842,6 +882,9 @@ function bookingFormHandler() {
         throw new Error(errorData.message || `Server error: ${res.status}`);
 
       }
+
+      // ✅ SAVE TO FIREBASE DASHBOARD
+      await saveToDashboard(payload);
 
       showToast("Trip booked successfully, we'll get back to you Soon!", true)
       BookingForm.reset()

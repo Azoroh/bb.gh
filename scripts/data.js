@@ -5,7 +5,7 @@ export const packages = [
     duration: "5 Days",
     location: "Accra – Cape Coast – Elmina",
     perfectFor: "Solo travelers & couples seeking history and luxury comfort",
-    summary: "Take a relaxing walk through the pages of history and culture while indulging in seaside luxury.",
+    summary: "Take a relaxing heartwarming walk through the pages of history and culture while indulging in seaside luxury.",
     highlights: [
       "Guided tour of Cape Coast and Elmina Castles",
       "Kakum National Park canopy walk",
