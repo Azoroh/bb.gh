@@ -270,13 +270,45 @@ body {
 .table-container {
     background: white;
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Add scroll hint on mobile */
+.table-container::after {
+    /* content: '← Scroll →'; */
+    display: none;
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(46, 204, 113, 0.9);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    pointer-events: none;
+    animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 800px;
+    /* Ensures table doesn't shrink too much */
 }
 
 thead {
@@ -389,6 +421,17 @@ tbody tr:hover {
 }
 
 @media (max-width: 768px) {
+    .table-container {
+        position: relative;
+        margin: 0 -1rem;
+        /* Extend to edges on mobile */
+        border-radius: 0;
+    }
+
+    .table-container::after {
+        display: block;
+    }
+
     .dashboard-layout {
         flex-direction: column;
     }
