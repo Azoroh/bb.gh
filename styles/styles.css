@@ -1115,6 +1115,18 @@ option {
 
 @media screen and (min-width: 1150px) {
 
+  /* .admin-button-mobile-item {
+    display: none !important;
+  } */
+
+  .admin-button-desktop {
+    display: flex !important;
+    /* Show it on desktop */
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: var(--font-semi-bold);
+  }
+
   .container {
     margin-inline: auto;
   }
@@ -1129,6 +1141,9 @@ option {
   }
 
   .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     height: calc(var(--header-height) + 2rem);
     column-gap: 4rem;
   }
@@ -1139,7 +1154,21 @@ option {
   }
 
   .nav_menu {
-    margin-left: auto;
+    margin-left: 0;
+    /* Centering logic */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    /* Keep it below the header/buttons */
+
+    /* Ensure the actual links are horizontal */
+    display: block;
+  }
+
+
+  .nav_buttons {
+    z-index: 10;
   }
 
   .menu {
@@ -1667,5 +1696,50 @@ option {
 
   .modal-booking-form .start-end-date {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+
+/* --- ADMIN BUTTON STYLES --- */
+
+/* Hide the desktop button by default (mobile first approach) */
+.admin-button-desktop {
+  display: none !important;
+}
+
+/* Style the button link inside the mobile menu pop-out */
+.admin-button-mobile-item .admin-button-link {
+  background-color: var(--black-color);
+  color: var(--white-color) !important;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.5rem;
+  font-weight: var(--font-semi-bold);
+  min-width: 150px;
+}
+
+/* Remove the underline effect from the button link in the menu */
+.admin-button-mobile-item .admin-button-link::after {
+  display: none !important;
+}
+
+/* Ensure the hover effect doesn't decrease opacity on the button */
+.menu a.admin-button-link:hover {
+  opacity: 1 !important;
+}
+
+/* Ensure the mobile button is centered and spaced out in the collapsed menu */
+@media screen and (max-width: 950px) {
+  .admin-button-mobile-item {
+    width: 100%;
+    /* Take full list item width */
+    text-align: center;
+    /* Center the link inside the list item */
+    margin-top: 2rem;
+    /* Add extra separation at the bottom of the list */
   }
 }

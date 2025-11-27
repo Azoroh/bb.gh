@@ -322,6 +322,159 @@
 
 
 
+    <!-- MODAL FORM  -->
+    <!-- Add Driver Modal -->
+    <div class="modal-overlay" id="add-driver-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add New Driver</h2>
+                <button class="modal-close" onclick="closeModal('add-driver-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-error" id="driver-form-error"></div>
+                <form id="add-driver-form" class="form-grid">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="driver-name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="driver-name" name="name" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="driver-phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="driver-phone" name="phone" required placeholder="+233123456789">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="driver-email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="driver-email" name="email" required placeholder="driver@example.com">
+                        <small>This will be used for login</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="driver-password">Password <span class="required">*</span></label>
+                        <input type="password" id="driver-password" name="password" required minlength="6"
+                            placeholder="Minimum 6 characters">
+                        <small>Driver will use this to login</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="driver-license">Driver's License Number</label>
+                        <input type="text" id="driver-license" name="license" placeholder="Optional">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="driver-vehicle">Vehicle Information</label>
+                        <input type="text" id="driver-vehicle" name="vehicle"
+                            placeholder="e.g., Toyota Camry - GH 1234-20">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="driver-notes">Additional Notes</label>
+                        <textarea id="driver-notes" name="notes"
+                            placeholder="Any additional information about the driver..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('add-driver-modal')">Cancel</button>
+                <button type="submit" form="add-driver-form" class="btn-submit" id="submit-driver-btn">
+                    <i class="ri-add-line"></i>
+                    Add Driver
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Task Modal -->
+    <div class="modal-overlay" id="create-task-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create New Task</h2>
+                <button class="modal-close" onclick="closeModal('create-task-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-error" id="task-form-error"></div>
+                <form id="create-task-form" class="form-grid">
+                    <div class="form-group">
+                        <label for="task-title">Task Title <span class="required">*</span></label>
+                        <input type="text" id="task-title" name="title" required placeholder="e.g., Airport Pickup">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-driver">Assign to Driver <span class="required">*</span></label>
+                        <select id="task-driver" name="driverId" required>
+                            <option value="">Select a driver...</option>
+                            <!-- Will be populated dynamically -->
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-date">Date <span class="required">*</span></label>
+                            <input type="date" id="task-date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-time">Time <span class="required">*</span></label>
+                            <input type="time" id="task-time" name="time" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-client-name">Client Name</label>
+                        <input type="text" id="task-client-name" name="clientName" placeholder="Optional">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-client-phone">Client Phone</label>
+                        <input type="tel" id="task-client-phone" name="clientPhone" placeholder="+233123456789">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-pickup">Pickup Location <span class="required">*</span></label>
+                        <input type="text" id="task-pickup" name="pickupLocation" required
+                            placeholder="e.g., Kotoka Airport">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-destination">Destination <span class="required">*</span></label>
+                        <input type="text" id="task-destination" name="destination" required
+                            placeholder="e.g., Labadi Beach Hotel">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-priority">Priority <span class="required">*</span></label>
+                        <select id="task-priority" name="priority" required>
+                            <option value="normal">Normal</option>
+                            <option value="high">High</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-notes">Notes / Instructions</label>
+                        <textarea id="task-notes" name="notes"
+                            placeholder="Special instructions for the driver..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('create-task-modal')">Cancel</button>
+                <button type="submit" form="create-task-form" class="btn-submit" id="submit-task-btn">
+                    <i class="ri-add-line"></i>
+                    Create Task
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
     <script type="module" src="./scripts/admin.js"></script>
 
 </body>

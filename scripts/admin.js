@@ -4,7 +4,8 @@
 import { auth, db } from './firebase-config.js';
 import {
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  createUserWithEmailAndPassword
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 import {
   collection,
@@ -13,8 +14,14 @@ import {
   getDoc,
   query,
   orderBy,
-  limit
+  limit,
+  setDoc,
+  addDoc,
+  where,
+  serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+
 
 // Check authentication and authorization
 onAuthStateChanged(auth, async (user) => {
@@ -118,8 +125,12 @@ async function loadOverviewData() {
     const uniqueClients = new Set(bookings.map(b => b.email));
     document.getElementById('total-clients').textContent = uniqueClients.size;
 
-    // Load drivers count
-    const driversSnapshot = await getDocs(collection(db, 'drivers'));
+    /// Load drivers count
+    const driversQuery = query(
+      collection(db, 'users'),
+      where('role', '==', 'driver')
+    );
+    const driversSnapshot = await getDocs(driversQuery);
     document.getElementById('total-drivers').textContent = driversSnapshot.size;
 
     // Load tasks count
@@ -286,7 +297,13 @@ async function loadClients() {
 // Load drivers (placeholder - you'll add drivers manually)
 async function loadDrivers() {
   try {
-    const driversSnapshot = await getDocs(collection(db, 'drivers'));
+    // Query users collection where role = 'driver'
+    const driversQuery = query(
+      collection(db, 'users'),
+      where('role', '==', 'driver')
+    );
+
+    const driversSnapshot = await getDocs(driversQuery);
     const drivers = driversSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -327,7 +344,7 @@ async function loadDrivers() {
   }
 }
 
-// Load tasks (placeholder)
+// Load tasks
 async function loadTasks() {
   try {
     const tasksSnapshot = await getDocs(collection(db, 'tasks'));
@@ -352,10 +369,42 @@ async function loadTasks() {
       return;
     }
 
-    // Display tasks (you'll implement this based on your task structure)
+    // Get all drivers to show names instead of IDs
+    const driversQuery = query(
+      collection(db, 'users'),
+      where('role', '==', 'driver')
+    );
+    const driversSnapshot = await getDocs(driversQuery);
+    const driversMap = {};
+    driversSnapshot.docs.forEach(doc => {
+      driversMap[doc.id] = doc.data().name;
+    });
+
+    // Display tasks
+    tbody.innerHTML = tasks.map(task => `
+      <tr>
+        <td><strong>${task.title}</strong></td>
+        <td>${driversMap[task.driverId] || 'Unknown Driver'}</td>
+        <td>
+          ${task.clientName || 'N/A'}<br>
+          <small style="color: #718096;">${task.pickupLocation} → ${task.destination}</small>
+        </td>
+        <td>${formatDate(task.date)} ${task.time}</td>
+        <td><span class="status-badge status-${task.status}">${capitalizeFirst(task.status)}</span></td>
+        <td>
+          <button class="action-btn" onclick="viewTask('${task.id}')" title="View">
+            <i class="ri-eye-line"></i>
+          </button>
+          <button class="action-btn" onclick="editTask('${task.id}')" title="Edit">
+            <i class="ri-edit-line"></i>
+          </button>
+        </td>
+      </tr>
+    `).join('');
 
   } catch (error) {
     console.error('Error loading tasks:', error);
+    showEmptyState('tasks-table', 'Error loading tasks');
   }
 }
 
@@ -416,14 +465,353 @@ document.getElementById('add-booking-btn')?.addEventListener('click', () => {
   alert('Add booking form coming soon!');
 });
 
-document.getElementById('add-driver-btn')?.addEventListener('click', () => {
-  alert('Add driver form coming soon!');
-});
+// document.getElementById('add-driver-btn')?.addEventListener('click', () => {
+//   alert('Add driver form coming soon!');
+// });
 
-document.getElementById('add-task-btn')?.addEventListener('click', () => {
-  alert('Create task form coming soon!');
-});
+// document.getElementById('add-task-btn')?.addEventListener('click', () => {
+//   alert('Create task form coming soon!');
+// });
 
 document.getElementById('add-payment-btn')?.addEventListener('click', () => {
   alert('Record payment form coming soon!');
 });
+
+
+
+
+// ==================== MODAL FUNCTIONS ====================
+
+// Open modal
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// Close modal
+window.closeModal = function (modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+
+    // Reset form
+    const form = modal.querySelector('form');
+    if (form) {
+      form.reset();
+    }
+
+    // Clear error messages
+    const errorDiv = modal.querySelector('.form-error');
+    if (errorDiv) {
+      errorDiv.classList.remove('show');
+      errorDiv.textContent = '';
+    }
+  }
+}
+
+// Show form error
+function showFormError(modalId, message) {
+  const errorDiv = document.querySelector(`#${modalId} .form-error`);
+  if (errorDiv) {
+    errorDiv.textContent = message;
+    errorDiv.classList.add('show');
+
+    // Scroll to error
+    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+// ==================== ADD DRIVER FUNCTIONALITY ====================
+
+// Update the button handler you added earlier
+document.getElementById('add-driver-btn')?.addEventListener('click', () => {
+  openModal('add-driver-modal');
+  // Set minimum date to today
+  document.getElementById('task-date').setAttribute('min', new Date().toISOString().split('T')[0]);
+});
+
+// Handle Add Driver Form Submission
+document.getElementById('add-driver-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submit-driver-btn');
+  const originalHTML = submitBtn.innerHTML;
+
+  try {
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Creating...';
+
+    // Get form data
+    const formData = new FormData(e.target);
+    const driverData = {
+      name: formData.get('name').trim(),
+      email: formData.get('email').trim(),
+      password: formData.get('password'),
+      phone: formData.get('phone').trim(),
+      license: formData.get('license')?.trim() || '',
+      vehicle: formData.get('vehicle')?.trim() || '',
+      notes: formData.get('notes')?.trim() || ''
+    };
+
+    // Validate
+    if (!driverData.name || !driverData.email || !driverData.password || !driverData.phone) {
+      throw new Error('Please fill in all required fields');
+    }
+
+    if (driverData.password.length < 6) {
+      throw new Error('Password must be at least 6 characters');
+    }
+
+    // Create Firebase Authentication user
+    // NOTE: This will temporarily log you out as admin!
+    // We need a workaround for this
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      driverData.email,
+      driverData.password
+    );
+
+    const driverId = userCredential.user.uid;
+
+    // Create driver profile in Firestore
+    await setDoc(doc(db, 'users', driverId), {
+      role: 'driver',
+      name: driverData.name,
+      email: driverData.email,
+      phone: driverData.phone,
+      license: driverData.license,
+      vehicle: driverData.vehicle,
+      notes: driverData.notes,
+      status: 'active',
+      createdAt: serverTimestamp()
+    });
+
+    // Create driver document in drivers collection (for easier querying)
+    await setDoc(doc(db, 'drivers', driverId), {
+      name: driverData.name,
+      email: driverData.email,
+      phone: driverData.phone,
+      license: driverData.license,
+      vehicle: driverData.vehicle,
+      notes: driverData.notes,
+      status: 'active',
+      createdAt: serverTimestamp()
+    });
+
+    // Success!
+    showToast('Driver created successfully!', true);
+    closeModal('add-driver-modal');
+
+    // Reload drivers list
+    await loadDrivers();
+
+    // WARNING: User might be logged out, need to log back in
+    alert('Driver created! You may need to log back in as admin.');
+
+  } catch (error) {
+    console.error('Error creating driver:', error);
+
+    let errorMessage = 'Failed to create driver. ';
+
+    if (error.code === 'auth/email-already-in-use') {
+      errorMessage += 'This email is already registered.';
+    } else if (error.code === 'auth/invalid-email') {
+      errorMessage += 'Invalid email address.';
+    } else if (error.code === 'auth/weak-password') {
+      errorMessage += 'Password is too weak.';
+    } else {
+      errorMessage += error.message;
+    }
+
+    showFormError('add-driver-modal', errorMessage);
+
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+  }
+});
+
+// ==================== CREATE TASK FUNCTIONALITY ====================
+
+// Update the button handler
+document.getElementById('add-task-btn')?.addEventListener('click', async () => {
+  openModal('create-task-modal');
+
+  // Set minimum date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('task-date').setAttribute('min', today);
+
+  // Load drivers into dropdown
+  await loadDriversDropdown();
+});
+
+// Load drivers into task form dropdown
+async function loadDriversDropdown() {
+  try {
+    // Query users collection where role = 'driver'
+    const driversQuery = query(
+      collection(db, 'users'),
+      where('role', '==', 'driver')
+    );
+
+    const driversSnapshot = await getDocs(driversQuery);
+    const drivers = driversSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    const select = document.getElementById('task-driver');
+
+    // Clear existing options except first one
+    select.innerHTML = '<option value="">Select a driver...</option>';
+
+    if (drivers.length === 0) {
+      select.innerHTML = '<option value="">No drivers available - Add a driver first</option>';
+      return;
+    }
+
+    // Add driver options
+    drivers.forEach(driver => {
+      const option = document.createElement('option');
+      option.value = driver.id;
+      option.textContent = `${driver.name} - ${driver.phone}`;
+      select.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error('Error loading drivers:', error);
+  }
+}
+
+// Handle Create Task Form Submission
+document.getElementById('create-task-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submit-task-btn');
+  const originalHTML = submitBtn.innerHTML;
+
+  try {
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Creating...';
+
+    // Get form data
+    const formData = new FormData(e.target);
+    const taskData = {
+      title: formData.get('title').trim(),
+      driverId: formData.get('driverId'),
+      date: formData.get('date'),
+      time: formData.get('time'),
+      clientName: formData.get('clientName')?.trim() || '',
+      clientPhone: formData.get('clientPhone')?.trim() || '',
+      pickupLocation: formData.get('pickupLocation').trim(),
+      destination: formData.get('destination').trim(),
+      priority: formData.get('priority'),
+      notes: formData.get('notes')?.trim() || '',
+      status: 'pending',
+      createdAt: serverTimestamp()
+    };
+
+    // Validate required fields
+    if (!taskData.title || !taskData.driverId || !taskData.date || !taskData.time ||
+      !taskData.pickupLocation || !taskData.destination) {
+      throw new Error('Please fill in all required fields');
+    }
+
+    // Create task in Firestore
+    await addDoc(collection(db, 'tasks'), taskData);
+
+    // Success!
+    showToast('Task created successfully!', true);
+    closeModal('create-task-modal');
+
+    // Reload tasks list
+    await loadTasks();
+
+  } catch (error) {
+    console.error('Error creating task:', error);
+    showFormError('create-task-modal', error.message || 'Failed to create task');
+
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+  }
+});
+
+// Toast notification helper
+function showToast(message, success = true) {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.position = 'fixed';
+  toast.style.bottom = '2rem';
+  toast.style.right = '2rem';
+  toast.style.background = success ? '#2ecc71' : '#e74c3c';
+  toast.style.color = 'white';
+  toast.style.padding = '1rem 1.5rem';
+  toast.style.borderRadius = '8px';
+  toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  toast.style.zIndex = '10000';
+  toast.style.fontWeight = '600';
+  toast.style.animation = 'slideInRight 0.3s ease-out';
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = 'slideOutRight 0.3s ease-out';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// Add CSS animation for toast
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideInRight {
+    from {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+  }
+`;
+document.head.appendChild(style);
+
+
+// Format single date
+function formatDate(dateString) {
+  if (!dateString) return 'N/A';
+  try {
+    const date = new Date(dateString);
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  } catch (error) {
+    return dateString;
+  }
+}
+
+// Task actions (placeholders)
+window.viewTask = function (id) {
+  alert(`View task: ${id}\nTask details modal coming soon!`);
+}
+
+window.editTask = function (id) {
+  alert(`Edit task: ${id}\nEdit task form coming soon!`);
+}

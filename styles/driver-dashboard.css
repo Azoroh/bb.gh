@@ -456,9 +456,13 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .stat-card:hover {
+    .stat-card:hover,
+    #tasks-container>.task-card {
         transform: none;
-        tr
+    }
+
+    .task-description {
+        border: solid 1px;
     }
 
     .task-details {
