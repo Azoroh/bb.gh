@@ -18,7 +18,9 @@ import {
   setDoc,
   addDoc,
   where,
-  serverTimestamp
+  serverTimestamp,
+  updateDoc,
+  deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 
@@ -452,8 +454,55 @@ window.editBooking = function (id) {
   alert(`Edit booking: ${id}\nThis will open a form to edit the booking.\nComing in next step!`);
 }
 
-window.viewClient = function (email) {
-  alert(`View client: ${email}\nThis will show all bookings for this client.\nComing soon!`);
+// View Client Modal Functionality
+window.viewClient = async function (email) {
+  try {
+    // Fetch all bookings for this client
+    const bookingsSnapshot = await getDocs(collection(db, 'bookings'));
+    const allBookings = bookingsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    // Filter bookings for this client
+    const clientBookings = allBookings.filter(b => b.email === email);
+
+    if (clientBookings.length === 0) {
+      alert('No bookings found for this client');
+      return;
+    }
+
+    // Get client info from first booking
+    // Assuming client details (name, phone) are consistent across their bookings
+    const firstBooking = clientBookings[0];
+
+    // Populate modal
+    document.getElementById('view-client-name').textContent =
+      `${firstBooking.firstName} ${firstBooking.lastName}`;
+    document.getElementById('view-client-email').textContent = email;
+    document.getElementById('view-client-phone').textContent =
+      `${firstBooking.phoneCountryCode || ''} ${firstBooking.phoneLocalNumber || ''}`;
+    document.getElementById('view-client-booking-count').textContent =
+      clientBookings.length;
+
+    // Populate bookings table
+    const tbody = document.getElementById('view-client-bookings-table');
+    tbody.innerHTML = clientBookings.map(booking => `
+            <tr>
+                <td>${booking.packageName || 'N/A'}</td>
+                <td>${formatDateRange(booking.startDate, booking.endDate)}</td>
+                <td>${booking.travelers}</td>
+                <td><span class="status-badge status-${booking.status}">${capitalizeFirst(booking.status)}</span></td>
+            </tr>
+        `).join('');
+
+    // Open modal
+    openModal('view-client-modal');
+
+  } catch (error) {
+    console.error('Error loading client:', error);
+    alert('Error loading client details');
+  }
 }
 
 window.editDriver = function (id) {
@@ -815,3 +864,352 @@ window.viewTask = function (id) {
 window.editTask = function (id) {
   alert(`Edit task: ${id}\nEdit task form coming soon!`);
 }
+
+
+
+
+
+// ==================== VIEW BOOKING MODAL ====================
+
+let currentBookingId = null;
+
+// Update the viewBooking function that's already in your code
+window.viewBooking = async function (id) {
+  currentBookingId = id;
+
+  try {
+    // Fetch booking data
+    const bookingDoc = await getDoc(doc(db, 'bookings', id));
+
+    if (!bookingDoc.exists()) {
+      alert('Booking not found');
+      return;
+    }
+
+    const booking = bookingDoc.data();
+
+    // Populate modal with booking data
+    document.getElementById('booking-client-name').textContent =
+      `${booking.firstName} ${booking.lastName}`;
+    document.getElementById('booking-client-email').textContent = booking.email;
+    document.getElementById('booking-client-phone').textContent =
+      `${booking.phoneCountryCode || ''} ${booking.phoneLocalNumber || booking.phone || 'N/A'}`;
+
+    document.getElementById('booking-package').textContent = booking.packageName || 'N/A';
+    document.getElementById('booking-start-date').textContent =
+      formatFullDate(booking.startDate);
+    document.getElementById('booking-end-date').textContent =
+      formatFullDate(booking.endDate);
+    document.getElementById('booking-travelers').textContent = booking.travelers;
+    document.getElementById('booking-addon').textContent = booking.addon || 'None';
+
+    document.getElementById('booking-message').textContent =
+      booking.message || 'No special requests';
+
+    // Set current status in dropdown
+    document.getElementById('booking-status-select').value = booking.status || 'pending';
+
+    // Show booking creation date
+    const createdDate = booking.createdAt?.toDate ?
+      formatFullDate(booking.createdAt.toDate().toISOString().split('T')[0]) :
+      'N/A';
+    document.getElementById('booking-created-date').textContent = createdDate;
+
+    // Clear any previous messages
+    document.getElementById('booking-update-success').classList.remove('show');
+    document.getElementById('booking-update-error').classList.remove('show');
+
+    // Open modal
+    openModal('view-booking-modal');
+
+  } catch (error) {
+    console.error('Error loading booking:', error);
+    alert('Error loading booking details. Please try again.');
+  }
+}
+
+// Handle status update
+document.getElementById('update-status-btn')?.addEventListener('click', async () => {
+  if (!currentBookingId) return;
+
+  const updateBtn = document.getElementById('update-status-btn');
+  const originalHTML = updateBtn.innerHTML;
+  const newStatus = document.getElementById('booking-status-select').value;
+
+  try {
+    updateBtn.disabled = true;
+    updateBtn.innerHTML = '<div class="spinner"></div> Updating...';
+
+    // Update status in Firestore
+    await updateDoc(doc(db, 'bookings', currentBookingId), {
+      status: newStatus,
+      updatedAt: serverTimestamp()
+    });
+
+    // Show success message
+    const successDiv = document.getElementById('booking-update-success');
+    successDiv.textContent = `✓ Status updated to "${capitalizeFirst(newStatus)}"`;
+    successDiv.classList.add('show');
+
+    // Hide after 3 seconds
+    setTimeout(() => {
+      successDiv.classList.remove('show');
+    }, 3000);
+
+    // Refresh the bookings list
+    const activeSection = document.querySelector('.content-section.active');
+    if (activeSection.id === 'bookings-section') {
+      await loadAllBookings();
+    } else if (activeSection.id === 'overview-section') {
+      await loadOverviewData();
+    }
+
+  } catch (error) {
+    console.error('Error updating status:', error);
+
+    const errorDiv = document.getElementById('booking-update-error');
+    errorDiv.textContent = '✗ Failed to update status. Please try again.';
+    errorDiv.classList.add('show');
+
+  } finally {
+    updateBtn.disabled = false;
+    updateBtn.innerHTML = originalHTML;
+  }
+});
+
+// Format single date helper function
+function formatFullDate(dateString) {
+  if (!dateString) return 'N/A';
+  try {
+    const date = new Date(dateString);
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  } catch (error) {
+    return dateString;
+  }
+}
+
+// ==================== VIEW TASK MODAL ====================
+
+let currentTaskId = null;
+
+// Update the viewTask function
+window.viewTask = async function (id) {
+  currentTaskId = id;
+
+  try {
+    // Open modal FIRST so elements exist
+    openModal('view-task-modal');
+
+    // Small delay to ensure DOM is ready
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Fetch task data
+    const taskDoc = await getDoc(doc(db, 'tasks', id));
+
+    if (!taskDoc.exists()) {
+      alert('Task not found');
+      closeModal('view-task-modal');
+      return;
+    }
+
+    const task = taskDoc.data();
+    console.log('Task data:', task);
+
+    // Fetch driver data
+    let driverData = { name: 'Unknown', email: 'N/A', phone: 'N/A' };
+    if (task.driverId) {
+      const driverDoc = await getDoc(doc(db, 'users', task.driverId));
+      if (driverDoc.exists()) {
+        driverData = driverDoc.data();
+      }
+    }
+
+    // Helper function to safely set text
+    const setText = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = value;
+        console.log(`Set ${id} to:`, value);
+      } else {
+        console.error(`Element not found: ${id}`);
+      }
+    };
+
+    // Populate modal with task data using the NEW IDs with "view-" prefix
+    setText('view-task-title', task.title || 'No title');
+    setText('view-task-date', task.date ? formatFullDate(task.date) : 'N/A');
+    setText('view-task-time', task.time || 'N/A');
+
+    // Priority with color coding
+    const priorityElement = document.getElementById('view-task-priority');
+    if (priorityElement) {
+      const priority = task.priority || 'normal';
+      priorityElement.textContent = capitalizeFirst(priority);
+      priorityElement.style.color =
+        priority === 'high' ? '#e74c3c' :
+          priority === 'low' ? '#2ecc71' : '#f59e0b';
+      priorityElement.style.fontWeight = '600';
+    }
+
+    // Driver info
+    setText('view-task-driver-name', driverData.name || 'Unknown');
+    setText('view-task-driver-email', driverData.email || 'N/A');
+    setText('view-task-driver-phone', driverData.phone || 'N/A');
+
+    // Client info
+    setText('view-task-client-name', task.clientName || 'Not provided');
+    setText('view-task-client-phone', task.clientPhone || 'Not provided');
+
+    // Location
+    setText('view-task-pickup', task.pickupLocation || 'Not specified');
+    setText('view-task-destination', task.destination || 'Not specified');
+
+    // Notes
+    setText('view-task-notes', task.notes || 'No notes provided');
+
+    // Status
+    const statusSelect = document.getElementById('task-status-select');
+    if (statusSelect) {
+      statusSelect.value = task.status || 'pending';
+    }
+
+    // Created date
+    let createdDate = 'N/A';
+    if (task.createdAt) {
+      if (task.createdAt.toDate) {
+        createdDate = formatFullDate(task.createdAt.toDate().toISOString().split('T')[0]);
+      } else if (typeof task.createdAt === 'string') {
+        createdDate = formatFullDate(task.createdAt.split('T')[0]);
+      }
+    }
+    setText('task-created-date', createdDate);
+
+    // Completed date
+    const completedContainer = document.getElementById('task-completed-container');
+    if (completedContainer) {
+      if (task.status === 'completed' && task.completedAt) {
+        const completedDate = formatFullDate(task.completedAt.split('T')[0]);
+        setText('task-completed-date', completedDate);
+        completedContainer.style.display = 'flex';
+      } else {
+        completedContainer.style.display = 'none';
+      }
+    }
+
+    // Clear any previous messages
+    document.getElementById('task-update-success')?.classList.remove('show');
+    document.getElementById('task-update-error')?.classList.remove('show');
+
+  } catch (error) {
+    console.error('Error loading task:', error);
+    alert('Error loading task details. Please try again.');
+    closeModal('view-task-modal');
+  }
+};
+
+// Handle task status update
+document.getElementById('update-task-status-btn')?.addEventListener('click', async () => {
+  if (!currentTaskId) return;
+
+  const updateBtn = document.getElementById('update-task-status-btn');
+  const originalHTML = updateBtn.innerHTML;
+  const newStatus = document.getElementById('task-status-select').value;
+
+  try {
+    updateBtn.disabled = true;
+    updateBtn.innerHTML = '<div class="spinner"></div> Updating...';
+
+    const updateData = {
+      status: newStatus,
+      updatedAt: serverTimestamp()
+    };
+
+    // If marking as completed, add completedAt timestamp
+    if (newStatus === 'completed') {
+      updateData.completedAt = new Date().toISOString();
+    }
+
+    // Update status in Firestore
+    await updateDoc(doc(db, 'tasks', currentTaskId), updateData);
+
+    // Show success message
+    const successDiv = document.getElementById('task-update-success');
+    if (successDiv) {
+      successDiv.textContent = `✓ Task status updated to "${capitalizeFirst(newStatus)}"`;
+      successDiv.classList.add('show');
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        successDiv.classList.remove('show');
+      }, 3000);
+    }
+
+    // Refresh the tasks list
+    await loadTasks();
+
+    // Update completed date display if applicable
+    if (newStatus === 'completed') {
+      const completedContainer = document.getElementById('task-completed-container');
+      const completedDate = formatFullDate(new Date().toISOString().split('T')[0]);
+      document.getElementById('task-completed-date').textContent = completedDate;
+      if (completedContainer) {
+        completedContainer.style.display = 'flex';
+      }
+    }
+
+  } catch (error) {
+    console.error('Error updating task status:', error);
+
+    const errorDiv = document.getElementById('task-update-error');
+    if (errorDiv) {
+      errorDiv.textContent = '✗ Failed to update status. Please try again.';
+      errorDiv.classList.add('show');
+    }
+
+  } finally {
+    updateBtn.disabled = false;
+    updateBtn.innerHTML = originalHTML;
+  }
+});
+
+// Handle task deletion
+document.getElementById('delete-task-btn')?.addEventListener('click', async () => {
+  if (!currentTaskId) return;
+
+  if (!confirm('Are you sure you want to delete this task? This action cannot be undone.')) {
+    return;
+  }
+
+  const deleteBtn = document.getElementById('delete-task-btn');
+  const originalHTML = deleteBtn.innerHTML;
+
+  try {
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<div class="spinner"></div> Deleting...';
+
+    // Delete task from Firestore
+    await deleteDoc(doc(db, 'tasks', currentTaskId));
+
+    showToast('Task deleted successfully', true);
+    closeModal('view-task-modal');
+
+    // Refresh the tasks list
+    await loadTasks();
+
+    // Update stats
+    await loadOverviewData();
+
+  } catch (error) {
+    console.error('Error deleting task:', error);
+
+    const errorDiv = document.getElementById('task-update-error');
+    if (errorDiv) {
+      errorDiv.textContent = '✗ Failed to delete task. Please try again.';
+      errorDiv.classList.add('show');
+    }
+
+    deleteBtn.disabled = false;
+    deleteBtn.innerHTML = originalHTML;
+  }
+});

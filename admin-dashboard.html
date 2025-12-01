@@ -472,6 +472,296 @@
     </div>
 
 
+    <!-- View Booking Modal -->
+    <div class="modal-overlay" id="view-booking-modal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Booking Details</h2>
+                <button class="modal-close" onclick="closeModal('view-booking-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-success" id="booking-update-success"></div>
+                <div class="form-error" id="booking-update-error"></div>
+
+                <!-- Booking Info Grid -->
+                <div class="info-grid">
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-user-line"></i>
+                            Client Information
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value" id="booking-client-name">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" id="booking-client-email">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone:</span>
+                            <span class="info-value" id="booking-client-phone">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-map-pin-line"></i>
+                            Trip Details
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Package:</span>
+                            <span class="info-value" id="booking-package">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Start Date:</span>
+                            <span class="info-value" id="booking-start-date">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">End Date:</span>
+                            <span class="info-value" id="booking-end-date">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Travelers:</span>
+                            <span class="info-value" id="booking-travelers">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Add-on:</span>
+                            <span class="info-value" id="booking-addon">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section full-width">
+                        <h3 class="info-section-title">
+                            <i class="ri-message-line"></i>
+                            Special Requests
+                        </h3>
+                        <div class="info-message" id="booking-message">
+                            No special requests
+                        </div>
+                    </div>
+
+                    <div class="info-section full-width">
+                        <h3 class="info-section-title">
+                            <i class="ri-settings-line"></i>
+                            Booking Management
+                        </h3>
+                        <div class="status-update-section">
+                            <label for="booking-status-select">Status:</label>
+                            <select id="booking-status-select" class="status-select">
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <button class="btn btn-submit" id="update-status-btn">
+                                <i class="ri-save-line"></i>
+                                Update Status
+                            </button>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Booking Date:</span>
+                            <span class="info-value" id="booking-created-date">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('view-booking-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- View Task Modal -->
+    <div class="modal-overlay" id="view-task-modal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Task Details</h2>
+                <button class="modal-close" onclick="closeModal('view-task-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-success" id="task-update-success"></div>
+                <div class="form-error" id="task-update-error"></div>
+
+                <!-- Task Info Grid -->
+                <div class="info-grid">
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-task-line"></i>
+                            Task Information
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Title:</span>
+                            <span class="info-value" id="view-task-title">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Date:</span>
+                            <span class="info-value" id="view-task-date">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Time:</span>
+                            <span class="info-value" id="view-task-time">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Priority:</span>
+                            <span class="info-value" id="view-task-priority">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-car-line"></i>
+                            Driver Information
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value" id="view-task-driver-name">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" id="view-task-driver-email">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone:</span>
+                            <span class="info-value" id="view-task-driver-phone">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-user-line"></i>
+                            Client Information
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value" id="view-task-client-name">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone:</span>
+                            <span class="info-value" id="view-task-client-phone">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-map-pin-line"></i>
+                            Location Details
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Pickup:</span>
+                            <span class="info-value" id="view-task-pickup">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Destination:</span>
+                            <span class="info-value" id="view-task-destination">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section full-width">
+                        <h3 class="info-section-title">
+                            <i class="ri-message-line"></i>
+                            Notes / Instructions
+                        </h3>
+                        <div class="info-message" id="view-task-notes">
+                            No notes provided
+                        </div>
+                    </div>
+
+                    <div class="info-section full-width">
+                        <h3 class="info-section-title">
+                            <i class="ri-settings-line"></i>
+                            Task Management
+                        </h3>
+                        <div class="status-update-section">
+                            <label for="task-status-select">Status:</label>
+                            <select id="task-status-select" class="status-select">
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <button class="btn btn-submit" id="update-task-status-btn">
+                                <i class="ri-save-line"></i>
+                                Update Status
+                            </button>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Created:</span>
+                            <span class="info-value" id="task-created-date">-</span>
+                        </div>
+                        <div class="info-item" id="task-completed-container" style="display: none;">
+                            <span class="info-label">Completed:</span>
+                            <span class="info-value" id="task-completed-date">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('view-task-modal')">Close</button>
+                <button type="button" class="btn btn-submit" id="delete-task-btn" style="background: #e74c3c;">
+                    <i class="ri-delete-bin-line"></i>
+                    Delete Task
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Client Modal -->
+    <div class="modal-overlay" id="view-client-modal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Client Details</h2>
+                <button class="modal-close" onclick="closeModal('view-client-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h3>Client Information</h3>
+                    <div class="info-item">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value" id="view-client-name">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value" id="view-client-email">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value" id="view-client-phone">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total Bookings:</span>
+                        <span class="info-value" id="view-client-booking-count">-</span>
+                    </div>
+                </div>
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Booking History</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Package</th>
+                                <th>Dates</th>
+                                <th>Travelers</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="view-client-bookings-table">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('view-client-modal')">Close</button>
+            </div>
+        </div>
+    </div>
 
 
 
