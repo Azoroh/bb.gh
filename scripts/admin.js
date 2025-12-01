@@ -1213,3 +1213,307 @@ document.getElementById('delete-task-btn')?.addEventListener('click', async () =
     deleteBtn.innerHTML = originalHTML;
   }
 });
+
+// ==================== EDIT BOOKING FUNCTIONALITY ====================
+
+let currentEditingBookingId = null;
+
+// Update the editBooking function
+window.editBooking = async function (id) {
+  currentEditingBookingId = id;
+
+  try {
+    // Fetch booking data
+    const bookingDoc = await getDoc(doc(db, 'bookings', id));
+
+    if (!bookingDoc.exists()) {
+      alert('Booking not found');
+      return;
+    }
+
+    const booking = bookingDoc.data();
+
+    // Pre-fill form fields
+    document.getElementById('edit-booking-firstname').value = booking.firstName || '';
+    document.getElementById('edit-booking-lastname').value = booking.lastName || '';
+    document.getElementById('edit-booking-email').value = booking.email || '';
+    document.getElementById('edit-booking-phone').value = booking.phone || '';
+    document.getElementById('edit-booking-package').value = booking.packageName || '';
+    document.getElementById('edit-booking-startdate').value = booking.startDate || '';
+    document.getElementById('edit-booking-enddate').value = booking.endDate || '';
+    document.getElementById('edit-booking-travelers').value = booking.travelers || 1;
+    document.getElementById('edit-booking-addon').value = booking.addon || '';
+    document.getElementById('edit-booking-status').value = booking.status || 'pending';
+    document.getElementById('edit-booking-message').value = booking.message || '';
+
+    // Clear any previous messages
+    document.getElementById('edit-booking-error').classList.remove('show');
+    document.getElementById('edit-booking-success').classList.remove('show');
+
+    // Open modal
+    openModal('edit-booking-modal');
+
+  } catch (error) {
+    console.error('Error loading booking for edit:', error);
+    alert('Error loading booking. Please try again.');
+  }
+}
+
+// Handle Edit Booking Form Submission
+document.getElementById('edit-booking-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  if (!currentEditingBookingId) {
+    alert('No booking selected for editing');
+    return;
+  }
+
+  const submitBtn = document.getElementById('update-booking-btn');
+  const originalHTML = submitBtn.innerHTML;
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Updating...';
+
+    // Get form data
+    const formData = new FormData(e.target);
+    const updatedData = {
+      firstName: formData.get('firstName').trim(),
+      lastName: formData.get('lastName').trim(),
+      email: formData.get('email').trim(),
+      phone: formData.get('phone').trim(),
+      packageName: formData.get('packageName').trim(),
+      startDate: formData.get('startDate'),
+      endDate: formData.get('endDate'),
+      travelers: parseInt(formData.get('travelers')),
+      addon: formData.get('addon')?.trim() || '',
+      status: formData.get('status'),
+      message: formData.get('message')?.trim() || '',
+      updatedAt: serverTimestamp()
+    };
+
+    // Validate
+    if (!updatedData.firstName || !updatedData.lastName || !updatedData.email ||
+      !updatedData.phone || !updatedData.packageName || !updatedData.startDate ||
+      !updatedData.endDate || !updatedData.travelers) {
+      throw new Error('Please fill in all required fields');
+    }
+
+    // Validate dates
+    if (new Date(updatedData.endDate) < new Date(updatedData.startDate)) {
+      throw new Error('End date must be after start date');
+    }
+
+    // Update booking in Firestore
+    await updateDoc(doc(db, 'bookings', currentEditingBookingId), updatedData);
+
+    // Show success message
+    const successDiv = document.getElementById('edit-booking-success');
+    successDiv.textContent = '✓ Booking updated successfully!';
+    successDiv.classList.add('show');
+
+    // Hide success message after 2 seconds and close modal
+    setTimeout(() => {
+      successDiv.classList.remove('show');
+      closeModal('edit-booking-modal');
+
+      // Refresh the bookings list
+      const activeSection = document.querySelector('.content-section.active');
+      if (activeSection.id === 'bookings-section') {
+        loadAllBookings();
+      } else if (activeSection.id === 'overview-section') {
+        loadOverviewData();
+      }
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error updating booking:', error);
+
+    const errorDiv = document.getElementById('edit-booking-error');
+    errorDiv.textContent = '✗ ' + (error.message || 'Failed to update booking. Please try again.');
+    errorDiv.classList.add('show');
+
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+  }
+});
+
+// Date validation for edit form
+document.getElementById('edit-booking-startdate')?.addEventListener('change', (e) => {
+  const endDateInput = document.getElementById('edit-booking-enddate');
+  endDateInput.setAttribute('min', e.target.value);
+  if (endDateInput.value && endDateInput.value < e.target.value) {
+    endDateInput.value = '';
+  }
+});
+
+
+// ==================== EDIT TASK FUNCTIONALITY ====================
+
+let currentEditingTaskId = null;
+
+// Update the editTask function
+window.editTask = async function (id) {
+  currentEditingTaskId = id;
+
+  try {
+    // Fetch task data
+    const taskDoc = await getDoc(doc(db, 'tasks', id));
+
+    if (!taskDoc.exists()) {
+      alert('Task not found');
+      return;
+    }
+
+    const task = taskDoc.data();
+
+    // Load drivers into dropdown first
+    await loadEditTaskDriversDropdown();
+
+    // Pre-fill form fields
+    document.getElementById('edit-task-title').value = task.title || '';
+    document.getElementById('edit-task-driver').value = task.driverId || '';
+    document.getElementById('edit-task-date').value = task.date || '';
+    document.getElementById('edit-task-time').value = task.time || '';
+    document.getElementById('edit-task-client-name').value = task.clientName || '';
+    document.getElementById('edit-task-client-phone').value = task.clientPhone || '';
+    document.getElementById('edit-task-pickup').value = task.pickupLocation || '';
+    document.getElementById('edit-task-destination').value = task.destination || '';
+    document.getElementById('edit-task-priority').value = task.priority || 'normal';
+    document.getElementById('edit-task-status').value = task.status || 'pending';
+    document.getElementById('edit-task-notes').value = task.notes || '';
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('edit-task-date').setAttribute('min', today);
+
+    // Clear any previous messages
+    document.getElementById('edit-task-error').classList.remove('show');
+    document.getElementById('edit-task-success').classList.remove('show');
+
+    // Open modal
+    openModal('edit-task-modal');
+
+  } catch (error) {
+    console.error('Error loading task for edit:', error);
+    alert('Error loading task. Please try again.');
+  }
+}
+
+// Load drivers into edit task form dropdown
+async function loadEditTaskDriversDropdown() {
+  try {
+    const driversQuery = query(
+      collection(db, 'users'),
+      where('role', '==', 'driver')
+    );
+
+    const driversSnapshot = await getDocs(driversQuery);
+    const drivers = driversSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    const select = document.getElementById('edit-task-driver');
+
+    // Clear existing options except first one
+    select.innerHTML = '<option value="">Select a driver...</option>';
+
+    if (drivers.length === 0) {
+      select.innerHTML = '<option value="">No drivers available</option>';
+      return;
+    }
+
+    // Add driver options
+    drivers.forEach(driver => {
+      const option = document.createElement('option');
+      option.value = driver.id;
+      option.textContent = `${driver.name} - ${driver.phone}`;
+      select.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error('Error loading drivers:', error);
+  }
+}
+
+// Handle Edit Task Form Submission
+document.getElementById('edit-task-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  if (!currentEditingTaskId) {
+    alert('No task selected for editing');
+    return;
+  }
+
+  const submitBtn = document.getElementById('update-task-btn');
+  const originalHTML = submitBtn.innerHTML;
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Updating...';
+
+    // Get form data
+    const formData = new FormData(e.target);
+    const updatedData = {
+      title: formData.get('title').trim(),
+      driverId: formData.get('driverId'),
+      date: formData.get('date'),
+      time: formData.get('time'),
+      clientName: formData.get('clientName')?.trim() || '',
+      clientPhone: formData.get('clientPhone')?.trim() || '',
+      pickupLocation: formData.get('pickupLocation').trim(),
+      destination: formData.get('destination').trim(),
+      priority: formData.get('priority'),
+      status: formData.get('status'),
+      notes: formData.get('notes')?.trim() || '',
+      updatedAt: serverTimestamp()
+    };
+
+    // Validate required fields
+    if (!updatedData.title || !updatedData.driverId || !updatedData.date ||
+      !updatedData.time || !updatedData.pickupLocation || !updatedData.destination) {
+      throw new Error('Please fill in all required fields');
+    }
+
+    // If status changed to completed, add completedAt timestamp
+    if (updatedData.status === 'completed') {
+      const currentTask = await getDoc(doc(db, 'tasks', currentEditingTaskId));
+      if (currentTask.exists() && currentTask.data().status !== 'completed') {
+        updatedData.completedAt = new Date().toISOString();
+      }
+    }
+
+    // Update task in Firestore
+    await updateDoc(doc(db, 'tasks', currentEditingTaskId), updatedData);
+
+    // Show success message
+    const successDiv = document.getElementById('edit-task-success');
+    successDiv.textContent = '✓ Task updated successfully!';
+    successDiv.classList.add('show');
+
+    // Hide success message after 2 seconds and close modal
+    setTimeout(() => {
+      successDiv.classList.remove('show');
+      closeModal('edit-task-modal');
+
+      // Refresh the tasks list
+      loadTasks();
+
+      // Update stats
+      loadOverviewData();
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error updating task:', error);
+
+    const errorDiv = document.getElementById('edit-task-error');
+    errorDiv.textContent = '✗ ' + (error.message || 'Failed to update task. Please try again.');
+    errorDiv.classList.add('show');
+
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+  }
+});

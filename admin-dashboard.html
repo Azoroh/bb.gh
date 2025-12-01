@@ -763,6 +763,189 @@
         </div>
     </div>
 
+    <!-- Edit Booking Modal -->
+    <div class="modal-overlay" id="edit-booking-modal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Edit Booking</h2>
+                <button class="modal-close" onclick="closeModal('edit-booking-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-error" id="edit-booking-error"></div>
+                <div class="form-success" id="edit-booking-success"></div>
+
+                <form id="edit-booking-form" class="form-grid">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-booking-firstname">First Name <span class="required">*</span></label>
+                            <input type="text" id="edit-booking-firstname" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-booking-lastname">Last Name <span class="required">*</span></label>
+                            <input type="text" id="edit-booking-lastname" name="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-booking-email">Email <span class="required">*</span></label>
+                        <input type="email" id="edit-booking-email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-booking-phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="edit-booking-phone" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-booking-package">Package <span class="required">*</span></label>
+                        <input type="text" id="edit-booking-package" name="packageName" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-booking-startdate">Start Date <span class="required">*</span></label>
+                            <input type="date" id="edit-booking-startdate" name="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-booking-enddate">End Date <span class="required">*</span></label>
+                            <input type="date" id="edit-booking-enddate" name="endDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-booking-travelers">Number of Travelers <span class="required">*</span></label>
+                        <input type="number" id="edit-booking-travelers" name="travelers" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-booking-addon">Add-on</label>
+                        <input type="text" id="edit-booking-addon" name="addon" placeholder="Optional">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-booking-status">Status <span class="required">*</span></label>
+                        <select id="edit-booking-status" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-booking-message">Special Requests</label>
+                        <textarea id="edit-booking-message" name="message" rows="3" placeholder="Optional"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('edit-booking-modal')">Cancel</button>
+                <button type="submit" form="edit-booking-form" class="btn-submit" id="update-booking-btn">
+                    <i class="ri-save-line"></i>
+                    Update Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal-overlay" id="edit-task-modal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="modal-close" onclick="closeModal('edit-task-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-error" id="edit-task-error"></div>
+                <div class="form-success" id="edit-task-success"></div>
+
+                <form id="edit-task-form" class="form-grid">
+                    <div class="form-group">
+                        <label for="edit-task-title">Task Title <span class="required">*</span></label>
+                        <input type="text" id="edit-task-title" name="title" required
+                            placeholder="e.g., Airport Pickup">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-driver">Assign to Driver <span class="required">*</span></label>
+                        <select id="edit-task-driver" name="driverId" required>
+                            <option value="">Select a driver...</option>
+                            <!-- Will be populated dynamically -->
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-task-date">Date <span class="required">*</span></label>
+                            <input type="date" id="edit-task-date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-task-time">Time <span class="required">*</span></label>
+                            <input type="time" id="edit-task-time" name="time" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-client-name">Client Name</label>
+                        <input type="text" id="edit-task-client-name" name="clientName" placeholder="Optional">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-client-phone">Client Phone</label>
+                        <input type="tel" id="edit-task-client-phone" name="clientPhone" placeholder="+233123456789">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-pickup">Pickup Location <span class="required">*</span></label>
+                        <input type="text" id="edit-task-pickup" name="pickupLocation" required
+                            placeholder="e.g., Kotoka Airport">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-destination">Destination <span class="required">*</span></label>
+                        <input type="text" id="edit-task-destination" name="destination" required
+                            placeholder="e.g., Labadi Beach Hotel">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-priority">Priority <span class="required">*</span></label>
+                        <select id="edit-task-priority" name="priority" required>
+                            <option value="normal">Normal</option>
+                            <option value="high">High</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-status">Status <span class="required">*</span></label>
+                        <select id="edit-task-status" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-task-notes">Notes / Instructions</label>
+                        <textarea id="edit-task-notes" name="notes"
+                            placeholder="Special instructions for the driver..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('edit-task-modal')">Cancel</button>
+                <button type="submit" form="edit-task-form" class="btn-submit" id="update-task-btn">
+                    <i class="ri-save-line"></i>
+                    Update Task
+                </button>
+            </div>
+        </div>
+    </div>
 
 
     <script type="module" src="./scripts/admin.js"></script>
