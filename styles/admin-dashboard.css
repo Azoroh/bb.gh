@@ -434,7 +434,7 @@ tbody tr:hover {
 @media (max-width: 768px) {
     .table-container {
         position: relative;
-        margin: 0 -1rem;
+        /* margin: 0 -1rem; */
         /* Extend to edges on mobile */
         border-radius: 0;
     }
