@@ -296,7 +296,7 @@ async function loadClients() {
   }
 }
 
-// Load drivers (placeholder - you'll add drivers manually)
+// Updated loadDrivers function with Edit and Delete buttons
 async function loadDrivers() {
   try {
     // Query users collection where role = 'driver'
@@ -329,13 +329,22 @@ async function loadDrivers() {
 
     tbody.innerHTML = drivers.map(driver => `
       <tr>
-        <td><strong>${driver.name}</strong></td>
+        <td>
+          <strong>${driver.name}</strong>
+          ${driver.vehicle ? `<br><small style="color: #718096;">${driver.vehicle}</small>` : ''}
+        </td>
         <td>${driver.email}</td>
         <td>${driver.phone || 'N/A'}</td>
-        <td><span class="status-badge status-${driver.status}">${capitalizeFirst(driver.status)}</span></td>
+        <td><span class="status-badge status-${driver.status || 'active'}">${capitalizeFirst(driver.status || 'active')}</span></td>
         <td>
-          <button class="action-btn" onclick="editDriver('${driver.id}')" title="Edit">
+          <button class="action-btn" onclick="editDriver('${driver.id}')" title="Edit Driver">
             <i class="ri-edit-line"></i>
+          </button>
+          <button class="action-btn" onclick="viewDriverDetails('${driver.id}')" title="View Details" style="color: #2ecc71;">
+            <i class="ri-eye-line"></i>
+          </button>
+          <button class="action-btn" onclick="deleteDriver('${driver.id}')" title="Delete Driver" style="color: #e74c3c;">
+            <i class="ri-delete-bin-line"></i>
           </button>
         </td>
       </tr>
@@ -345,6 +354,149 @@ async function loadDrivers() {
     console.error('Error loading drivers:', error);
   }
 }
+
+
+// ==================== VIEW DRIVER DETAILS FUNCTIONALITY ====================
+
+let currentViewDriverId = null;
+
+// View Driver Details Function (replaces the alert version)
+window.viewDriverDetails = async function (id) {
+  currentViewDriverId = id;
+
+  try {
+    // Open modal FIRST so elements exist
+    openModal('view-driver-modal');
+
+    // Small delay to ensure DOM is ready
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Fetch driver data
+    const driverDoc = await getDoc(doc(db, 'users', id));
+
+    if (!driverDoc.exists()) {
+      alert('Driver not found');
+      closeModal('view-driver-modal');
+      return;
+    }
+
+    const driver = driverDoc.data();
+
+    // Fetch driver's tasks
+    const tasksQuery = query(
+      collection(db, 'tasks'),
+      where('driverId', '==', id),
+      orderBy('date', 'desc')
+    );
+    const tasksSnapshot = await getDocs(tasksQuery);
+    const tasks = tasksSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    // Calculate statistics
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(t => t.status === 'completed').length;
+    const pendingTasks = tasks.filter(t => t.status === 'pending').length;
+    const inProgressTasks = tasks.filter(t => t.status === 'in-progress').length;
+    const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+    // Helper function to safely set text
+    const setText = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = value;
+      }
+    };
+
+    // Populate driver info
+    setText('view-driver-name', driver.name || 'N/A');
+    setText('view-driver-email', driver.email || 'N/A');
+    setText('view-driver-phone', driver.phone || 'N/A');
+
+    // Status with color coding
+    const statusElement = document.getElementById('view-driver-status');
+    if (statusElement) {
+      const status = driver.status || 'active';
+      statusElement.innerHTML = `<span class="status-badge status-${status}">${capitalizeFirst(status)}</span>`;
+    }
+
+    setText('view-driver-license', driver.license || 'Not provided');
+    setText('view-driver-vehicle', driver.vehicle || 'Not provided');
+
+    // Created date
+    let createdDate = 'N/A';
+    if (driver.createdAt) {
+      if (driver.createdAt.toDate) {
+        createdDate = formatFullDate(driver.createdAt.toDate().toISOString().split('T')[0]);
+      } else if (typeof driver.createdAt === 'string') {
+        createdDate = formatFullDate(driver.createdAt.split('T')[0]);
+      }
+    }
+    setText('view-driver-created', createdDate);
+
+    // Task statistics
+    setText('view-driver-total-tasks', totalTasks);
+    setText('view-driver-completed-tasks', completedTasks);
+    setText('view-driver-pending-tasks', pendingTasks);
+    setText('view-driver-inprogress-tasks', inProgressTasks);
+    setText('view-driver-completion-rate', `${completionRate}%`);
+
+    // Last task
+    if (tasks.length > 0) {
+      const lastTask = tasks[0];
+      setText('view-driver-last-task', `${lastTask.title} (${formatDate(lastTask.date)})`);
+    } else {
+      setText('view-driver-last-task', 'No tasks yet');
+    }
+
+    // Notes
+    setText('view-driver-notes', driver.notes || 'No notes available');
+
+    // Populate recent tasks table (last 5)
+    const tasksTable = document.getElementById('view-driver-tasks-table');
+    if (tasks.length === 0) {
+      tasksTable.innerHTML = `
+        <tr>
+          <td colspan="4" style="text-align: center; color: #a0aec0; padding: 2rem;">
+            <i class="ri-task-line" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.3;"></i>
+            No tasks assigned yet
+          </td>
+        </tr>
+      `;
+    } else {
+      tasksTable.innerHTML = tasks.slice(0, 5).map(task => `
+        <tr style="cursor: pointer;" onclick="viewTask('${task.id}')">
+          <td>
+            <strong>${task.title || 'Untitled'}</strong><br>
+            <small style="color: #718096;">${task.pickupLocation || 'N/A'} → ${task.destination || 'N/A'}</small>
+          </td>
+          <td>${formatFullDate(task.date)}<br><small style="color: #718096;">${task.time || 'N/A'}</small></td>
+          <td>${task.clientName || 'N/A'}</td>
+          <td><span class="status-badge status-${task.status}">${capitalizeFirst(task.status || 'pending')}</span></td>
+        </tr>
+      `).join('');
+    }
+
+  } catch (error) {
+    console.error('Error loading driver details:', error);
+    alert('Error loading driver details. Please try again.');
+    closeModal('view-driver-modal');
+  }
+};
+
+// Handle "Edit Driver" button from view modal
+document.getElementById('edit-from-view-driver-btn')?.addEventListener('click', () => {
+  if (currentViewDriverId) {
+    closeModal('view-driver-modal');
+    // Small delay to allow first modal to close
+    setTimeout(() => {
+      editDriver(currentViewDriverId);
+    }, 300);
+  }
+});
+
+
 
 // Load tasks
 async function loadTasks() {
@@ -416,34 +568,20 @@ async function loadPayments() {
   console.log('Loading payments...');
 }
 
-// Helper functions
-function formatDateRange(start, end) {
-  if (!start || !end) return 'N/A';
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const options = { month: 'short', day: 'numeric' };
-  return `${startDate.toLocaleDateString('en-US', options)} - ${endDate.toLocaleDateString('en-US', options)}`;
-}
-
-function capitalizeFirst(str) {
-  if (!str) return '';
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function showEmptyState(tableId, message) {
-  const tbody = document.getElementById(tableId);
-  const colspan = tbody.closest('table').querySelectorAll('th').length;
-  tbody.innerHTML = `
-    <tr>
-      <td colspan="${colspan}">
-        <div class="empty-state">
-          <i class="ri-inbox-line"></i>
-          <p>${message}</p>
-        </div>
-      </td>
-    </tr>
-  `;
-}
+// function showEmptyState(tableId, message) {
+//   const tbody = document.getElementById(tableId);
+//   const colspan = tbody.closest('table').querySelectorAll('th').length;
+//   tbody.innerHTML = `
+//     <tr>
+//       <td colspan="${colspan}">
+//         <div class="empty-state">
+//           <i class="ri-inbox-line"></i>
+//           <p>${message}</p>
+//         </div>
+//       </td>
+//     </tr>
+//   `;
+// }
 
 // Make functions globally available for onclick handlers
 window.viewBooking = function (id) {
@@ -531,16 +669,16 @@ document.getElementById('add-payment-btn')?.addEventListener('click', () => {
 
 // ==================== MODAL FUNCTIONS ====================
 
-// Open modal
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-}
+// // Open modal
+// function openModal(modalId) {
+//   const modal = document.getElementById(modalId);
+//   if (modal) {
+//     modal.classList.add('active');
+//     document.body.style.overflow = 'hidden';
+//   }
+// }
 
-// Close modal
+// // Close modal
 window.closeModal = function (modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
@@ -562,17 +700,6 @@ window.closeModal = function (modalId) {
   }
 }
 
-// Show form error
-function showFormError(modalId, message) {
-  const errorDiv = document.querySelector(`#${modalId} .form-error`);
-  if (errorDiv) {
-    errorDiv.textContent = message;
-    errorDiv.classList.add('show');
-
-    // Scroll to error
-    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-}
 
 // ==================== ADD DRIVER FUNCTIONALITY ====================
 
@@ -792,69 +919,34 @@ document.getElementById('create-task-form')?.addEventListener('submit', async (e
   }
 });
 
-// Toast notification helper
-function showToast(message, success = true) {
-  const toast = document.createElement('div');
-  toast.textContent = message;
-  toast.style.position = 'fixed';
-  toast.style.bottom = '2rem';
-  toast.style.right = '2rem';
-  toast.style.background = success ? '#2ecc71' : '#e74c3c';
-  toast.style.color = 'white';
-  toast.style.padding = '1rem 1.5rem';
-  toast.style.borderRadius = '8px';
-  toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-  toast.style.zIndex = '10000';
-  toast.style.fontWeight = '600';
-  toast.style.animation = 'slideInRight 0.3s ease-out';
 
-  document.body.appendChild(toast);
+// // Add CSS animation for toast
+// const style = document.createElement('style');
+// style.textContent = `
+//   @keyframes slideInRight {
+//     from {
+//       transform: translateX(400px);
+//       opacity: 0;
+//     }
+//     to {
+//       transform: translateX(0);
+//       opacity: 1;
+//     }
+//   }
 
-  setTimeout(() => {
-    toast.style.animation = 'slideOutRight 0.3s ease-out';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-}
+//   @keyframes slideOutRight {
+//     from {
+//       transform: translateX(0);
+//       opacity: 1;
+//     }
+//     to {
+//       transform: translateX(400px);
+//       opacity: 0;
+//     }
+//   }
+// `;
+// document.head.appendChild(style);
 
-// Add CSS animation for toast
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideInRight {
-    from {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideOutRight {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-  }
-`;
-document.head.appendChild(style);
-
-
-// Format single date
-function formatDate(dateString) {
-  if (!dateString) return 'N/A';
-  try {
-    const date = new Date(dateString);
-    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-  } catch (error) {
-    return dateString;
-  }
-}
 
 // Task actions (placeholders)
 window.viewTask = function (id) {
@@ -977,17 +1069,6 @@ document.getElementById('update-status-btn')?.addEventListener('click', async ()
   }
 });
 
-// Format single date helper function
-function formatFullDate(dateString) {
-  if (!dateString) return 'N/A';
-  try {
-    const date = new Date(dateString);
-    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-  } catch (error) {
-    return dateString;
-  }
-}
 
 // ==================== VIEW TASK MODAL ====================
 
@@ -1517,3 +1598,300 @@ document.getElementById('edit-task-form')?.addEventListener('submit', async (e) 
     submitBtn.innerHTML = originalHTML;
   }
 });
+
+
+// ==================== EDIT DRIVER FUNCTIONALITY ====================
+
+let currentEditingDriverId = null;
+
+// Update the editDriver function in admin.js
+window.editDriver = async function (id) {
+  currentEditingDriverId = id;
+
+  try {
+    // Fetch driver data
+    const driverDoc = await getDoc(doc(db, 'users', id));
+
+    if (!driverDoc.exists()) {
+      alert('Driver not found');
+      return;
+    }
+
+    const driver = driverDoc.data();
+
+    // Pre-fill form fields
+    document.getElementById('edit-driver-name').value = driver.name || '';
+    document.getElementById('edit-driver-email').value = driver.email || '';
+    document.getElementById('edit-driver-phone').value = driver.phone || '';
+    document.getElementById('edit-driver-license').value = driver.license || '';
+    document.getElementById('edit-driver-vehicle').value = driver.vehicle || '';
+    document.getElementById('edit-driver-status').value = driver.status || 'active';
+    document.getElementById('edit-driver-notes').value = driver.notes || '';
+
+    // Clear any previous messages
+    document.getElementById('edit-driver-error').classList.remove('show');
+    document.getElementById('edit-driver-success').classList.remove('show');
+
+    // Open modal
+    openModal('edit-driver-modal');
+
+  } catch (error) {
+    console.error('Error loading driver for edit:', error);
+    alert('Error loading driver. Please try again.');
+  }
+}
+
+// Handle Edit Driver Form Submission
+document.getElementById('edit-driver-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  if (!currentEditingDriverId) {
+    alert('No driver selected for editing');
+    return;
+  }
+
+  const submitBtn = document.getElementById('update-driver-btn');
+  const originalHTML = submitBtn.innerHTML;
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Updating...';
+
+    // Get form data
+    const formData = new FormData(e.target);
+    const updatedData = {
+      name: formData.get('name').trim(),
+      phone: formData.get('phone').trim(),
+      license: formData.get('license')?.trim() || '',
+      vehicle: formData.get('vehicle')?.trim() || '',
+      status: formData.get('status'),
+      notes: formData.get('notes')?.trim() || '',
+      updatedAt: serverTimestamp()
+    };
+
+    // Validate required fields
+    if (!updatedData.name || !updatedData.phone) {
+      throw new Error('Please fill in all required fields');
+    }
+
+    // Update driver in Firestore (users collection)
+    await updateDoc(doc(db, 'users', currentEditingDriverId), updatedData);
+
+    // Also update in drivers collection if it exists
+    try {
+      await updateDoc(doc(db, 'drivers', currentEditingDriverId), updatedData);
+    } catch (err) {
+      // Drivers collection might not exist for older entries
+      console.log('Drivers collection not updated:', err);
+    }
+
+    // Show success message
+    const successDiv = document.getElementById('edit-driver-success');
+    successDiv.textContent = '✓ Driver updated successfully!';
+    successDiv.classList.add('show');
+
+    // Hide success message after 2 seconds and close modal
+    setTimeout(() => {
+      successDiv.classList.remove('show');
+      closeModal('edit-driver-modal');
+
+      // Refresh the drivers list
+      loadDrivers();
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error updating driver:', error);
+
+    const errorDiv = document.getElementById('edit-driver-error');
+    errorDiv.textContent = '✗ ' + (error.message || 'Failed to update driver. Please try again.');
+    errorDiv.classList.add('show');
+
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+  }
+});
+
+// Optional: Delete Driver Function
+window.deleteDriver = async function (id) {
+  if (!confirm('Are you sure you want to delete this driver? This will also remove all their assigned tasks.')) {
+    return;
+  }
+
+  try {
+    // Delete from users collection
+    await deleteDoc(doc(db, 'users', id));
+
+    // Delete from drivers collection if it exists
+    try {
+      await deleteDoc(doc(db, 'drivers', id));
+    } catch (err) {
+      console.log('Driver doc not in drivers collection');
+    }
+
+    // Optional: Delete or reassign their tasks
+    const tasksQuery = query(
+      collection(db, 'tasks'),
+      where('driverId', '==', id)
+    );
+    const tasksSnapshot = await getDocs(tasksQuery);
+
+    const deletePromises = tasksSnapshot.docs.map(doc => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+
+    showToast('Driver and associated tasks deleted successfully', true);
+
+    // Refresh drivers list
+    await loadDrivers();
+
+  } catch (error) {
+    console.error('Error deleting driver:', error);
+    showToast('Failed to delete driver', false);
+  }
+}
+
+
+
+
+
+
+
+
+// ==================== HELPER FUNCTIONS (CONSOLIDATED) ====================
+// Place these at the very bottom of your admin.js file
+// Remove any duplicate versions of these functions from above
+
+// Format date range (e.g., "Jan 5 - Jan 10")
+function formatDateRange(start, end) {
+  if (!start || !end) return 'N/A';
+  try {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const options = { month: 'short', day: 'numeric' };
+    return `${startDate.toLocaleDateString('en-US', options)} - ${endDate.toLocaleDateString('en-US', options)}`;
+  } catch (error) {
+    // Return original strings if date parsing fails
+    return `${start} - ${end}`;
+  }
+}
+
+// Format single date with day (e.g., "Mon, Jan 5, 2024")
+function formatFullDate(dateString) {
+  if (!dateString) return 'N/A';
+  try {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  } catch (error) {
+    return dateString;
+  }
+}
+
+// Format single date without day (e.g., "Jan 5, 2024")
+function formatDate(dateString) {
+  if (!dateString) return 'N/A';
+  try {
+    const date = new Date(dateString);
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  } catch (error) {
+    return dateString;
+  }
+}
+
+// Capitalize first letter and replace hyphens with spaces
+function capitalizeFirst(str) {
+  if (!str) return '';
+  // Capitalize the first letter and replace hyphens with spaces (e.g., 'in-progress' -> 'In Progress')
+  return str.charAt(0).toUpperCase() + str.slice(1).replace(/-/g, ' ');
+}
+
+// Show empty state in tables
+function showEmptyState(tableId, message) {
+  const tbody = document.getElementById(tableId);
+  if (!tbody) return;
+
+  const colspan = tbody.closest('table')?.querySelectorAll('th').length || 5;
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="${colspan}">
+        <div class="empty-state">
+          <i class="ri-inbox-line"></i>
+          <p>${message}</p>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+// Toast notification
+function showToast(message, success = true) {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.position = 'fixed';
+  toast.style.bottom = '2rem';
+  toast.style.right = '2rem';
+  toast.style.background = success ? '#2ecc71' : '#e74c3c';
+  toast.style.color = 'white';
+  toast.style.padding = '1rem 1.5rem';
+  toast.style.borderRadius = '8px';
+  toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  toast.style.zIndex = '10000';
+  toast.style.fontWeight = '600';
+  toast.style.animation = 'slideInRight 0.3s ease-out';
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = 'slideOutRight 0.3s ease-out';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// Show form error
+function showFormError(modalId, message) {
+  const errorDiv = document.querySelector(`#${modalId} .form-error`);
+  if (errorDiv) {
+    errorDiv.textContent = message;
+    errorDiv.classList.add('show');
+    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+// Open modal
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// Close modal
+window.closeModal = function (modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+
+    // Reset form
+    const form = modal.querySelector('form');
+    if (form) {
+      form.reset();
+    }
+
+    // Clear error messages
+    const errorDiv = modal.querySelector('.form-error');
+    if (errorDiv) {
+      errorDiv.classList.remove('show');
+      errorDiv.textContent = '';
+    }
+
+    // Clear success messages
+    const successDiv = modal.querySelector('.form-success');
+    if (successDiv) {
+      successDiv.classList.remove('show');
+      successDiv.textContent = '';
+    }
+  }
+}

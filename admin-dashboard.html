@@ -574,8 +574,6 @@
         </div>
     </div>
 
-
-
     <!-- View Task Modal -->
     <div class="modal-overlay" id="view-task-modal">
         <div class="modal modal-large">
@@ -759,6 +757,149 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="closeModal('view-client-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Driver Modal -->
+    <div class="modal-overlay" id="view-driver-modal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Driver Details</h2>
+                <button class="modal-close" onclick="closeModal('view-driver-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Driver Info Grid -->
+                <div class="info-grid">
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-user-line"></i>
+                            Personal Information
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value" id="view-driver-name">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" id="view-driver-email">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone:</span>
+                            <span class="info-value" id="view-driver-phone">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status:</span>
+                            <span class="info-value" id="view-driver-status">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-car-line"></i>
+                            Vehicle Information
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">License Number:</span>
+                            <span class="info-value" id="view-driver-license">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Vehicle:</span>
+                            <span class="info-value" id="view-driver-vehicle">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Member Since:</span>
+                            <span class="info-value" id="view-driver-created">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-task-line"></i>
+                            Task Statistics
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Total Tasks:</span>
+                            <span class="info-value" id="view-driver-total-tasks">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Completed:</span>
+                            <span class="info-value" style="color: #2ecc71; font-weight: 700;"
+                                id="view-driver-completed-tasks">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Pending:</span>
+                            <span class="info-value" style="color: #f59e0b; font-weight: 700;"
+                                id="view-driver-pending-tasks">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">In Progress:</span>
+                            <span class="info-value" style="color: #667eea; font-weight: 700;"
+                                id="view-driver-inprogress-tasks">0</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 class="info-section-title">
+                            <i class="ri-star-line"></i>
+                            Performance
+                        </h3>
+                        <div class="info-item">
+                            <span class="info-label">Completion Rate:</span>
+                            <span class="info-value" id="view-driver-completion-rate">0%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Task:</span>
+                            <span class="info-value" id="view-driver-last-task">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section full-width">
+                        <h3 class="info-section-title">
+                            <i class="ri-message-line"></i>
+                            Notes
+                        </h3>
+                        <div class="info-message" id="view-driver-notes">
+                            No notes available
+                        </div>
+                    </div>
+
+                    <div class="info-section full-width">
+                        <h3 class="info-section-title">
+                            <i class="ri-history-line"></i>
+                            Recent Tasks
+                        </h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="view-driver-tasks-table">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #a0aec0;">
+                                            No tasks assigned yet
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('view-driver-modal')">Close</button>
+                <button type="button" class="btn btn-submit" id="edit-from-view-driver-btn"
+                    style="background: #667eea;">
+                    <i class="ri-edit-line"></i>
+                    Edit Driver
+                </button>
             </div>
         </div>
     </div>
@@ -947,6 +1088,74 @@
         </div>
     </div>
 
+    <!-- Edit Driver Modal -->
+    <div class="modal-overlay" id="edit-driver-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Driver</h2>
+                <button class="modal-close" onclick="closeModal('edit-driver-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-error" id="edit-driver-error"></div>
+                <div class="form-success" id="edit-driver-success"></div>
+
+                <form id="edit-driver-form" class="form-grid">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-driver-name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="edit-driver-name" name="name" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-driver-phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="edit-driver-phone" name="phone" required placeholder="+233123456789">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-driver-email">Email Address</label>
+                        <input type="email" id="edit-driver-email" name="email" disabled
+                            style="background: #f0f0f0; cursor: not-allowed;" placeholder="driver@example.com">
+                        <small style="color: #e74c3c;">⚠️ Email cannot be changed (used for login)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-driver-license">Driver's License Number</label>
+                        <input type="text" id="edit-driver-license" name="license" placeholder="Optional">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-driver-vehicle">Vehicle Information</label>
+                        <input type="text" id="edit-driver-vehicle" name="vehicle"
+                            placeholder="e.g., Toyota Camry - GH 1234-20">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-driver-status">Status <span class="required">*</span></label>
+                        <select id="edit-driver-status" name="status" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="on-leave">On Leave</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-driver-notes">Additional Notes</label>
+                        <textarea id="edit-driver-notes" name="notes"
+                            placeholder="Any additional information about the driver..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('edit-driver-modal')">Cancel</button>
+                <button type="submit" form="edit-driver-form" class="btn-submit" id="update-driver-btn">
+                    <i class="ri-save-line"></i>
+                    Update Driver
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="./scripts/admin.js"></script>
 

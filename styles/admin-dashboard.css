@@ -99,7 +99,7 @@ body {
 
 /* Sidebar Navigation */
 .sidebar {
-    width: 260px;
+    width: 150px;
     background: white;
     border-right: 1px solid #e2e8f0;
     padding: 1.5rem 0;
@@ -427,7 +427,7 @@ tbody tr:hover {
 /* Responsive */
 @media (max-width: 1024px) {
     .sidebar {
-        width: 220px;
+        width: 150px;
     }
 }
 
