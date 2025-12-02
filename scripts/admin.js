@@ -647,9 +647,128 @@ window.editDriver = function (id) {
   alert(`Edit driver: ${id}\nComing soon!`);
 }
 
-// Button handlers (placeholders for now)
+// ==================== ADD NEW BOOKING FUNCTIONALITY ====================
+
+// Update the button handler - Replace the placeholder around line 700
 document.getElementById('add-booking-btn')?.addEventListener('click', () => {
-  alert('Add booking form coming soon!');
+  // Set minimum date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('add-booking-startdate').setAttribute('min', today);
+  document.getElementById('add-booking-enddate').setAttribute('min', today);
+
+  // Open modal
+  openModal('add-booking-modal');
+});
+
+// Date validation for add booking form
+document.getElementById('add-booking-startdate')?.addEventListener('change', (e) => {
+  const endDateInput = document.getElementById('add-booking-enddate');
+  endDateInput.setAttribute('min', e.target.value);
+  if (endDateInput.value && endDateInput.value < e.target.value) {
+    endDateInput.value = '';
+  }
+});
+
+// Handle Add Booking Form Submission
+document.getElementById('add-booking-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('create-booking-btn');
+  const originalHTML = submitBtn.innerHTML;
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Creating...';
+
+    // Get form data
+    const formData = new FormData(e.target);
+    const phone = formData.get('phone').trim();
+
+    // Simple phone parsing - extract country code and local number
+    let phoneCountryCode = '';
+    let phoneLocalNumber = phone;
+
+    // If phone starts with +, try to extract country code
+    if (phone.startsWith('+')) {
+      // Simple extraction: take first 4 characters as country code
+      const match = phone.match(/^(\+\d{1,4})\s*(.+)$/);
+      if (match) {
+        phoneCountryCode = match[1];
+        phoneLocalNumber = match[2].replace(/\s/g, '');
+      }
+    }
+
+    const bookingData = {
+      firstName: formData.get('firstName').trim(),
+      lastName: formData.get('lastName').trim(),
+      email: formData.get('email').trim(),
+      phone: phone,
+      phoneCountryCode: phoneCountryCode,
+      phoneLocalNumber: phoneLocalNumber,
+      packageName: formData.get('packageName'),
+      startDate: formData.get('startDate'),
+      endDate: formData.get('endDate'),
+      travelers: parseInt(formData.get('travelers')),
+      addon: formData.get('addon') || 'None',
+      status: formData.get('status'),
+      message: formData.get('message')?.trim() || '',
+      createdAt: serverTimestamp()
+    };
+
+    // Validate required fields
+    if (!bookingData.firstName || !bookingData.lastName || !bookingData.email ||
+      !bookingData.phone || !bookingData.packageName || !bookingData.startDate ||
+      !bookingData.endDate || !bookingData.travelers) {
+      throw new Error('Please fill in all required fields');
+    }
+
+    // Validate dates
+    if (new Date(bookingData.endDate) < new Date(bookingData.startDate)) {
+      throw new Error('End date must be after start date');
+    }
+
+    // Validate travelers
+    if (bookingData.travelers < 1) {
+      throw new Error('Number of travelers must be at least 1');
+    }
+
+    // Create booking in Firestore
+    const docRef = await addDoc(collection(db, 'bookings'), bookingData);
+    console.log('Booking created with ID:', docRef.id);
+
+    // Show success message
+    const successDiv = document.getElementById('add-booking-success');
+    successDiv.textContent = '✓ Booking created successfully!';
+    successDiv.classList.add('show');
+
+    // Hide success message and close modal after 2 seconds
+    setTimeout(() => {
+      successDiv.classList.remove('show');
+      closeModal('add-booking-modal');
+
+      // Refresh bookings list
+      const activeSection = document.querySelector('.content-section.active');
+      if (activeSection.id === 'bookings-section') {
+        loadAllBookings();
+      } else if (activeSection.id === 'overview-section') {
+        loadOverviewData();
+      }
+
+      // Show toast
+      showToast('Booking created successfully!', true);
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error creating booking:', error);
+
+    const errorDiv = document.getElementById('add-booking-error');
+    errorDiv.textContent = '✗ ' + (error.message || 'Failed to create booking. Please try again.');
+    errorDiv.classList.add('show');
+
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+  }
 });
 
 // document.getElementById('add-driver-btn')?.addEventListener('click', () => {

@@ -1157,6 +1157,111 @@
         </div>
     </div>
 
+    <!-- Add New Booking Modal -->
+    <div class="modal-overlay" id="add-booking-modal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>Create New Booking</h2>
+                <button class="modal-close" onclick="closeModal('add-booking-modal')">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-error" id="add-booking-error"></div>
+                <div class="form-success" id="add-booking-success"></div>
+
+                <form id="add-booking-form" class="form-grid">
+                    <!-- Client Information -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="add-booking-firstname">First Name <span class="required">*</span></label>
+                            <input type="text" id="add-booking-firstname" name="firstName" required placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="add-booking-lastname">Last Name <span class="required">*</span></label>
+                            <input type="text" id="add-booking-lastname" name="lastName" required placeholder="Doe">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add-booking-email">Email <span class="required">*</span></label>
+                        <input type="email" id="add-booking-email" name="email" required
+                            placeholder="john.doe@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add-booking-phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="add-booking-phone" name="phone" required placeholder="+233 123 456 789">
+                        <small>Include country code (e.g., +233 for Ghana)</small>
+                    </div>
+
+                    <!-- Trip Details -->
+                    <div class="form-group">
+                        <label for="add-booking-package">Package <span class="required">*</span></label>
+                        <select id="add-booking-package" name="packageName" required>
+                            <option value="">Select a package...</option>
+                            <option value="Kakum Canopy Walk">Kakum Canopy Walk</option>
+                            <option value="Cape Coast Castle Tour">Cape Coast Castle Tour</option>
+                            <option value="Elmina Castle Experience">Elmina Castle Experience</option>
+                            <option value="Historical Duo Package">Historical Duo Package</option>
+                            <option value="Custom Package">Custom Package</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="add-booking-startdate">Start Date <span class="required">*</span></label>
+                            <input type="date" id="add-booking-startdate" name="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-booking-enddate">End Date <span class="required">*</span></label>
+                            <input type="date" id="add-booking-enddate" name="endDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add-booking-travelers">Number of Travelers <span class="required">*</span></label>
+                        <input type="number" id="add-booking-travelers" name="travelers" min="1" value="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add-booking-addon">Add-on (Optional)</label>
+                        <select id="add-booking-addon" name="addon">
+                            <option value="">No add-on</option>
+                            <option value="Airport Pickup">Airport Pickup</option>
+                            <option value="Hotel Booking">Hotel Booking</option>
+                            <option value="Meal Package">Meal Package</option>
+                            <option value="Photography Service">Photography Service</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add-booking-status">Status <span class="required">*</span></label>
+                        <select id="add-booking-status" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed" selected>Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add-booking-message">Special Requests / Notes</label>
+                        <textarea id="add-booking-message" name="message" rows="3"
+                            placeholder="Any special requirements or notes..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('add-booking-modal')">Cancel</button>
+                <button type="submit" form="add-booking-form" class="btn-submit" id="create-booking-btn">
+                    <i class="ri-add-line"></i>
+                    Create Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="./scripts/admin.js"></script>
 
 </body>
