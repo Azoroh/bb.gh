@@ -701,13 +701,11 @@ window.closeModal = function (modalId) {
 }
 
 
-// ==================== ADD DRIVER FUNCTIONALITY ====================
+// ==================== ADD DRIVER FUNCTIONALITY (FIXED) ====================
 
-// Update the button handler you added earlier
+// Update the button handler
 document.getElementById('add-driver-btn')?.addEventListener('click', () => {
   openModal('add-driver-modal');
-  // Set minimum date to today
-  document.getElementById('task-date').setAttribute('min', new Date().toISOString().split('T')[0]);
 });
 
 // Handle Add Driver Form Submission
@@ -743,9 +741,11 @@ document.getElementById('add-driver-form')?.addEventListener('submit', async (e)
       throw new Error('Password must be at least 6 characters');
     }
 
+    // CRITICAL FIX: Save current admin auth state
+    const currentAdmin = auth.currentUser;
+    console.log('Current admin:', currentAdmin.email);
+
     // Create Firebase Authentication user
-    // NOTE: This will temporarily log you out as admin!
-    // We need a workaround for this
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       driverData.email,
@@ -753,41 +753,48 @@ document.getElementById('add-driver-form')?.addEventListener('submit', async (e)
     );
 
     const driverId = userCredential.user.uid;
+    console.log('Driver created with ID:', driverId);
 
-    // Create driver profile in Firestore
-    await setDoc(doc(db, 'users', driverId), {
-      role: 'driver',
-      name: driverData.name,
-      email: driverData.email,
-      phone: driverData.phone,
-      license: driverData.license,
-      vehicle: driverData.vehicle,
-      notes: driverData.notes,
-      status: 'active',
-      createdAt: serverTimestamp()
-    });
+    // IMMEDIATELY create driver profile in Firestore BEFORE redirect
+    // Use Promise.all to ensure both complete
+    await Promise.all([
+      setDoc(doc(db, 'users', driverId), {
+        role: 'driver',
+        name: driverData.name,
+        email: driverData.email,
+        phone: driverData.phone,
+        license: driverData.license,
+        vehicle: driverData.vehicle,
+        notes: driverData.notes,
+        status: 'active',
+        createdAt: serverTimestamp()
+      }),
+      setDoc(doc(db, 'drivers', driverId), {
+        name: driverData.name,
+        email: driverData.email,
+        phone: driverData.phone,
+        license: driverData.license,
+        vehicle: driverData.vehicle,
+        notes: driverData.notes,
+        status: 'active',
+        createdAt: serverTimestamp()
+      })
+    ]);
 
-    // Create driver document in drivers collection (for easier querying)
-    await setDoc(doc(db, 'drivers', driverId), {
-      name: driverData.name,
-      email: driverData.email,
-      phone: driverData.phone,
-      license: driverData.license,
-      vehicle: driverData.vehicle,
-      notes: driverData.notes,
-      status: 'active',
-      createdAt: serverTimestamp()
-    });
+    console.log('Driver profile saved to Firestore');
 
-    // Success!
-    showToast('Driver created successfully!', true);
+    // Now sign out the newly created driver
+    await signOut(auth);
+    console.log('Driver signed out');
+
+    // Close modal and show instructions
     closeModal('add-driver-modal');
 
-    // Reload drivers list
-    await loadDrivers();
+    // Show detailed alert
+    alert(`✓ Driver "${driverData.name}" created successfully!\n\nYou will now be redirected to login page.\nPlease log back in as admin to see the new driver.`);
 
-    // WARNING: User might be logged out, need to log back in
-    alert('Driver created! You may need to log back in as admin.');
+    // Redirect to login
+    window.location.href = 'login.html';
 
   } catch (error) {
     console.error('Error creating driver:', error);
@@ -795,7 +802,7 @@ document.getElementById('add-driver-form')?.addEventListener('submit', async (e)
     let errorMessage = 'Failed to create driver. ';
 
     if (error.code === 'auth/email-already-in-use') {
-      errorMessage += 'This email is already registered.';
+      errorMessage += 'This email is already registered. Please use a different email.';
     } else if (error.code === 'auth/invalid-email') {
       errorMessage += 'Invalid email address.';
     } else if (error.code === 'auth/weak-password') {
@@ -806,7 +813,6 @@ document.getElementById('add-driver-form')?.addEventListener('submit', async (e)
 
     showFormError('add-driver-modal', errorMessage);
 
-  } finally {
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalHTML;
   }
