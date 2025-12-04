@@ -226,7 +226,7 @@ async function loadAllBookings() {
       <tr>
         <td><strong>${booking.firstName} ${booking.lastName}</strong></td>
         <td>${booking.email}</td>
-        <td>${booking.phoneCountryCode + '-' + booking.phoneLocalNumber || 'N/A'}</td>
+        <td>${booking.phoneCountryCode ? booking.phoneCountryCode + ' ' + booking.phoneLocalNumber : booking.phoneLocalNumber || booking.phone || 'N/A'}</td>
         <td>${booking.packageName || 'N/A'}</td>
         <td>${formatDateRange(booking.startDate, booking.endDate)}</td>
         <td>${booking.travelers}</td>
@@ -261,7 +261,7 @@ async function loadClients() {
         clientsMap[booking.email] = {
           name: `${booking.firstName} ${booking.lastName}`,
           email: booking.email,
-          phone: booking.phoneCountryCode + '-' + booking.phoneLocalNumber,
+          phone: booking.phoneCountryCode ? booking.phoneCountryCode + ' ' + booking.phoneLocalNumber : booking.phoneLocalNumber || booking.phone || 'N/A',
           bookingCount: 0
         };
       }
@@ -562,11 +562,314 @@ async function loadTasks() {
   }
 }
 
-// Load payments (placeholder)
+// ==================== PAYMENT MANAGEMENT FUNCTIONALITY ====================
+
+// Load payments function
 async function loadPayments() {
-  // Placeholder - you'll implement this
-  console.log('Loading payments...');
+  try {
+    const paymentsSnapshot = await getDocs(collection(db, 'payments'));
+    const payments = paymentsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    const tbody = document.getElementById('payments-table');
+
+    if (payments.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <i class="ri-money-dollar-circle-line"></i>
+              <p>No payment records yet. Click "Record Payment" to add one.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    // Get all bookings to show booking details
+    const bookingsSnapshot = await getDocs(collection(db, 'bookings'));
+    const bookingsMap = {};
+    bookingsSnapshot.docs.forEach(doc => {
+      const data = doc.data();
+      bookingsMap[doc.id] = {
+        clientName: `${data.firstName} ${data.lastName}`,
+        packageName: data.packageName
+      };
+    });
+
+    // Display payments
+    tbody.innerHTML = payments.map(payment => {
+      const booking = bookingsMap[payment.bookingId] || { clientName: 'Unknown', packageName: 'N/A' };
+
+      return `
+        <tr>
+          <td><strong>${booking.packageName}</strong></td>
+          <td>${booking.clientName}</td>
+          <td style="font-weight: 700; color: #2ecc71;">${payment.currency} ${parseFloat(payment.amount).toFixed(2)}</td>
+          <td>${payment.method}</td>
+          <td>${formatDate(payment.date)}</td>
+          <td><span class="status-badge status-${payment.status}">${capitalizeFirst(payment.status)}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewPayment('${payment.id}')" title="View">
+              <i class="ri-eye-line"></i>
+            </button>
+            <button class="action-btn" onclick="deletePayment('${payment.id}')" title="Delete" style="color: #e74c3c;">
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+  } catch (error) {
+    console.error('Error loading payments:', error);
+    showEmptyState('payments-table', 'Error loading payments');
+  }
 }
+
+// Add Payment Button Handler - Replace the placeholder
+document.getElementById('add-payment-btn')?.addEventListener('click', async () => {
+  // Load bookings into dropdown
+  await loadBookingsDropdown();
+
+  // Set default date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('payment-date').value = today;
+
+  // Open modal
+  openModal('add-payment-modal');
+});
+
+// Load bookings into payment form dropdown
+async function loadBookingsDropdown() {
+  try {
+    const bookingsSnapshot = await getDocs(collection(db, 'bookings'));
+    const bookings = bookingsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    const select = document.getElementById('payment-booking');
+
+    // Clear existing options
+    select.innerHTML = '<option value="">Select a booking...</option>';
+
+    if (bookings.length === 0) {
+      select.innerHTML = '<option value="">No bookings available</option>';
+      return;
+    }
+
+    // Sort bookings by date (newest first)
+    bookings.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+    // Add booking options
+    bookings.forEach(booking => {
+      const option = document.createElement('option');
+      option.value = booking.id;
+      option.textContent = `${booking.firstName} ${booking.lastName} - ${booking.packageName} (${formatDate(booking.startDate)})`;
+      // Store booking data as data attributes
+      option.setAttribute('data-client-name', `${booking.firstName} ${booking.lastName}`);
+      option.setAttribute('data-client-email', booking.email);
+      option.setAttribute('data-package', booking.packageName);
+      select.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error('Error loading bookings:', error);
+  }
+}
+
+// Handle Add Payment Form Submission
+document.getElementById('add-payment-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submit-payment-btn');
+  const originalHTML = submitBtn.innerHTML;
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Saving...';
+
+    // Get form data
+    const formData = new FormData(e.target);
+
+    // Get selected booking details
+    const bookingSelect = document.getElementById('payment-booking');
+    const selectedOption = bookingSelect.options[bookingSelect.selectedIndex];
+    const clientName = selectedOption.getAttribute('data-client-name');
+    const clientEmail = selectedOption.getAttribute('data-client-email');
+    const packageName = selectedOption.getAttribute('data-package');
+
+    const paymentData = {
+      bookingId: formData.get('bookingId'),
+      clientName: clientName,
+      clientEmail: clientEmail,
+      packageName: packageName,
+      amount: parseFloat(formData.get('amount')),
+      currency: formData.get('currency'),
+      method: formData.get('method'),
+      date: formData.get('date'),
+      reference: formData.get('reference')?.trim() || '',
+      status: formData.get('status'),
+      notes: formData.get('notes')?.trim() || '',
+      createdAt: serverTimestamp()
+    };
+
+    // Validate
+    if (!paymentData.bookingId || !paymentData.amount || !paymentData.method ||
+      !paymentData.date || !paymentData.status) {
+      throw new Error('Please fill in all required fields');
+    }
+
+    if (paymentData.amount <= 0) {
+      throw new Error('Amount must be greater than 0');
+    }
+
+    // Create payment in Firestore
+    await addDoc(collection(db, 'payments'), paymentData);
+
+    // Show success message
+    const successDiv = document.getElementById('add-payment-success');
+    successDiv.textContent = '✓ Payment recorded successfully!';
+    successDiv.classList.add('show');
+
+    // Hide success message after 2 seconds and close modal
+    setTimeout(() => {
+      successDiv.classList.remove('show');
+      closeModal('add-payment-modal');
+
+      // Reload payments list
+      loadPayments();
+
+      showToast('Payment recorded successfully!', true);
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error recording payment:', error);
+
+    const errorDiv = document.getElementById('add-payment-error');
+    errorDiv.textContent = '✗ ' + (error.message || 'Failed to record payment. Please try again.');
+    errorDiv.classList.add('show');
+
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+  }
+});
+
+// View Payment Details
+let currentPaymentId = null;
+
+window.viewPayment = async function (id) {
+  currentPaymentId = id;
+
+  try {
+    openModal('view-payment-modal');
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Fetch payment data
+    const paymentDoc = await getDoc(doc(db, 'payments', id));
+
+    if (!paymentDoc.exists()) {
+      alert('Payment not found');
+      closeModal('view-payment-modal');
+      return;
+    }
+
+    const payment = paymentDoc.data();
+
+    // Fetch booking data
+    let bookingData = null;
+    if (payment.bookingId) {
+      const bookingDoc = await getDoc(doc(db, 'bookings', payment.bookingId));
+      if (bookingDoc.exists()) {
+        bookingData = bookingDoc.data();
+      }
+    }
+
+    // Helper function to set text
+    const setText = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = value;
+      }
+    };
+
+    // Populate payment info
+    setText('view-payment-amount', `${payment.currency} ${parseFloat(payment.amount).toFixed(2)}`);
+    setText('view-payment-method', payment.method || 'N/A');
+    setText('view-payment-date', formatFullDate(payment.date));
+    setText('view-payment-reference', payment.reference || 'No reference provided');
+
+    // Status with badge
+    const statusElement = document.getElementById('view-payment-status');
+    if (statusElement) {
+      statusElement.innerHTML = `<span class="status-badge status-${payment.status}">${capitalizeFirst(payment.status)}</span>`;
+    }
+
+    // Client info
+    setText('view-payment-client-name', payment.clientName || 'N/A');
+    setText('view-payment-client-email', payment.clientEmail || 'N/A');
+
+    if (bookingData) {
+      setText('view-payment-client-phone', `${bookingData.phoneCountryCode || ''} ${bookingData.phoneLocalNumber || 'N/A'}`);
+      setText('view-payment-package', bookingData.packageName || 'N/A');
+      setText('view-payment-dates', formatDateRange(bookingData.startDate, bookingData.endDate));
+      setText('view-payment-travelers', bookingData.travelers || 'N/A');
+    } else {
+      setText('view-payment-client-phone', 'N/A');
+      setText('view-payment-package', payment.packageName || 'N/A');
+      setText('view-payment-dates', 'N/A');
+      setText('view-payment-travelers', 'N/A');
+    }
+
+    // Notes
+    setText('view-payment-notes', payment.notes || 'No notes available');
+
+  } catch (error) {
+    console.error('Error loading payment:', error);
+    alert('Error loading payment details. Please try again.');
+    closeModal('view-payment-modal');
+  }
+};
+
+// Delete Payment
+window.deletePayment = async function (id) {
+  if (!confirm('Are you sure you want to delete this payment record? This action cannot be undone.')) {
+    return;
+  }
+
+  try {
+    await deleteDoc(doc(db, 'payments', id));
+    showToast('Payment deleted successfully', true);
+    await loadPayments();
+  } catch (error) {
+    console.error('Error deleting payment:', error);
+    showToast('Failed to delete payment', false);
+  }
+};
+
+// Delete payment from view modal
+document.getElementById('delete-payment-btn')?.addEventListener('click', async () => {
+  if (!currentPaymentId) return;
+
+  if (!confirm('Are you sure you want to delete this payment record? This action cannot be undone.')) {
+    return;
+  }
+
+  try {
+    await deleteDoc(doc(db, 'payments', currentPaymentId));
+    showToast('Payment deleted successfully', true);
+    closeModal('view-payment-modal');
+    await loadPayments();
+  } catch (error) {
+    console.error('Error deleting payment:', error);
+    showToast('Failed to delete payment', false);
+  }
+});
 
 // function showEmptyState(tableId, message) {
 //   const tbody = document.getElementById(tableId);
@@ -779,9 +1082,9 @@ document.getElementById('add-booking-form')?.addEventListener('submit', async (e
 //   alert('Create task form coming soon!');
 // });
 
-document.getElementById('add-payment-btn')?.addEventListener('click', () => {
-  alert('Record payment form coming soon!');
-});
+// document.getElementById('add-payment-btn')?.addEventListener('click', () => {
+//   alert('Record payment form coming soon!');
+// });
 
 
 
@@ -1483,11 +1786,28 @@ document.getElementById('edit-booking-form')?.addEventListener('submit', async (
 
     // Get form data
     const formData = new FormData(e.target);
+    const phone = formData.get('phone').trim();
+
+    // Parse phone number into country code and local number
+    let phoneCountryCode = '';
+    let phoneLocalNumber = phone;
+
+    // If phone starts with +, try to extract country code
+    if (phone.startsWith('+')) {
+      const match = phone.match(/^(\+\d{1,4})\s*(.+)$/);
+      if (match) {
+        phoneCountryCode = match[1];
+        phoneLocalNumber = match[2].replace(/\s/g, '');
+      }
+    }
+
     const updatedData = {
       firstName: formData.get('firstName').trim(),
       lastName: formData.get('lastName').trim(),
       email: formData.get('email').trim(),
-      phone: formData.get('phone').trim(),
+      phone: phone,
+      phoneCountryCode: phoneCountryCode,
+      phoneLocalNumber: phoneLocalNumber,
       packageName: formData.get('packageName').trim(),
       startDate: formData.get('startDate'),
       endDate: formData.get('endDate'),
