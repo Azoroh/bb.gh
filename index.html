@@ -11,14 +11,98 @@
 
   <link rel="shortcut icon" href="./img/logo/favicon.ico" type="image/x-icon">
 
+  <!-- Preconnect to external domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <!-- Preload critical resources -->
+  <link rel="preload" as="image" href="./img/landing-bg.webp" fetchpriority="high">
+  <link rel="preload" href="./styles/swiper-bundle.min.css" as="style">
+  <link rel="preload" href="./scripts/swiper-bundle.min.js" as="script">
+
+  <!-- Critical CSS inline -->
+  <style>
+    /* Critical above-the-fold CSS */
+    :root {
+      --header-height: 3.5rem;
+      --title-color: hsl(220, 8%, 10%);
+      --text-color: hsl(220, 8%, 40%);
+      --white-color: hsl(0, 0%, 100%);
+      --black-color: hsl(220, 8%, 6%);
+      --body-color: hsl(220, 8%, 99%);
+      --opacity-color-30: hsla(0, 0%, 90%, 0.3);
+      --opacity-color-20: hsla(0, 0%, 90%, 0.2);
+      --font-semi-bold: 600;
+      --font-bold: 700;
+      --biggest-font-size: 3rem;
+      --z-fixed: 100;
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      list-style: none;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Zalando Sans", sans-serif;
+      background-color: #fcf5eb;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: transparent;
+      z-index: var(--z-fixed);
+      transition: background-color 0.4s;
+    }
+
+    .home {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .home_bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .home_blur {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--opacity-color-20);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+    }
+  </style>
+
+  <!-- Load Swiper CSS -->
   <link rel="stylesheet" href="./styles/swiper-bundle.min.css" />
 
-  <link rel="stylesheet" href="./styles/styles.css" />
+  <!-- Load main CSS with media="print" trick for async loading -->
+  <link rel="preload" href="./styles/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="./styles/styles.css">
+  </noscript>
 
+  <!-- RemixIcon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
 
-  <!-- intl-tel-input cdn css -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/css/intlTelInput.css">
 </head>
 
 <body>
@@ -27,8 +111,6 @@
       <a href="index.html" class="nav_logo">
         <img src="./img/logo/bb full white.png" alt="image logo" />
       </a>
-
-      <!-- nav links -->
       <div class="nav_menu" id="nav-menu">
         <ul class="menu">
           <li><a href="#home" class="nav_link active-link">Home</a></li>
@@ -36,13 +118,6 @@
           <li><a href="#packages" class="nav_link">Explore</a></li>
           <li><a href="#Add-on" class="nav_link">Services</a></li>
           <li><a href="#footer" class="nav_link">Contact</a></li>
-
-          <li class="admin-button-mobile-item">
-            <a href="login.html" class="nav_link button admin-button-link">
-              Admin
-              <i class="ri-dashboard-line"></i>
-            </a>
-          </li>
         </ul>
 
         <!-- close button -->
@@ -53,10 +128,6 @@
 
       <!-- nav buttons -->
       <div class="nav_buttons">
-        <a href="login.html" class="button admin-button-desktop">
-          Admin
-          <i class="ri-dashboard-line"></i>
-        </a>
 
         <!-- toggle button -->
         <div class="nav_toggle" id="nav-toggle">
@@ -68,7 +139,10 @@
 
   <main class="main">
     <section class="home section" id="home">
-      <img src="./img/landing-bg.webp" alt="home bg img" class="home_bg" />
+      <picture>
+        <source src="./img/landing-bg.webp" type="image/webp">
+        <img src="./img/landing-bg.webp" alt="home bg img" class="home_bg" fetchpriority="high" decoding="async" />
+      </picture>
       <div class="home_blur"></div>
 
       <div class="home_container container grid">
@@ -532,16 +606,18 @@
     <i class="ri-whatsapp-fill"></i>
   </a>
 
-  <!-- SCROLL REVEAL -->
-  <script src="./scripts/scrollreveal.min.js"></script>
+  <link rel="modulepreload" href="./scripts//index.js">
 
-  <script src="./scripts/swiper-bundle.min.js"></script>
+  <!-- SCROLL REVEAL -->
+  <script src="./scripts/scrollreveal.min.js" defer></script>
+
+  <!-- SWIPER -->
+  <script src="./scripts/swiper-bundle.min.js" defer></script>
 
   <!-- intl-tel-input scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/intlTelInput.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/intlTelInput.min.js"></script> -->
 
-  <!-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/utils.js"></script> -->
-
+  <!-- Main script -->
   <script type="module" src="./scripts/index.js"></script>
 
 </body>

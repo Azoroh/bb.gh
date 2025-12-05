@@ -365,7 +365,7 @@ nav {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
-  /* justify-content: center; */
+  justify-content: center;
   padding: 2rem 1rem;
 }
 
@@ -374,8 +374,9 @@ nav {
   align-items: center;
   gap: .7rem;
   /* justify-content: center; */
-  min-width: 30px;
-  max-width: 400px;
+  min-width: 313px;
+  max-width: 313px;
+  /* max-width: 400px; */
 }
 
 .service_info {
@@ -1113,9 +1114,6 @@ option {
 
 @media screen and (min-width: 1150px) {
 
-  /* .admin-button-mobile-item {
-    display: none !important;
-  } */
 
   .admin-button-desktop {
     display: flex !important;
@@ -1698,46 +1696,52 @@ option {
 }
 
 
-/* --- ADMIN BUTTON STYLES --- */
 
-/* Hide the desktop button by default (mobile first approach) */
-.admin-button-desktop {
-  display: none !important;
+
+
+
+
+
+
+
+
+/* ============================================ */
+/* PERFORMANCE OPTIMIZATIONS */
+/* ============================================ */
+
+/* CSS Containment for package cards */
+.package_card {
+  contain: layout style paint;
 }
 
-/* Style the button link inside the mobile menu pop-out */
-.admin-button-mobile-item .admin-button-link {
-  background-color: var(--black-color);
-  color: var(--white-color) !important;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  margin-top: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  column-gap: 0.5rem;
-  font-weight: var(--font-semi-bold);
-  min-width: 150px;
+/* Optimize will-change only during scroll */
+.packages_container:hover .package_card {
+  will-change: transform;
 }
 
-/* Remove the underline effect from the button link in the menu */
-.admin-button-mobile-item .admin-button-link::after {
-  display: none !important;
+.packages_container:not(:hover) .package_card {
+  will-change: auto;
 }
 
-/* Ensure the hover effect doesn't decrease opacity on the button */
-.menu a.admin-button-link:hover {
-  opacity: 1 !important;
+/* Optimize video rendering */
+.video-container video {
+  will-change: opacity;
 }
 
-/* Ensure the mobile button is centered and spaced out in the collapsed menu */
-@media screen and (max-width: 950px) {
-  .admin-button-mobile-item {
-    width: 100%;
-    /* Take full list item width */
-    text-align: center;
-    /* Center the link inside the list item */
-    margin-top: 2rem;
-    /* Add extra separation at the bottom of the list */
-  }
+/* Reduce repaints for fixed elements */
+.header {
+  will-change: background-color;
+}
+
+.whatsapp_btn {
+  will-change: transform;
+}
+
+/* Improve modal performance */
+.modal-overlay {
+  will-change: opacity;
+}
+
+.modal-content {
+  will-change: transform;
 }
