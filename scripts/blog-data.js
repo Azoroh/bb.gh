@@ -29,7 +29,7 @@ export const blogPosts = [
 
       <h3>Cohort 1 Starts Soon</h3>
       <p>The first cohort is launching soon! If you're interested in participating or learning more about this opportunity:</p>
-      <p>📧 <strong>Apply via email:</strong> joinlaunchra@xavslabs.com</p>
+      <p><i class="ri-mail-send-line"></i> <strong>Apply via email:</strong> joinlaunchra@xavslabs.com</p>
 
       <p>This is just the beginning of an exciting journey. We can't wait to see what we'll build together.</p>
 
@@ -128,9 +128,9 @@ export const blogPosts = [
 
       <p><strong>Get in touch:</strong></p>
       <ul>
-        <li>📱 WhatsApp: <a href="https://wa.me/233245302636">+233 245 302 636</a></li>
-        <li>📧 Email: bbordersgh@gmail.com</li>
-        <li>📸 Instagram: <a href="https://www.instagram.com/beyondbordersgh/" target="_blank">@beyondbordersgh</a></li>
+        <li><i class="ri-whatsapp-line"></i> WhatsApp: <a href="https://wa.me/233245302636">+233 245 302 636</a></li>
+        <li><i class="ri-mail-send-line"></i> Email: bbordersgh@gmail.com</li>
+        <li><i class="ri-instagram-line"></i> Instagram: <a href="https://www.instagram.com/beyondbordersgh/" target="_blank">@beyondbordersgh</a></li>
       </ul>
 
       <p>Let's plan your perfect Ghana adventure together!</p>
@@ -175,16 +175,16 @@ export const blogPosts = [
       <p>Tune in to Univers FM 105.7 MHz to catch the full discussion!</p>
 
       <p><strong>About the Show:</strong><br>
-      📻 <em>Talking Business</em> on Univers FM<br>
-      🎙️ Host: Mariam Jasmine Saaka<br>
-      📅 December 6th, 2024<br>
-      ⏰ 1:00 PM - 2:00 PM</p>
+      <i class="ri-speak-fill"></i> <em>Talking Business</em> on Univers FM<br>
+      <i class="ri-mic-fill"></i> Host: Mariam Jasmine Saaka<br>
+      <i class="ri-calendar-view"></i> December 6th, 2025<br>
+      <i class="ri-time-line"></i> 1:00 PM - 2:00 PM</p>
 
       <h3>Want to Experience Detty December with Us?</h3>
       <p>Whether you're coming from abroad or you're right here in Ghana, we have packages that will make your December unforgettable.</p>
 
-      <p>📱 <a href="https://wa.me/233245302636">WhatsApp us</a> to start planning<br>
-      📧 Email: bbordersgh@gmail.com</p>
+      <p><i class="ri-whatsapp-line"></i> <a href="https://wa.me/233245302636">WhatsApp us</a> to start planning<br>
+      <i class="ri-mail-send-line"></i> Email: bbordersgh@gmail.com</p>
 
       <p class="post-signature">Let's make this Detty December your best one yet! 🎉</p>
     `

@@ -1767,3 +1767,385 @@ option {
 .modal-content {
   will-change: transform;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================ */
+/* INFO MODAL (Privacy, Terms, FAQ, Payments) */
+/* ============================================ */
+
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.info-modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.info-modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 85vh;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(-50px);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-modal-overlay.active .info-modal-content {
+  transform: translateY(0);
+}
+
+.info-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #2C3E50;
+}
+
+.info-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--white-color);
+}
+
+.info-modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--white-color);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.info-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.info-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.info-modal-body h3 {
+  color: var(--title-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.info-modal-body h3:first-child {
+  margin-top: 0;
+}
+
+.info-modal-body p {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.info-modal-body ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.info-modal-body li {
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.info-modal-body li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #2C3E50;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.info-modal-body strong {
+  color: var(--title-color);
+}
+
+/* FAQ specific styles */
+.faq-item {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1rem;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-question {
+  font-weight: 600;
+  color: var(--title-color);
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.faq-answer {
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+@media screen and (max-width: 768px) {
+  .info-modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .info-modal-body {
+    padding: 1.5rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================ */
+/* GALLERY STACK SECTION */
+/* ============================================ */
+
+.gallery-stack-section {
+  /* background: var(--container-color); */
+  padding: 5rem 0;
+}
+
+.stack-wrapper {
+  --n: 7;
+  --k: 0;
+  width: min(920px, 90%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+/* Meta sidebar */
+.stack-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.stack-counter {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--title-color);
+}
+
+.stack-description {
+  opacity: 0.7;
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+/* Controls */
+.stack-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stack-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--black-color);
+  background: transparent;
+  color: var(--black-color);
+  font-size: 1.5rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.stack-btn:hover {
+  background: var(--black-color);
+  color: var(--white-color);
+  transform: scale(1.05);
+}
+
+.stack-btn:active {
+  transform: scale(0.97);
+}
+
+/* Stack container */
+.stack-container {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  perspective: 1200px;
+}
+
+/* Individual cards */
+.stack-card {
+  --a: 0deg;
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.4s cubic-bezier(0.22, 0.9, 0.36, 1),
+    opacity 0.4s ease,
+    filter 0.4s;
+  will-change: transform, opacity;
+}
+
+.stack-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.stack-info {
+  position: absolute;
+  left: 1.5rem;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  color: var(--white-color);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.stack-info h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stack-info p {
+  margin: 0;
+  opacity: 0.95;
+  font-size: 0.95rem;
+}
+
+/* Card states */
+.stack-card.visible {
+  opacity: 1;
+  transform: translateX(0%) translateY(0%) scale(1) rotate(0deg);
+  filter: none;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.stack-card.hidden {
+  opacity: 0.001;
+  transform: translateX(0%) translateY(8%) scale(0.92) rotate(var(--a));
+  filter: blur(1px) saturate(0.8);
+  pointer-events: none;
+}
+
+.stack-card.out-left {
+  opacity: 0.5;
+  transform: translateX(-130%) scale(0.95) rotate(calc(var(--a) * 0.5));
+}
+
+.stack-card.out-right {
+  opacity: 0.5;
+  transform: translateX(130%) scale(0.95) rotate(calc(var(--a) * 0.5));
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .stack-wrapper {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .stack-container {
+    height: 320px;
+  }
+
+  .stack-meta {
+    text-align: center;
+    align-items: center;
+  }
+
+  .stack-info h3 {
+    font-size: 1.25rem;
+  }
+
+  .stack-info p {
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .stack-container {
+    height: 280px;
+  }
+
+  .stack-info {
+    left: 1rem;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}

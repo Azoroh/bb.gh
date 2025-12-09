@@ -1,4 +1,5 @@
 import { packages, addons, destinations } from "./data.js";
+import { modalContent } from './modal-content.js';
 
 let itiInstance = null;
 let modalItiInstance = null;
@@ -103,7 +104,6 @@ function renderPackageCards() {
             <h3>${pkg.title}</h3>
             <p class="package_meta">${pkg.duration} | ${pkg.location}</p>
           </div>
-          <p class="package_price">From <br><strong>${pkg.price}</strong></p>
         </div>
         <p class="package_description">${pkg.summary}</p>
         <div class="package_action">
@@ -556,6 +556,192 @@ function initializeScrollReveal() {
   sr.reveal('.home_data .button', { delay: 1100 });
 }
 
+
+
+
+
+// ============================================
+// INFO MODALS
+// ============================================
+function createInfoModal() {
+  const modalHTML = `
+    <div class="info-modal-overlay" id="info-modal">
+      <div class="info-modal-content">
+        <div class="info-modal-header">
+          <h2 id="info-modal-title"></h2>
+          <button class="info-modal-close" id="info-modal-close">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <div class="info-modal-body" id="info-modal-body"></div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function openInfoModal(type) {
+  const modal = document.getElementById('info-modal');
+  const title = document.getElementById('info-modal-title');
+  const body = document.getElementById('info-modal-body');
+
+  const content = modalContent[type];
+  if (!content) return;
+
+  title.textContent = content.title;
+  body.innerHTML = content.content;
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInfoModal() {
+  const modal = document.getElementById('info-modal');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function initializeInfoModals() {
+  createInfoModal();
+
+  document.getElementById('info-modal-close').addEventListener('click', closeInfoModal);
+
+  document.getElementById('info-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'info-modal') closeInfoModal();
+  });
+
+  document.querySelectorAll('.footer_link[data-modal]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const modalType = link.dataset.modal.toLowerCase();
+      openInfoModal(modalType);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('info-modal');
+      if (modal && modal.classList.contains('active')) closeInfoModal();
+    }
+  });
+}
+
+
+// ============================================
+// GALLERY STACK
+// ============================================
+function initializeGalleryStack() {
+  const section = document.getElementById("stackSection");
+  if (!section) return;
+
+  const stack = document.getElementById("stack");
+  const cards = Array.from(stack.querySelectorAll(".stack-card"));
+  const n = cards.length;
+  const counter = document.getElementById("counter");
+  const description = document.getElementById("description");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+
+  let k = 0;
+  let animating = false;
+
+  function norm(i) {
+    return ((i % n) + n) % n;
+  }
+
+  function setZIndices(currentIndex) {
+    cards.forEach((card) => {
+      const idx = +card.dataset.i;
+      const dist = norm(idx - currentIndex);
+      card.style.zIndex = (n - dist).toString();
+    });
+  }
+
+  function updateTo(newIndex, dir = 1) {
+    if (animating) return;
+    newIndex = norm(newIndex);
+    if (newIndex === k) return;
+
+    animating = true;
+
+    const previous = k;
+    const next = newIndex;
+
+    setZIndices(next);
+
+    cards.forEach((c) =>
+      c.classList.remove("visible", "hidden", "out-left", "out-right")
+    );
+
+    const outgoing = cards.find((c) => +c.dataset.i === previous);
+    const incoming = cards.find((c) => +c.dataset.i === next);
+
+    incoming.classList.add("visible");
+
+    if (dir > 0) outgoing.classList.add("out-left");
+    else outgoing.classList.add("out-right");
+
+    cards.forEach((c) => {
+      const i = +c.dataset.i;
+      if (i !== next && i !== previous) c.classList.add("hidden");
+    });
+
+    counter.textContent = `${next + 1} / ${n}`;
+    const incomingDesc = incoming.querySelector(".stack-info p");
+    if (incomingDesc) description.textContent = incomingDesc.textContent;
+
+    const duration = 400;
+    setTimeout(() => {
+      cards.forEach((c) => {
+        c.classList.remove("out-left", "out-right");
+        if (+c.dataset.i === next) {
+          c.classList.add("visible");
+          c.classList.remove("hidden");
+        } else {
+          c.classList.add("hidden");
+          c.classList.remove("visible");
+        }
+      });
+
+      k = next;
+      animating = false;
+    }, duration + 30);
+  }
+
+  function init() {
+    section.style.setProperty("--n", n);
+
+    // Remove all classes first
+    cards.forEach((c) => {
+      c.classList.remove("visible", "hidden", "out-left", "out-right");
+    });
+
+    // Set all cards to hidden except the first one
+    cards.forEach((c) => {
+      const idx = +c.dataset.i;
+      if (idx === k) {
+        c.classList.add("visible");
+      } else {
+        c.classList.add("hidden");
+      }
+    });
+
+    setZIndices(k);
+
+    counter.textContent = `${k + 1} / ${n}`;
+    const topCard = cards.find((c) => +c.dataset.i === k);
+    const desc = topCard ? topCard.querySelector(".stack-info p") : null;
+    description.textContent = desc ? desc.textContent : "";
+  }
+
+  prevBtn.addEventListener("click", () => updateTo(k - 1, -1));
+  nextBtn.addEventListener("click", () => updateTo(k + 1, 1));
+
+  // Initialize immediately
+  init();
+}
+
+
 // ============================================
 // MAIN INIT - PRIORITIZED LOADING
 // ============================================
@@ -582,5 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dateValidation();
     travelerValidation();
     bookingFormHandler();
+    initializeInfoModals();
+    initializeGalleryStack();
   });
 });
