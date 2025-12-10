@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Management - Beyond Borders</title>
+
+    <link
+      rel="shortcut icon"
+      href="./img/logo/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <link rel="stylesheet" href="./styles/admin-dashboard.css" />
+
+    <style>
+      .admin-management-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+
+      .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .admin-header h1 {
+        font-size: 2rem;
+        color: var(--title-color);
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: #2c3e50;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .back-btn:hover {
+        background: #34495e;
+        transform: translateY(-2px);
+      }
+
+      .add-admin-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .add-admin-section h2 {
+        margin-bottom: 1.5rem;
+        color: var(--title-color);
+      }
+
+      .admin-form {
+        display: grid;
+        gap: 1rem;
+        max-width: 500px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        color: var(--title-color);
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #2c3e50;
+      }
+
+      .add-btn {
+        padding: 0.85rem 2rem;
+        background: #2ecc71;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .add-btn:hover {
+        background: #27ae60;
+        transform: translateY(-2px);
+      }
+
+      .add-btn:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .admins-list-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .admins-list-section h2 {
+        margin-bottom: 1.5rem;
+        color: var(--title-color);
+      }
+
+      .admins-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .admins-table thead {
+        background: #f8f9fa;
+      }
+
+      .admins-table th,
+      .admins-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .admins-table th {
+        font-weight: 600;
+        color: var(--title-color);
+      }
+
+      .admins-table td {
+        color: var(--text-color);
+      }
+
+      .role-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 0.35rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .role-badge.super {
+        background: #3498db;
+        color: white;
+      }
+
+      .role-badge.admin {
+        background: #95a5a6;
+        color: white;
+      }
+
+      .delete-btn {
+        padding: 0.5rem 1rem;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 0.35rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .delete-btn:hover {
+        background: #c0392b;
+      }
+
+      .delete-btn:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-color);
+      }
+
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-color);
+      }
+
+      @media screen and (max-width: 768px) {
+        .admin-management-container {
+          padding: 1rem;
+        }
+
+        .admins-table {
+          font-size: 0.85rem;
+        }
+
+        .admins-table th,
+        .admins-table td {
+          padding: 0.75rem 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-management-container">
+      <div class="admin-header">
+        <h1><i class="ri-user-settings-line"></i> Admin Management</h1>
+        <a href="admin-dashboard.html" class="back-btn">
+          <i class="ri-arrow-left-line"></i>
+          Back to Dashboard
+        </a>
+      </div>
+
+      <!-- Add New Admin Section -->
+      <div class="add-admin-section">
+        <h2>Add New Admin</h2>
+        <form class="admin-form" id="add-admin-form">
+          <div class="form-group">
+            <label for="admin-email">Email Address</label>
+            <input
+              type="email"
+              id="admin-email"
+              placeholder="admin@example.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="admin-password">Password</label>
+            <input
+              type="password"
+              id="admin-password"
+              placeholder="Minimum 6 characters"
+              minlength="6"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="admin-name">Full Name</label>
+            <input
+              type="text"
+              id="admin-name"
+              placeholder="John Doe"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="admin-role">Role</label>
+            <select id="admin-role" required>
+              <option value="admin">Admin</option>
+              <option value="super">Super Admin</option>
+            </select>
+          </div>
+
+          <button type="submit" class="add-btn">
+            <i class="ri-user-add-line"></i>
+            Add Admin
+          </button>
+        </form>
+      </div>
+
+      <!-- Admins List Section -->
+      <div class="admins-list-section">
+        <h2>Current Admins</h2>
+        <div id="admins-list-container">
+          <div class="loading">
+            <i
+              class="ri-loader-4-line"
+              style="font-size: 2rem; animation: spin 1s linear infinite"
+            ></i>
+            <p>Loading admins...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./scripts/admin-management.js"></script>
+  </body>
+</html>
