@@ -1,1463 +1,1947 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Beyond Borders</title>
 
-    <link rel="shortcut icon" href="./img/logo/favicon.ico" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="./img/logo/favicon.ico"
+      type="image/x-icon"
+    />
 
-    <link rel="stylesheet" href="./styles/admin-dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+    <link rel="stylesheet" href="./styles/admin-dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
 
     <!-- International Phone Input -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/intlTelInput.min.js"></script> -->
+  </head>
 
-</head>
-
-<body>
-
-
+  <body>
     <!-- Header -->
     <header class="header">
-        <div class="logo">
-            <img src="./img/logo/bb full.png" alt="logo" class="logo-img">
+      <div class="logo">
+        <img src="./img/logo/bb full.png" alt="logo" class="logo-img" />
+      </div>
+      <div class="user-info">
+        <div>
+          <span class="user-name" id="user-name">Name</span>
+          <span class="user-role">Admin</span>
         </div>
-        <div class="user-info">
-            <div>
-                <span class="user-name" id="user-name">Name</span>
-                <span class="user-role">Admin</span>
-            </div>
-            <button class="logout-btn" id="logout-btn">
-                <i class="ri-logout-box-line"></i>
-                Logout
-            </button>
-        </div>
+        <button class="logout-btn" id="logout-btn">
+          <i class="ri-logout-box-line"></i>
+          Logout
+        </button>
+      </div>
     </header>
 
     <!-- Dashboard Layout -->
     <div class="dashboard-layout">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <nav>
-                <div class="nav-section">
-                    <div class="nav-title">Overview</div>
-                    <div class="nav-item active" data-section="overview">
-                        <i class="ri-dashboard-line"></i>
-                        <span>Dashboard</span>
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <nav>
+          <div class="nav-section">
+            <div class="nav-title">Overview</div>
+            <div class="nav-item active" data-section="overview">
+              <i class="ri-dashboard-line"></i>
+              <span>Dashboard</span>
+            </div>
+            <a href="admin-management.html" class="admin-link">
+              <i class="ri-user-settings-line"></i>
+              Manage Admins
+            </a>
+          </div>
+
+          <div class="nav-section">
+            <div class="nav-title">Management</div>
+            <div class="nav-item" data-section="bookings">
+              <i class="ri-calendar-check-line"></i>
+              <span>Bookings</span>
+            </div>
+            <div class="nav-item" data-section="clients">
+              <i class="ri-user-3-line"></i>
+              <span>Clients</span>
+            </div>
+            <div class="nav-item" data-section="drivers">
+              <i class="ri-car-line"></i>
+              <span>Drivers</span>
+            </div>
+            <div class="nav-item" data-section="tasks">
+              <i class="ri-task-line"></i>
+              <span>Tasks</span>
+            </div>
+            <div class="nav-item" data-section="payments">
+              <i class="ri-money-dollar-circle-line"></i>
+              <span>Payments</span>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Overview Section -->
+        <section id="overview-section" class="content-section active">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-info">
+                <h3>Total Bookings</h3>
+                <div class="value" id="total-bookings">0</div>
+              </div>
+              <div class="stat-icon icon-blue">
+                <i class="ri-calendar-check-line"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <h3>Active Clients</h3>
+                <div class="value" id="total-clients">0</div>
+              </div>
+              <div class="stat-icon icon-green">
+                <i class="ri-user-3-line"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <h3>Active Drivers</h3>
+                <div class="value" id="total-drivers">0</div>
+              </div>
+              <div class="stat-icon icon-orange">
+                <i class="ri-car-line"></i>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <h3>Pending Tasks</h3>
+                <div class="value" id="total-tasks">0</div>
+              </div>
+              <div class="stat-icon icon-purple">
+                <i class="ri-task-line"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <h2 class="section-title">Recent Bookings</h2>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Package</th>
+                  <th>Dates</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recent-bookings-table">
+                <tr>
+                  <td colspan="5">
+                    <div class="spinner"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Bookings Section -->
+        <section id="bookings-section" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">All Bookings</h2>
+            <button class="btn-primary" id="add-booking-btn">
+              <i class="ri-add-line"></i>
+              New Booking
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Package</th>
+                  <th>Dates</th>
+                  <th>Travelers</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookings-table">
+                <tr>
+                  <td colspan="8">
+                    <div class="spinner"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Clients Section -->
+        <section id="clients-section" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Clients</h2>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Total Bookings</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="clients-table">
+                <tr>
+                  <td colspan="5">
+                    <div class="spinner"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Drivers Section -->
+        <section id="drivers-section" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Drivers</h2>
+            <button class="btn-primary" id="add-driver-btn">
+              <i class="ri-add-line"></i>
+              Add Driver
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="drivers-table">
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state">
+                      <i class="ri-car-line"></i>
+                      <p>No drivers yet. Click "Add Driver" to create one.</p>
                     </div>
-                </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-                <div class="nav-section">
-                    <div class="nav-title">Management</div>
-                    <div class="nav-item" data-section="bookings">
-                        <i class="ri-calendar-check-line"></i>
-                        <span>Bookings</span>
+        <!-- Tasks Section -->
+        <section id="tasks-section" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Tasks</h2>
+            <button class="btn-primary" id="add-task-btn">
+              <i class="ri-add-line"></i>
+              Create Task
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Assigned To</th>
+                  <th>Booking</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tasks-table">
+                <tr>
+                  <td colspan="6">
+                    <div class="empty-state">
+                      <i class="ri-task-line"></i>
+                      <p>
+                        No tasks yet. Click "Create Task" to assign work to
+                        drivers.
+                      </p>
                     </div>
-                    <div class="nav-item" data-section="clients">
-                        <i class="ri-user-3-line"></i>
-                        <span>Clients</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Payments Section -->
+        <section id="payments-section" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Payments</h2>
+            <button class="btn-primary" id="add-payment-btn">
+              <i class="ri-add-line"></i>
+              Record Payment
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Booking</th>
+                  <th>Client</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="payments-table">
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">
+                      <i class="ri-money-dollar-circle-line"></i>
+                      <p>No payment records yet.</p>
                     </div>
-                    <div class="nav-item" data-section="drivers">
-                        <i class="ri-car-line"></i>
-                        <span>Drivers</span>
-                    </div>
-                    <div class="nav-item" data-section="tasks">
-                        <i class="ri-task-line"></i>
-                        <span>Tasks</span>
-                    </div>
-                    <div class="nav-item" data-section="payments">
-                        <i class="ri-money-dollar-circle-line"></i>
-                        <span>Payments</span>
-                    </div>
-                </div>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Overview Section -->
-            <section id="overview-section" class="content-section active">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Total Bookings</h3>
-                            <div class="value" id="total-bookings">0</div>
-                        </div>
-                        <div class="stat-icon icon-blue">
-                            <i class="ri-calendar-check-line"></i>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Active Clients</h3>
-                            <div class="value" id="total-clients">0</div>
-                        </div>
-                        <div class="stat-icon icon-green">
-                            <i class="ri-user-3-line"></i>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Active Drivers</h3>
-                            <div class="value" id="total-drivers">0</div>
-                        </div>
-                        <div class="stat-icon icon-orange">
-                            <i class="ri-car-line"></i>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Pending Tasks</h3>
-                            <div class="value" id="total-tasks">0</div>
-                        </div>
-                        <div class="stat-icon icon-purple">
-                            <i class="ri-task-line"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-header">
-                    <h2 class="section-title">Recent Bookings</h2>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Client</th>
-                                <th>Package</th>
-                                <th>Dates</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recent-bookings-table">
-                            <tr>
-                                <td colspan="5">
-                                    <div class="spinner"></div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Bookings Section -->
-            <section id="bookings-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">All Bookings</h2>
-                    <button class="btn-primary" id="add-booking-btn">
-                        <i class="ri-add-line"></i>
-                        New Booking
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Client</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Package</th>
-                                <th>Dates</th>
-                                <th>Travelers</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bookings-table">
-                            <tr>
-                                <td colspan="8">
-                                    <div class="spinner"></div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Clients Section -->
-            <section id="clients-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Clients</h2>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Total Bookings</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clients-table">
-                            <tr>
-                                <td colspan="5">
-                                    <div class="spinner"></div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Drivers Section -->
-            <section id="drivers-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Drivers</h2>
-                    <button class="btn-primary" id="add-driver-btn">
-                        <i class="ri-add-line"></i>
-                        Add Driver
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="drivers-table">
-                            <tr>
-                                <td colspan="5">
-                                    <div class="empty-state">
-                                        <i class="ri-car-line"></i>
-                                        <p>No drivers yet. Click "Add Driver" to create one.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Tasks Section -->
-            <section id="tasks-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Tasks</h2>
-                    <button class="btn-primary" id="add-task-btn">
-                        <i class="ri-add-line"></i>
-                        Create Task
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Task</th>
-                                <th>Assigned To</th>
-                                <th>Booking</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tasks-table">
-                            <tr>
-                                <td colspan="6">
-                                    <div class="empty-state">
-                                        <i class="ri-task-line"></i>
-                                        <p>No tasks yet. Click "Create Task" to assign work to drivers.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Payments Section -->
-            <section id="payments-section" class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Payments</h2>
-                    <button class="btn-primary" id="add-payment-btn">
-                        <i class="ri-add-line"></i>
-                        Record Payment
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Booking</th>
-                                <th>Client</th>
-                                <th>Amount</th>
-                                <th>Method</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="payments-table">
-                            <tr>
-                                <td colspan="7">
-                                    <div class="empty-state">
-                                        <i class="ri-money-dollar-circle-line"></i>
-                                        <p>No payment records yet.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
     </div>
-
-
-
-
-
 
     <!-- MODAL FORM  -->
     <!-- Add Driver Modal -->
     <div class="modal-overlay" id="add-driver-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Add New Driver</h2>
-                <button class="modal-close" onclick="closeModal('add-driver-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-error" id="driver-form-error"></div>
-                <form id="add-driver-form" class="form-grid">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="driver-name">Full Name <span class="required">*</span></label>
-                            <input type="text" id="driver-name" name="name" required placeholder="John Doe">
-                        </div>
-                        <div class="form-group">
-                            <label for="driver-phone">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="driver-phone" name="phone" required placeholder="+233123456789">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="driver-email">Email Address <span class="required">*</span></label>
-                        <input type="email" id="driver-email" name="email" required placeholder="driver@example.com">
-                        <small>This will be used for login</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="driver-password">Password <span class="required">*</span></label>
-                        <input type="password" id="driver-password" name="password" required minlength="6"
-                            placeholder="Minimum 6 characters">
-                        <small>Driver will use this to login</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="driver-license">Driver's License Number</label>
-                        <input type="text" id="driver-license" name="license" placeholder="Optional">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="driver-vehicle">Vehicle Information</label>
-                        <input type="text" id="driver-vehicle" name="vehicle"
-                            placeholder="e.g., Toyota Camry - GH 1234-20">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="driver-notes">Additional Notes</label>
-                        <textarea id="driver-notes" name="notes"
-                            placeholder="Any additional information about the driver..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('add-driver-modal')">Cancel</button>
-                <button type="submit" form="add-driver-form" class="btn-submit" id="submit-driver-btn">
-                    <i class="ri-add-line"></i>
-                    Add Driver
-                </button>
-            </div>
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Add New Driver</h2>
+          <button class="modal-close" onclick="closeModal('add-driver-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-error" id="driver-form-error"></div>
+          <form id="add-driver-form" class="form-grid">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="driver-name"
+                  >Full Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="driver-name"
+                  name="name"
+                  required
+                  placeholder="John Doe"
+                />
+              </div>
+              <div class="form-group">
+                <label for="driver-phone"
+                  >Phone Number <span class="required">*</span></label
+                >
+                <input
+                  type="tel"
+                  id="driver-phone"
+                  name="phone"
+                  required
+                  placeholder="+233123456789"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="driver-email"
+                >Email Address <span class="required">*</span></label
+              >
+              <input
+                type="email"
+                id="driver-email"
+                name="email"
+                required
+                placeholder="driver@example.com"
+              />
+              <small>This will be used for login</small>
+            </div>
+
+            <div class="form-group">
+              <label for="driver-password"
+                >Password <span class="required">*</span></label
+              >
+              <input
+                type="password"
+                id="driver-password"
+                name="password"
+                required
+                minlength="6"
+                placeholder="Minimum 6 characters"
+              />
+              <small>Driver will use this to login</small>
+            </div>
+
+            <div class="form-group">
+              <label for="driver-license">Driver's License Number</label>
+              <input
+                type="text"
+                id="driver-license"
+                name="license"
+                placeholder="Optional"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="driver-vehicle">Vehicle Information</label>
+              <input
+                type="text"
+                id="driver-vehicle"
+                name="vehicle"
+                placeholder="e.g., Toyota Camry - GH 1234-20"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="driver-notes">Additional Notes</label>
+              <textarea
+                id="driver-notes"
+                name="notes"
+                placeholder="Any additional information about the driver..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('add-driver-modal')"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="add-driver-form"
+            class="btn-submit"
+            id="submit-driver-btn"
+          >
+            <i class="ri-add-line"></i>
+            Add Driver
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Create Task Modal -->
     <div class="modal-overlay" id="create-task-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Create New Task</h2>
-                <button class="modal-close" onclick="closeModal('create-task-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-error" id="task-form-error"></div>
-                <form id="create-task-form" class="form-grid">
-                    <div class="form-group">
-                        <label for="task-title">Task Title <span class="required">*</span></label>
-                        <input type="text" id="task-title" name="title" required placeholder="e.g., Airport Pickup">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="task-driver">Assign to Driver <span class="required">*</span></label>
-                        <select id="task-driver" name="driverId" required>
-                            <option value="">Select a driver...</option>
-                            <!-- Will be populated dynamically -->
-                        </select>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="task-date">Date <span class="required">*</span></label>
-                            <input type="date" id="task-date" name="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="task-time">Time <span class="required">*</span></label>
-                            <input type="time" id="task-time" name="time" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="task-client-name">Client Name</label>
-                        <input type="text" id="task-client-name" name="clientName" placeholder="Optional">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="task-client-phone">Client Phone</label>
-                        <input type="tel" id="task-client-phone" name="clientPhone" placeholder="+233123456789">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="task-pickup">Pickup Location <span class="required">*</span></label>
-                        <input type="text" id="task-pickup" name="pickupLocation" required
-                            placeholder="e.g., Kotoka Airport">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="task-destination">Destination <span class="required">*</span></label>
-                        <input type="text" id="task-destination" name="destination" required
-                            placeholder="e.g., Labadi Beach Hotel">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="task-priority">Priority <span class="required">*</span></label>
-                        <select id="task-priority" name="priority" required>
-                            <option value="normal">Normal</option>
-                            <option value="high">High</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="task-notes">Notes / Instructions</label>
-                        <textarea id="task-notes" name="notes"
-                            placeholder="Special instructions for the driver..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('create-task-modal')">Cancel</button>
-                <button type="submit" form="create-task-form" class="btn-submit" id="submit-task-btn">
-                    <i class="ri-add-line"></i>
-                    Create Task
-                </button>
-            </div>
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Create New Task</h2>
+          <button class="modal-close" onclick="closeModal('create-task-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
-    </div>
+        <div class="modal-body">
+          <div class="form-error" id="task-form-error"></div>
+          <form id="create-task-form" class="form-grid">
+            <div class="form-group">
+              <label for="task-title"
+                >Task Title <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="task-title"
+                name="title"
+                required
+                placeholder="e.g., Airport Pickup"
+              />
+            </div>
 
+            <div class="form-group">
+              <label for="task-driver"
+                >Assign to Driver <span class="required">*</span></label
+              >
+              <select id="task-driver" name="driverId" required>
+                <option value="">Select a driver...</option>
+                <!-- Will be populated dynamically -->
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="task-date"
+                  >Date <span class="required">*</span></label
+                >
+                <input type="date" id="task-date" name="date" required />
+              </div>
+              <div class="form-group">
+                <label for="task-time"
+                  >Time <span class="required">*</span></label
+                >
+                <input type="time" id="task-time" name="time" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="task-client-name">Client Name</label>
+              <input
+                type="text"
+                id="task-client-name"
+                name="clientName"
+                placeholder="Optional"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="task-client-phone">Client Phone</label>
+              <input
+                type="tel"
+                id="task-client-phone"
+                name="clientPhone"
+                placeholder="+233123456789"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="task-pickup"
+                >Pickup Location <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="task-pickup"
+                name="pickupLocation"
+                required
+                placeholder="e.g., Kotoka Airport"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="task-destination"
+                >Destination <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="task-destination"
+                name="destination"
+                required
+                placeholder="e.g., Labadi Beach Hotel"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="task-priority"
+                >Priority <span class="required">*</span></label
+              >
+              <select id="task-priority" name="priority" required>
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="task-notes">Notes / Instructions</label>
+              <textarea
+                id="task-notes"
+                name="notes"
+                placeholder="Special instructions for the driver..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('create-task-modal')"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="create-task-form"
+            class="btn-submit"
+            id="submit-task-btn"
+          >
+            <i class="ri-add-line"></i>
+            Create Task
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- View Booking Modal -->
     <div class="modal-overlay" id="view-booking-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Booking Details</h2>
-                <button class="modal-close" onclick="closeModal('view-booking-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-success" id="booking-update-success"></div>
-                <div class="form-error" id="booking-update-error"></div>
-
-                <!-- Booking Info Grid -->
-                <div class="info-grid">
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-user-line"></i>
-                            Client Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Name:</span>
-                            <span class="info-value" id="booking-client-name">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Email:</span>
-                            <span class="info-value" id="booking-client-email">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Phone:</span>
-                            <span class="info-value" id="booking-client-phone">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-map-pin-line"></i>
-                            Trip Details
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Package:</span>
-                            <span class="info-value" id="booking-package">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Start Date:</span>
-                            <span class="info-value" id="booking-start-date">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">End Date:</span>
-                            <span class="info-value" id="booking-end-date">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Travelers:</span>
-                            <span class="info-value" id="booking-travelers">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Add-on:</span>
-                            <span class="info-value" id="booking-addon">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-message-line"></i>
-                            Special Requests
-                        </h3>
-                        <div class="info-message" id="booking-message">
-                            No special requests
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-settings-line"></i>
-                            Booking Management
-                        </h3>
-                        <div class="status-update-section">
-                            <label for="booking-status-select">Status:</label>
-                            <select id="booking-status-select" class="status-select">
-                                <option value="pending">Pending</option>
-                                <option value="confirmed">Confirmed</option>
-                                <option value="completed">Completed</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                            <button class="btn btn-submit" id="update-status-btn">
-                                <i class="ri-save-line"></i>
-                                Update Status
-                            </button>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Booking Date:</span>
-                            <span class="info-value" id="booking-created-date">-</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('view-booking-modal')">Close</button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Booking Details</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('view-booking-modal')"
+          >
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-success" id="booking-update-success"></div>
+          <div class="form-error" id="booking-update-error"></div>
+
+          <!-- Booking Info Grid -->
+          <div class="info-grid">
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-user-line"></i>
+                Client Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value" id="booking-client-name">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value" id="booking-client-email">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value" id="booking-client-phone">-</span>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-map-pin-line"></i>
+                Trip Details
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Package:</span>
+                <span class="info-value" id="booking-package">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Start Date:</span>
+                <span class="info-value" id="booking-start-date">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">End Date:</span>
+                <span class="info-value" id="booking-end-date">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Travelers:</span>
+                <span class="info-value" id="booking-travelers">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Add-on:</span>
+                <span class="info-value" id="booking-addon">-</span>
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-message-line"></i>
+                Special Requests
+              </h3>
+              <div class="info-message" id="booking-message">
+                No special requests
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-settings-line"></i>
+                Booking Management
+              </h3>
+              <div class="status-update-section">
+                <label for="booking-status-select">Status:</label>
+                <select id="booking-status-select" class="status-select">
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+                <button class="btn btn-submit" id="update-status-btn">
+                  <i class="ri-save-line"></i>
+                  Update Status
+                </button>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Booking Date:</span>
+                <span class="info-value" id="booking-created-date">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('view-booking-modal')"
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- View Task Modal -->
     <div class="modal-overlay" id="view-task-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Task Details</h2>
-                <button class="modal-close" onclick="closeModal('view-task-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-success" id="task-update-success"></div>
-                <div class="form-error" id="task-update-error"></div>
-
-                <!-- Task Info Grid -->
-                <div class="info-grid">
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-task-line"></i>
-                            Task Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Title:</span>
-                            <span class="info-value" id="view-task-title">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Date:</span>
-                            <span class="info-value" id="view-task-date">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Time:</span>
-                            <span class="info-value" id="view-task-time">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Priority:</span>
-                            <span class="info-value" id="view-task-priority">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-car-line"></i>
-                            Driver Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Name:</span>
-                            <span class="info-value" id="view-task-driver-name">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Email:</span>
-                            <span class="info-value" id="view-task-driver-email">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Phone:</span>
-                            <span class="info-value" id="view-task-driver-phone">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-user-line"></i>
-                            Client Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Name:</span>
-                            <span class="info-value" id="view-task-client-name">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Phone:</span>
-                            <span class="info-value" id="view-task-client-phone">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-map-pin-line"></i>
-                            Location Details
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Pickup:</span>
-                            <span class="info-value" id="view-task-pickup">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Destination:</span>
-                            <span class="info-value" id="view-task-destination">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-message-line"></i>
-                            Notes / Instructions
-                        </h3>
-                        <div class="info-message" id="view-task-notes">
-                            No notes provided
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-settings-line"></i>
-                            Task Management
-                        </h3>
-                        <div class="status-update-section">
-                            <label for="task-status-select">Status:</label>
-                            <select id="task-status-select" class="status-select">
-                                <option value="pending">Pending</option>
-                                <option value="in-progress">In Progress</option>
-                                <option value="completed">Completed</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                            <button class="btn btn-submit" id="update-task-status-btn">
-                                <i class="ri-save-line"></i>
-                                Update Status
-                            </button>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Created:</span>
-                            <span class="info-value" id="task-created-date">-</span>
-                        </div>
-                        <div class="info-item" id="task-completed-container" style="display: none;">
-                            <span class="info-label">Completed:</span>
-                            <span class="info-value" id="task-completed-date">-</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('view-task-modal')">Close</button>
-                <button type="button" class="btn btn-submit" id="delete-task-btn" style="background: #e74c3c;">
-                    <i class="ri-delete-bin-line"></i>
-                    Delete Task
-                </button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Task Details</h2>
+          <button class="modal-close" onclick="closeModal('view-task-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-success" id="task-update-success"></div>
+          <div class="form-error" id="task-update-error"></div>
+
+          <!-- Task Info Grid -->
+          <div class="info-grid">
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-task-line"></i>
+                Task Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Title:</span>
+                <span class="info-value" id="view-task-title">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Date:</span>
+                <span class="info-value" id="view-task-date">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Time:</span>
+                <span class="info-value" id="view-task-time">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Priority:</span>
+                <span class="info-value" id="view-task-priority">-</span>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-car-line"></i>
+                Driver Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value" id="view-task-driver-name">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value" id="view-task-driver-email">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value" id="view-task-driver-phone">-</span>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-user-line"></i>
+                Client Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value" id="view-task-client-name">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value" id="view-task-client-phone">-</span>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-map-pin-line"></i>
+                Location Details
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Pickup:</span>
+                <span class="info-value" id="view-task-pickup">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Destination:</span>
+                <span class="info-value" id="view-task-destination">-</span>
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-message-line"></i>
+                Notes / Instructions
+              </h3>
+              <div class="info-message" id="view-task-notes">
+                No notes provided
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-settings-line"></i>
+                Task Management
+              </h3>
+              <div class="status-update-section">
+                <label for="task-status-select">Status:</label>
+                <select id="task-status-select" class="status-select">
+                  <option value="pending">Pending</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+                <button class="btn btn-submit" id="update-task-status-btn">
+                  <i class="ri-save-line"></i>
+                  Update Status
+                </button>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Created:</span>
+                <span class="info-value" id="task-created-date">-</span>
+              </div>
+              <div
+                class="info-item"
+                id="task-completed-container"
+                style="display: none"
+              >
+                <span class="info-label">Completed:</span>
+                <span class="info-value" id="task-completed-date">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('view-task-modal')"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-submit"
+            id="delete-task-btn"
+            style="background: #e74c3c"
+          >
+            <i class="ri-delete-bin-line"></i>
+            Delete Task
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- View Client Modal -->
     <div class="modal-overlay" id="view-client-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Client Details</h2>
-                <button class="modal-close" onclick="closeModal('view-client-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="info-section">
-                    <h3>Client Information</h3>
-                    <div class="info-item">
-                        <span class="info-label">Name:</span>
-                        <span class="info-value" id="view-client-name">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email:</span>
-                        <span class="info-value" id="view-client-email">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Phone:</span>
-                        <span class="info-value" id="view-client-phone">-</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Total Bookings:</span>
-                        <span class="info-value" id="view-client-booking-count">-</span>
-                    </div>
-                </div>
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Booking History</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Package</th>
-                                <th>Dates</th>
-                                <th>Travelers</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="view-client-bookings-table">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('view-client-modal')">Close</button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Client Details</h2>
+          <button class="modal-close" onclick="closeModal('view-client-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="info-section">
+            <h3>Client Information</h3>
+            <div class="info-item">
+              <span class="info-label">Name:</span>
+              <span class="info-value" id="view-client-name">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email:</span>
+              <span class="info-value" id="view-client-email">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Phone:</span>
+              <span class="info-value" id="view-client-phone">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Total Bookings:</span>
+              <span class="info-value" id="view-client-booking-count">-</span>
+            </div>
+          </div>
+          <h3 style="margin-top: 2rem; margin-bottom: 1rem">Booking History</h3>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Package</th>
+                  <th>Dates</th>
+                  <th>Travelers</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="view-client-bookings-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeModal('view-client-modal')">
+            Close
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- View Driver Modal -->
     <div class="modal-overlay" id="view-driver-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Driver Details</h2>
-                <button class="modal-close" onclick="closeModal('view-driver-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Driver Info Grid -->
-                <div class="info-grid">
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-user-line"></i>
-                            Personal Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Name:</span>
-                            <span class="info-value" id="view-driver-name">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Email:</span>
-                            <span class="info-value" id="view-driver-email">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Phone:</span>
-                            <span class="info-value" id="view-driver-phone">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Status:</span>
-                            <span class="info-value" id="view-driver-status">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-car-line"></i>
-                            Vehicle Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">License Number:</span>
-                            <span class="info-value" id="view-driver-license">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Vehicle:</span>
-                            <span class="info-value" id="view-driver-vehicle">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Member Since:</span>
-                            <span class="info-value" id="view-driver-created">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-task-line"></i>
-                            Task Statistics
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Total Tasks:</span>
-                            <span class="info-value" id="view-driver-total-tasks">0</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Completed:</span>
-                            <span class="info-value" style="color: #2ecc71; font-weight: 700;"
-                                id="view-driver-completed-tasks">0</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Pending:</span>
-                            <span class="info-value" style="color: #f59e0b; font-weight: 700;"
-                                id="view-driver-pending-tasks">0</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">In Progress:</span>
-                            <span class="info-value" style="color: #667eea; font-weight: 700;"
-                                id="view-driver-inprogress-tasks">0</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-star-line"></i>
-                            Performance
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Completion Rate:</span>
-                            <span class="info-value" id="view-driver-completion-rate">0%</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Last Task:</span>
-                            <span class="info-value" id="view-driver-last-task">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-message-line"></i>
-                            Notes
-                        </h3>
-                        <div class="info-message" id="view-driver-notes">
-                            No notes available
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-history-line"></i>
-                            Recent Tasks
-                        </h3>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Task</th>
-                                        <th>Date</th>
-                                        <th>Client</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="view-driver-tasks-table">
-                                    <tr>
-                                        <td colspan="4" style="text-align: center; color: #a0aec0;">
-                                            No tasks assigned yet
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('view-driver-modal')">Close</button>
-                <button type="button" class="btn btn-submit" id="edit-from-view-driver-btn"
-                    style="background: #667eea;">
-                    <i class="ri-edit-line"></i>
-                    Edit Driver
-                </button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Driver Details</h2>
+          <button class="modal-close" onclick="closeModal('view-driver-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <!-- Driver Info Grid -->
+          <div class="info-grid">
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-user-line"></i>
+                Personal Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value" id="view-driver-name">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value" id="view-driver-email">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value" id="view-driver-phone">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Status:</span>
+                <span class="info-value" id="view-driver-status">-</span>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-car-line"></i>
+                Vehicle Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">License Number:</span>
+                <span class="info-value" id="view-driver-license">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Vehicle:</span>
+                <span class="info-value" id="view-driver-vehicle">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Member Since:</span>
+                <span class="info-value" id="view-driver-created">-</span>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-task-line"></i>
+                Task Statistics
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Total Tasks:</span>
+                <span class="info-value" id="view-driver-total-tasks">0</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Completed:</span>
+                <span
+                  class="info-value"
+                  style="color: #2ecc71; font-weight: 700"
+                  id="view-driver-completed-tasks"
+                  >0</span
+                >
+              </div>
+              <div class="info-item">
+                <span class="info-label">Pending:</span>
+                <span
+                  class="info-value"
+                  style="color: #f59e0b; font-weight: 700"
+                  id="view-driver-pending-tasks"
+                  >0</span
+                >
+              </div>
+              <div class="info-item">
+                <span class="info-label">In Progress:</span>
+                <span
+                  class="info-value"
+                  style="color: #667eea; font-weight: 700"
+                  id="view-driver-inprogress-tasks"
+                  >0</span
+                >
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-star-line"></i>
+                Performance
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Completion Rate:</span>
+                <span class="info-value" id="view-driver-completion-rate"
+                  >0%</span
+                >
+              </div>
+              <div class="info-item">
+                <span class="info-label">Last Task:</span>
+                <span class="info-value" id="view-driver-last-task">-</span>
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-message-line"></i>
+                Notes
+              </h3>
+              <div class="info-message" id="view-driver-notes">
+                No notes available
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-history-line"></i>
+                Recent Tasks
+              </h3>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Task</th>
+                      <th>Date</th>
+                      <th>Client</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="view-driver-tasks-table">
+                    <tr>
+                      <td
+                        colspan="4"
+                        style="text-align: center; color: #a0aec0"
+                      >
+                        No tasks assigned yet
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('view-driver-modal')"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-submit"
+            id="edit-from-view-driver-btn"
+            style="background: #667eea"
+          >
+            <i class="ri-edit-line"></i>
+            Edit Driver
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Edit Booking Modal -->
     <div class="modal-overlay" id="edit-booking-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Edit Booking</h2>
-                <button class="modal-close" onclick="closeModal('edit-booking-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-error" id="edit-booking-error"></div>
-                <div class="form-success" id="edit-booking-success"></div>
-
-                <form id="edit-booking-form" class="form-grid">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-booking-firstname">First Name <span class="required">*</span></label>
-                            <input type="text" id="edit-booking-firstname" name="firstName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-booking-lastname">Last Name <span class="required">*</span></label>
-                            <input type="text" id="edit-booking-lastname" name="lastName" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-booking-email">Email <span class="required">*</span></label>
-                        <input type="email" id="edit-booking-email" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-booking-phone">Phone Number <span class="required">*</span></label>
-                        <input type="tel" id="edit-booking-phone" name="phone" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-booking-package">Package <span class="required">*</span></label>
-                        <input type="text" id="edit-booking-package" name="packageName" required>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-booking-startdate">Start Date <span class="required">*</span></label>
-                            <input type="date" id="edit-booking-startdate" name="startDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-booking-enddate">End Date <span class="required">*</span></label>
-                            <input type="date" id="edit-booking-enddate" name="endDate" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-booking-travelers">Number of Travelers <span class="required">*</span></label>
-                        <input type="number" id="edit-booking-travelers" name="travelers" min="1" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-booking-addon">Add-on</label>
-                        <input type="text" id="edit-booking-addon" name="addon" placeholder="Optional">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-booking-status">Status <span class="required">*</span></label>
-                        <select id="edit-booking-status" name="status" required>
-                            <option value="pending">Pending</option>
-                            <option value="confirmed">Confirmed</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-booking-message">Special Requests</label>
-                        <textarea id="edit-booking-message" name="message" rows="3" placeholder="Optional"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('edit-booking-modal')">Cancel</button>
-                <button type="submit" form="edit-booking-form" class="btn-submit" id="update-booking-btn">
-                    <i class="ri-save-line"></i>
-                    Update Booking
-                </button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Edit Booking</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('edit-booking-modal')"
+          >
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-error" id="edit-booking-error"></div>
+          <div class="form-success" id="edit-booking-success"></div>
+
+          <form id="edit-booking-form" class="form-grid">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-booking-firstname"
+                  >First Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="edit-booking-firstname"
+                  name="firstName"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="edit-booking-lastname"
+                  >Last Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="edit-booking-lastname"
+                  name="lastName"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-booking-email"
+                >Email <span class="required">*</span></label
+              >
+              <input
+                type="email"
+                id="edit-booking-email"
+                name="email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-booking-phone"
+                >Phone Number <span class="required">*</span></label
+              >
+              <input type="tel" id="edit-booking-phone" name="phone" required />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-booking-package"
+                >Package <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="edit-booking-package"
+                name="packageName"
+                required
+              />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-booking-startdate"
+                  >Start Date <span class="required">*</span></label
+                >
+                <input
+                  type="date"
+                  id="edit-booking-startdate"
+                  name="startDate"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="edit-booking-enddate"
+                  >End Date <span class="required">*</span></label
+                >
+                <input
+                  type="date"
+                  id="edit-booking-enddate"
+                  name="endDate"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-booking-travelers"
+                >Number of Travelers <span class="required">*</span></label
+              >
+              <input
+                type="number"
+                id="edit-booking-travelers"
+                name="travelers"
+                min="1"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-booking-addon">Add-on</label>
+              <input
+                type="text"
+                id="edit-booking-addon"
+                name="addon"
+                placeholder="Optional"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-booking-status"
+                >Status <span class="required">*</span></label
+              >
+              <select id="edit-booking-status" name="status" required>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-booking-message">Special Requests</label>
+              <textarea
+                id="edit-booking-message"
+                name="message"
+                rows="3"
+                placeholder="Optional"
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('edit-booking-modal')"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="edit-booking-form"
+            class="btn-submit"
+            id="update-booking-btn"
+          >
+            <i class="ri-save-line"></i>
+            Update Booking
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Edit Task Modal -->
     <div class="modal-overlay" id="edit-task-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Edit Task</h2>
-                <button class="modal-close" onclick="closeModal('edit-task-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-error" id="edit-task-error"></div>
-                <div class="form-success" id="edit-task-success"></div>
-
-                <form id="edit-task-form" class="form-grid">
-                    <div class="form-group">
-                        <label for="edit-task-title">Task Title <span class="required">*</span></label>
-                        <input type="text" id="edit-task-title" name="title" required
-                            placeholder="e.g., Airport Pickup">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-driver">Assign to Driver <span class="required">*</span></label>
-                        <select id="edit-task-driver" name="driverId" required>
-                            <option value="">Select a driver...</option>
-                            <!-- Will be populated dynamically -->
-                        </select>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-task-date">Date <span class="required">*</span></label>
-                            <input type="date" id="edit-task-date" name="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-task-time">Time <span class="required">*</span></label>
-                            <input type="time" id="edit-task-time" name="time" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-client-name">Client Name</label>
-                        <input type="text" id="edit-task-client-name" name="clientName" placeholder="Optional">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-client-phone">Client Phone</label>
-                        <input type="tel" id="edit-task-client-phone" name="clientPhone" placeholder="+233123456789">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-pickup">Pickup Location <span class="required">*</span></label>
-                        <input type="text" id="edit-task-pickup" name="pickupLocation" required
-                            placeholder="e.g., Kotoka Airport">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-destination">Destination <span class="required">*</span></label>
-                        <input type="text" id="edit-task-destination" name="destination" required
-                            placeholder="e.g., Labadi Beach Hotel">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-priority">Priority <span class="required">*</span></label>
-                        <select id="edit-task-priority" name="priority" required>
-                            <option value="normal">Normal</option>
-                            <option value="high">High</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-status">Status <span class="required">*</span></label>
-                        <select id="edit-task-status" name="status" required>
-                            <option value="pending">Pending</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-task-notes">Notes / Instructions</label>
-                        <textarea id="edit-task-notes" name="notes"
-                            placeholder="Special instructions for the driver..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('edit-task-modal')">Cancel</button>
-                <button type="submit" form="edit-task-form" class="btn-submit" id="update-task-btn">
-                    <i class="ri-save-line"></i>
-                    Update Task
-                </button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Edit Task</h2>
+          <button class="modal-close" onclick="closeModal('edit-task-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-error" id="edit-task-error"></div>
+          <div class="form-success" id="edit-task-success"></div>
+
+          <form id="edit-task-form" class="form-grid">
+            <div class="form-group">
+              <label for="edit-task-title"
+                >Task Title <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="edit-task-title"
+                name="title"
+                required
+                placeholder="e.g., Airport Pickup"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-driver"
+                >Assign to Driver <span class="required">*</span></label
+              >
+              <select id="edit-task-driver" name="driverId" required>
+                <option value="">Select a driver...</option>
+                <!-- Will be populated dynamically -->
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-task-date"
+                  >Date <span class="required">*</span></label
+                >
+                <input type="date" id="edit-task-date" name="date" required />
+              </div>
+              <div class="form-group">
+                <label for="edit-task-time"
+                  >Time <span class="required">*</span></label
+                >
+                <input type="time" id="edit-task-time" name="time" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-client-name">Client Name</label>
+              <input
+                type="text"
+                id="edit-task-client-name"
+                name="clientName"
+                placeholder="Optional"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-client-phone">Client Phone</label>
+              <input
+                type="tel"
+                id="edit-task-client-phone"
+                name="clientPhone"
+                placeholder="+233123456789"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-pickup"
+                >Pickup Location <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="edit-task-pickup"
+                name="pickupLocation"
+                required
+                placeholder="e.g., Kotoka Airport"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-destination"
+                >Destination <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="edit-task-destination"
+                name="destination"
+                required
+                placeholder="e.g., Labadi Beach Hotel"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-priority"
+                >Priority <span class="required">*</span></label
+              >
+              <select id="edit-task-priority" name="priority" required>
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-status"
+                >Status <span class="required">*</span></label
+              >
+              <select id="edit-task-status" name="status" required>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-notes">Notes / Instructions</label>
+              <textarea
+                id="edit-task-notes"
+                name="notes"
+                placeholder="Special instructions for the driver..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('edit-task-modal')"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="edit-task-form"
+            class="btn-submit"
+            id="update-task-btn"
+          >
+            <i class="ri-save-line"></i>
+            Update Task
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Edit Driver Modal -->
     <div class="modal-overlay" id="edit-driver-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Edit Driver</h2>
-                <button class="modal-close" onclick="closeModal('edit-driver-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-error" id="edit-driver-error"></div>
-                <div class="form-success" id="edit-driver-success"></div>
-
-                <form id="edit-driver-form" class="form-grid">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-driver-name">Full Name <span class="required">*</span></label>
-                            <input type="text" id="edit-driver-name" name="name" required placeholder="John Doe">
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-driver-phone">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="edit-driver-phone" name="phone" required placeholder="+233123456789">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-driver-email">Email Address</label>
-                        <input type="email" id="edit-driver-email" name="email" disabled
-                            style="background: #f0f0f0; cursor: not-allowed;" placeholder="driver@example.com">
-                        <small style="color: #e74c3c;">⚠️ Email cannot be changed (used for login)</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-driver-license">Driver's License Number</label>
-                        <input type="text" id="edit-driver-license" name="license" placeholder="Optional">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-driver-vehicle">Vehicle Information</label>
-                        <input type="text" id="edit-driver-vehicle" name="vehicle"
-                            placeholder="e.g., Toyota Camry - GH 1234-20">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-driver-status">Status <span class="required">*</span></label>
-                        <select id="edit-driver-status" name="status" required>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="on-leave">On Leave</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-driver-notes">Additional Notes</label>
-                        <textarea id="edit-driver-notes" name="notes"
-                            placeholder="Any additional information about the driver..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('edit-driver-modal')">Cancel</button>
-                <button type="submit" form="edit-driver-form" class="btn-submit" id="update-driver-btn">
-                    <i class="ri-save-line"></i>
-                    Update Driver
-                </button>
-            </div>
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Edit Driver</h2>
+          <button class="modal-close" onclick="closeModal('edit-driver-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-error" id="edit-driver-error"></div>
+          <div class="form-success" id="edit-driver-success"></div>
+
+          <form id="edit-driver-form" class="form-grid">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit-driver-name"
+                  >Full Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="edit-driver-name"
+                  name="name"
+                  required
+                  placeholder="John Doe"
+                />
+              </div>
+              <div class="form-group">
+                <label for="edit-driver-phone"
+                  >Phone Number <span class="required">*</span></label
+                >
+                <input
+                  type="tel"
+                  id="edit-driver-phone"
+                  name="phone"
+                  required
+                  placeholder="+233123456789"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-driver-email">Email Address</label>
+              <input
+                type="email"
+                id="edit-driver-email"
+                name="email"
+                disabled
+                style="background: #f0f0f0; cursor: not-allowed"
+                placeholder="driver@example.com"
+              />
+              <small style="color: #e74c3c"
+                >⚠️ Email cannot be changed (used for login)</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="edit-driver-license">Driver's License Number</label>
+              <input
+                type="text"
+                id="edit-driver-license"
+                name="license"
+                placeholder="Optional"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-driver-vehicle">Vehicle Information</label>
+              <input
+                type="text"
+                id="edit-driver-vehicle"
+                name="vehicle"
+                placeholder="e.g., Toyota Camry - GH 1234-20"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="edit-driver-status"
+                >Status <span class="required">*</span></label
+              >
+              <select id="edit-driver-status" name="status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="on-leave">On Leave</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-driver-notes">Additional Notes</label>
+              <textarea
+                id="edit-driver-notes"
+                name="notes"
+                placeholder="Any additional information about the driver..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('edit-driver-modal')"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="edit-driver-form"
+            class="btn-submit"
+            id="update-driver-btn"
+          >
+            <i class="ri-save-line"></i>
+            Update Driver
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Add New Booking Modal -->
     <div class="modal-overlay" id="add-booking-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Create New Booking</h2>
-                <button class="modal-close" onclick="closeModal('add-booking-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-error" id="add-booking-error"></div>
-                <div class="form-success" id="add-booking-success"></div>
-
-                <form id="add-booking-form" class="form-grid">
-                    <!-- Client Information -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="add-booking-firstname">First Name <span class="required">*</span></label>
-                            <input type="text" id="add-booking-firstname" name="firstName" required placeholder="John">
-                        </div>
-                        <div class="form-group">
-                            <label for="add-booking-lastname">Last Name <span class="required">*</span></label>
-                            <input type="text" id="add-booking-lastname" name="lastName" required placeholder="Doe">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="add-booking-email">Email <span class="required">*</span></label>
-                        <input type="email" id="add-booking-email" name="email" required
-                            placeholder="john.doe@example.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="add-booking-phone">Phone Number <span class="required">*</span></label>
-                        <input type="tel" id="add-booking-phone" name="phone" required placeholder="+233 123 456 789">
-                        <small>Include country code (e.g., +233 for Ghana)</small>
-                    </div>
-
-                    <!-- Trip Details -->
-                    <div class="form-group">
-                        <label for="add-booking-package">Package <span class="required">*</span></label>
-                        <select id="add-booking-package" name="packageName" required>
-                            <option value="">Select a package...</option>
-                            <option value="Kakum Canopy Walk">Kakum Canopy Walk</option>
-                            <option value="Cape Coast Castle Tour">Cape Coast Castle Tour</option>
-                            <option value="Elmina Castle Experience">Elmina Castle Experience</option>
-                            <option value="Historical Duo Package">Historical Duo Package</option>
-                            <option value="Custom Package">Custom Package</option>
-                        </select>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="add-booking-startdate">Start Date <span class="required">*</span></label>
-                            <input type="date" id="add-booking-startdate" name="startDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="add-booking-enddate">End Date <span class="required">*</span></label>
-                            <input type="date" id="add-booking-enddate" name="endDate" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="add-booking-travelers">Number of Travelers <span class="required">*</span></label>
-                        <input type="number" id="add-booking-travelers" name="travelers" min="1" value="1" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="add-booking-addon">Add-on (Optional)</label>
-                        <select id="add-booking-addon" name="addon">
-                            <option value="">No add-on</option>
-                            <option value="Airport Pickup">Airport Pickup</option>
-                            <option value="Hotel Booking">Hotel Booking</option>
-                            <option value="Meal Package">Meal Package</option>
-                            <option value="Photography Service">Photography Service</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="add-booking-status">Status <span class="required">*</span></label>
-                        <select id="add-booking-status" name="status" required>
-                            <option value="pending">Pending</option>
-                            <option value="confirmed" selected>Confirmed</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="add-booking-message">Special Requests / Notes</label>
-                        <textarea id="add-booking-message" name="message" rows="3"
-                            placeholder="Any special requirements or notes..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('add-booking-modal')">Cancel</button>
-                <button type="submit" form="add-booking-form" class="btn-submit" id="create-booking-btn">
-                    <i class="ri-add-line"></i>
-                    Create Booking
-                </button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Create New Booking</h2>
+          <button class="modal-close" onclick="closeModal('add-booking-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-error" id="add-booking-error"></div>
+          <div class="form-success" id="add-booking-success"></div>
+
+          <form id="add-booking-form" class="form-grid">
+            <!-- Client Information -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="add-booking-firstname"
+                  >First Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="add-booking-firstname"
+                  name="firstName"
+                  required
+                  placeholder="John"
+                />
+              </div>
+              <div class="form-group">
+                <label for="add-booking-lastname"
+                  >Last Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="add-booking-lastname"
+                  name="lastName"
+                  required
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="add-booking-email"
+                >Email <span class="required">*</span></label
+              >
+              <input
+                type="email"
+                id="add-booking-email"
+                name="email"
+                required
+                placeholder="john.doe@example.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="add-booking-phone"
+                >Phone Number <span class="required">*</span></label
+              >
+              <input
+                type="tel"
+                id="add-booking-phone"
+                name="phone"
+                required
+                placeholder="+233 123 456 789"
+              />
+              <small>Include country code (e.g., +233 for Ghana)</small>
+            </div>
+
+            <!-- Trip Details -->
+            <div class="form-group">
+              <label for="add-booking-package"
+                >Package <span class="required">*</span></label
+              >
+              <select id="add-booking-package" name="packageName" required>
+                <option value="">Select a package...</option>
+                <option value="Kakum Canopy Walk">Kakum Canopy Walk</option>
+                <option value="Cape Coast Castle Tour">
+                  Cape Coast Castle Tour
+                </option>
+                <option value="Elmina Castle Experience">
+                  Elmina Castle Experience
+                </option>
+                <option value="Historical Duo Package">
+                  Historical Duo Package
+                </option>
+                <option value="Custom Package">Custom Package</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="add-booking-startdate"
+                  >Start Date <span class="required">*</span></label
+                >
+                <input
+                  type="date"
+                  id="add-booking-startdate"
+                  name="startDate"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="add-booking-enddate"
+                  >End Date <span class="required">*</span></label
+                >
+                <input
+                  type="date"
+                  id="add-booking-enddate"
+                  name="endDate"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="add-booking-travelers"
+                >Number of Travelers <span class="required">*</span></label
+              >
+              <input
+                type="number"
+                id="add-booking-travelers"
+                name="travelers"
+                min="1"
+                value="1"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="add-booking-addon">Add-on (Optional)</label>
+              <select id="add-booking-addon" name="addon">
+                <option value="">No add-on</option>
+                <option value="Airport Pickup">Airport Pickup</option>
+                <option value="Hotel Booking">Hotel Booking</option>
+                <option value="Meal Package">Meal Package</option>
+                <option value="Photography Service">Photography Service</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="add-booking-status"
+                >Status <span class="required">*</span></label
+              >
+              <select id="add-booking-status" name="status" required>
+                <option value="pending">Pending</option>
+                <option value="confirmed" selected>Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="add-booking-message">Special Requests / Notes</label>
+              <textarea
+                id="add-booking-message"
+                name="message"
+                rows="3"
+                placeholder="Any special requirements or notes..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('add-booking-modal')"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="add-booking-form"
+            class="btn-submit"
+            id="create-booking-btn"
+          >
+            <i class="ri-add-line"></i>
+            Create Booking
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Add Payment Modal -->
     <div class="modal-overlay" id="add-payment-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Record Payment</h2>
-                <button class="modal-close" onclick="closeModal('add-payment-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-error" id="add-payment-error"></div>
-                <div class="form-success" id="add-payment-success"></div>
-
-                <form id="add-payment-form" class="form-grid">
-                    <div class="form-group">
-                        <label for="payment-booking">Booking <span class="required">*</span></label>
-                        <select id="payment-booking" name="bookingId" required>
-                            <option value="">Select a booking...</option>
-                            <!-- Will be populated dynamically -->
-                        </select>
-                        <small>Select the booking this payment is for</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="payment-amount">Amount <span class="required">*</span></label>
-                        <input type="number" id="payment-amount" name="amount" step="0.01" min="0" required
-                            placeholder="0.00">
-                        <small>Enter amount in your local currency</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="payment-currency">Currency <span class="required">*</span></label>
-                        <select id="payment-currency" name="currency" required>
-                            <option value="GHS">GHS - Ghanaian Cedi</option>
-                            <option value="USD">USD - US Dollar</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="GBP">GBP - British Pound</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="payment-method">Payment Method <span class="required">*</span></label>
-                        <select id="payment-method" name="method" required>
-                            <option value="">Select method...</option>
-                            <option value="Cash">Cash</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="Mobile Money">Mobile Money (MTN/Vodafone/AirtelTigo)</option>
-                            <option value="Credit Card">Credit Card</option>
-                            <option value="PayPal">PayPal</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="payment-date">Payment Date <span class="required">*</span></label>
-                        <input type="date" id="payment-date" name="date" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="payment-reference">Reference/Transaction ID</label>
-                        <input type="text" id="payment-reference" name="reference"
-                            placeholder="e.g., TXN123456, Receipt #001">
-                        <small>Optional: Transaction ID, receipt number, or reference</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="payment-status">Status <span class="required">*</span></label>
-                        <select id="payment-status" name="status" required>
-                            <option value="completed" selected>Completed</option>
-                            <option value="pending">Pending</option>
-                            <option value="failed">Failed</option>
-                            <option value="refunded">Refunded</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="payment-notes">Notes</label>
-                        <textarea id="payment-notes" name="notes" rows="3"
-                            placeholder="Any additional notes about this payment..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('add-payment-modal')">Cancel</button>
-                <button type="submit" form="add-payment-form" class="btn-submit" id="submit-payment-btn">
-                    <i class="ri-add-line"></i>
-                    Record Payment
-                </button>
-            </div>
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Record Payment</h2>
+          <button class="modal-close" onclick="closeModal('add-payment-modal')">
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-error" id="add-payment-error"></div>
+          <div class="form-success" id="add-payment-success"></div>
+
+          <form id="add-payment-form" class="form-grid">
+            <div class="form-group">
+              <label for="payment-booking"
+                >Booking <span class="required">*</span></label
+              >
+              <select id="payment-booking" name="bookingId" required>
+                <option value="">Select a booking...</option>
+                <!-- Will be populated dynamically -->
+              </select>
+              <small>Select the booking this payment is for</small>
+            </div>
+
+            <div class="form-group">
+              <label for="payment-amount"
+                >Amount <span class="required">*</span></label
+              >
+              <input
+                type="number"
+                id="payment-amount"
+                name="amount"
+                step="0.01"
+                min="0"
+                required
+                placeholder="0.00"
+              />
+              <small>Enter amount in your local currency</small>
+            </div>
+
+            <div class="form-group">
+              <label for="payment-currency"
+                >Currency <span class="required">*</span></label
+              >
+              <select id="payment-currency" name="currency" required>
+                <option value="GHS">GHS - Ghanaian Cedi</option>
+                <option value="USD">USD - US Dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British Pound</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="payment-method"
+                >Payment Method <span class="required">*</span></label
+              >
+              <select id="payment-method" name="method" required>
+                <option value="">Select method...</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Mobile Money">
+                  Mobile Money (MTN/Vodafone/AirtelTigo)
+                </option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="payment-date"
+                >Payment Date <span class="required">*</span></label
+              >
+              <input type="date" id="payment-date" name="date" required />
+            </div>
+
+            <div class="form-group">
+              <label for="payment-reference">Reference/Transaction ID</label>
+              <input
+                type="text"
+                id="payment-reference"
+                name="reference"
+                placeholder="e.g., TXN123456, Receipt #001"
+              />
+              <small
+                >Optional: Transaction ID, receipt number, or reference</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="payment-status"
+                >Status <span class="required">*</span></label
+              >
+              <select id="payment-status" name="status" required>
+                <option value="completed" selected>Completed</option>
+                <option value="pending">Pending</option>
+                <option value="failed">Failed</option>
+                <option value="refunded">Refunded</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="payment-notes">Notes</label>
+              <textarea
+                id="payment-notes"
+                name="notes"
+                rows="3"
+                placeholder="Any additional notes about this payment..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('add-payment-modal')"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="add-payment-form"
+            class="btn-submit"
+            id="submit-payment-btn"
+          >
+            <i class="ri-add-line"></i>
+            Record Payment
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- View Payment Modal -->
     <div class="modal-overlay" id="view-payment-modal">
-        <div class="modal modal-large">
-            <div class="modal-header">
-                <h2>Payment Details</h2>
-                <button class="modal-close" onclick="closeModal('view-payment-modal')">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="info-grid">
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-money-dollar-circle-line"></i>
-                            Payment Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Amount:</span>
-                            <span class="info-value" id="view-payment-amount"
-                                style="font-size: 1.5rem; font-weight: 700; color: #2ecc71;">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Method:</span>
-                            <span class="info-value" id="view-payment-method">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Date:</span>
-                            <span class="info-value" id="view-payment-date">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Reference:</span>
-                            <span class="info-value" id="view-payment-reference">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Status:</span>
-                            <span class="info-value" id="view-payment-status">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h3 class="info-section-title">
-                            <i class="ri-user-line"></i>
-                            Client Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Name:</span>
-                            <span class="info-value" id="view-payment-client-name">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Email:</span>
-                            <span class="info-value" id="view-payment-client-email">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Phone:</span>
-                            <span class="info-value" id="view-payment-client-phone">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-calendar-check-line"></i>
-                            Booking Information
-                        </h3>
-                        <div class="info-item">
-                            <span class="info-label">Package:</span>
-                            <span class="info-value" id="view-payment-package">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Travel Dates:</span>
-                            <span class="info-value" id="view-payment-dates">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Travelers:</span>
-                            <span class="info-value" id="view-payment-travelers">-</span>
-                        </div>
-                    </div>
-
-                    <div class="info-section full-width">
-                        <h3 class="info-section-title">
-                            <i class="ri-message-line"></i>
-                            Notes
-                        </h3>
-                        <div class="info-message" id="view-payment-notes">
-                            No notes available
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal('view-payment-modal')">Close</button>
-                <button type="button" class="btn btn-submit" id="delete-payment-btn" style="background: #e74c3c;">
-                    <i class="ri-delete-bin-line"></i>
-                    Delete Payment
-                </button>
-            </div>
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h2>Payment Details</h2>
+          <button
+            class="modal-close"
+            onclick="closeModal('view-payment-modal')"
+          >
+            <i class="ri-close-line"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="info-grid">
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-money-dollar-circle-line"></i>
+                Payment Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Amount:</span>
+                <span
+                  class="info-value"
+                  id="view-payment-amount"
+                  style="font-size: 1.5rem; font-weight: 700; color: #2ecc71"
+                  >-</span
+                >
+              </div>
+              <div class="info-item">
+                <span class="info-label">Method:</span>
+                <span class="info-value" id="view-payment-method">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Date:</span>
+                <span class="info-value" id="view-payment-date">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Reference:</span>
+                <span class="info-value" id="view-payment-reference">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Status:</span>
+                <span class="info-value" id="view-payment-status">-</span>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3 class="info-section-title">
+                <i class="ri-user-line"></i>
+                Client Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value" id="view-payment-client-name">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value" id="view-payment-client-email">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value" id="view-payment-client-phone">-</span>
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-calendar-check-line"></i>
+                Booking Information
+              </h3>
+              <div class="info-item">
+                <span class="info-label">Package:</span>
+                <span class="info-value" id="view-payment-package">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Travel Dates:</span>
+                <span class="info-value" id="view-payment-dates">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Travelers:</span>
+                <span class="info-value" id="view-payment-travelers">-</span>
+              </div>
+            </div>
+
+            <div class="info-section full-width">
+              <h3 class="info-section-title">
+                <i class="ri-message-line"></i>
+                Notes
+              </h3>
+              <div class="info-message" id="view-payment-notes">
+                No notes available
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="closeModal('view-payment-modal')"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-submit"
+            id="delete-payment-btn"
+            style="background: #e74c3c"
+          >
+            <i class="ri-delete-bin-line"></i>
+            Delete Payment
+          </button>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="./scripts/admin.js"></script>
-
-</body>
-
+  </body>
 </html>

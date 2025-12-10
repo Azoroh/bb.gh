@@ -1,96 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Driver Dashboard - Beyond Borders</title>
 
-    <link rel="shortcut icon" href="./img/logo/favicon.ico" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="./img/logo/favicon.ico"
+      type="image/x-icon"
+    />
 
-    <link rel="stylesheet" href="./styles/driver-dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+    <link rel="stylesheet" href="./styles/driver-dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+  </head>
 
-</head>
-
-<body>
-
+  <body>
     <!-- Header -->
     <header class="header">
-        <div class="header-left">
-            <div class="logo">
-                <img src="./img/logo/bb full.png" alt="logo" class="logo-img">
-            </div>
+      <div class="header-left">
+        <div class="logo">
+          <img src="./img/logo/bb full.png" alt="logo" class="logo-img" />
         </div>
-        <div class="user-info">
-            <div>
-                <span class="user-name" id="user-name">Driver</span>
-                <span class="user-role">Driver</span>
-            </div>
-            <button class="logout-btn" id="logout-btn">
-                <i class="ri-logout-box-line"></i>
-                Logout
-            </button>
+      </div>
+      <div class="user-info">
+        <div>
+          <span class="user-name" id="user-name">Driver</span>
+          <span class="user-role">Driver</span>
         </div>
+        <button class="logout-btn" id="logout-btn">
+          <i class="ri-logout-box-line"></i>
+          Logout
+        </button>
+      </div>
     </header>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Welcome Section -->
-        <section class="welcome-section">
-            <h1 id="welcome-message">Welcome back!</h1>
-            <p>Here are your assigned tasks for today</p>
-        </section>
+      <!-- Welcome Section -->
+      <section class="welcome-section">
+        <h1 id="welcome-message">Welcome back!</h1>
+        <p>Here are your assigned tasks for today</p>
+      </section>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Total Tasks</h3>
-                    <div class="value" id="total-tasks">0</div>
-                </div>
-                <div class="stat-icon icon-orange">
-                    <i class="ri-task-line"></i>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Pending</h3>
-                    <div class="value" id="pending-tasks">0</div>
-                </div>
-                <div class="stat-icon icon-blue">
-                    <i class="ri-time-line"></i>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Completed</h3>
-                    <div class="value" id="completed-tasks">0</div>
-                </div>
-                <div class="stat-icon icon-green">
-                    <i class="ri-checkbox-circle-line"></i>
-                </div>
-            </div>
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Total Tasks</h3>
+            <div class="value" id="total-tasks">0</div>
+          </div>
+          <div class="stat-icon icon-orange">
+            <i class="ri-task-line"></i>
+          </div>
         </div>
 
-        <!-- Tasks Section -->
-        <section class="section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="ri-task-line"></i>
-                    My Tasks
-                </h2>
-            </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Pending</h3>
+            <div class="value" id="pending-tasks">0</div>
+          </div>
+          <div class="stat-icon icon-blue">
+            <i class="ri-time-line"></i>
+          </div>
+        </div>
 
-            <div class="tasks-container" id="tasks-container">
-                <div class="spinner"></div>
-            </div>
-        </section>
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>Completed</h3>
+            <div class="value" id="completed-tasks">0</div>
+          </div>
+          <div class="stat-icon icon-green">
+            <i class="ri-checkbox-circle-line"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks Section -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="ri-task-line"></i>
+            My Tasks
+          </h2>
+        </div>
+
+        <div class="tasks-container" id="tasks-container">
+          <div class="spinner"></div>
+        </div>
+      </section>
     </main>
 
     <script type="module" src="./scripts/driver.js"></script>
-</body>
-
+  </body>
 </html>

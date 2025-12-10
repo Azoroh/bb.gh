@@ -1,16 +1,17 @@
 export const blogPosts = [
-    {
-        id: 1,
-        title: "Beyond Borders Partners with Launchra for Industry Innovation",
-        excerpt: "We're thrilled to announce our first official industry partnership with Launchra by XAVS Labs—a collaboration that brings real-world travel experience to aspiring professionals.",
-        category: "culture",
-        categoryLabel: "Company News",
-        image: "./img/blog/partnership.jpg",
-        date: "2025-11-20",
-        readTime: "4 min read",
-        slug: "launchra-partnership-announcement",
-        featured: true,
-        content: `
+  {
+    id: 1,
+    title: "Beyond Borders Partners with Launchra for Industry Innovation",
+    excerpt:
+      "We're thrilled to announce our first official industry partnership with Launchra by XAVS Labs—a collaboration that brings real-world travel experience to aspiring professionals.",
+    category: "culture",
+    categoryLabel: "Company News",
+    image: "./img/blog/partnership.jpg",
+    date: "2025-11-20",
+    readTime: "4 min read",
+    slug: "launchra-partnership-announcement",
+    featured: true,
+    content: `
       <p>We're excited to announce our first official industry partnership with <strong>Launchra</strong>, powered by XAVS Labs—a Ghanaian travel and experience brand redefining how young people explore the world.</p>
 
       <h3>What This Partnership Means</h3>
@@ -34,20 +35,21 @@ export const blogPosts = [
       <p>This is just the beginning of an exciting journey. We can't wait to see what we'll build together.</p>
 
       <p class="post-signature">— Powered by XAVS Labs & Beyond Borders</p>
-    `
-    },
-    {
-        id: 2,
-        title: "Our Complete Range of Travel Services: Everything You Need to Know",
-        excerpt: "From full travel planning to exclusive cultural tours, discover all seven services we offer to make your Ghana experience unforgettable.",
-        category: "travel-tips",
-        categoryLabel: "Travel Tips",
-        image: "./img/blog/services.jpg",
-        date: "2025-11-28",
-        readTime: "6 min read",
-        slug: "complete-travel-services-guide",
-        featured: false,
-        content: `
+    `,
+  },
+  {
+    id: 2,
+    title: "Our Complete Range of Travel Services: Everything You Need to Know",
+    excerpt:
+      "From full travel planning to exclusive cultural tours, discover all seven services we offer to make your Ghana experience unforgettable.",
+    category: "travel-tips",
+    categoryLabel: "Travel Tips",
+    image: "./img/blog/services.jpg",
+    date: "2025-11-28",
+    readTime: "6 min read",
+    slug: "complete-travel-services-guide",
+    featured: false,
+    content: `
       <p>At Beyond Borders, we've designed a comprehensive suite of services to handle every aspect of your Ghana adventure. Here's everything we offer:</p>
 
       <h3>01. Full Travel Planning & Coordination</h3>
@@ -96,9 +98,9 @@ export const blogPosts = [
 
       <h3>05. Signature Adventure Experiences</h3>
       <p>Our exclusive adventure packages designed to create unforgettable memories:</p>
-      
+
       <p><strong>Beyond the Beach</strong> – Fun coastal adventures featuring games, BBQ, bonfire nights, and friendly competitions. Perfect for groups and team bonding.</p>
-      
+
       <p><strong>Beyond the Woods</strong> – Outdoor exploration with cycling, trail missions, survival challenges, and team strategy games. For the adventurous at heart.</p>
 
       <h3>06. Group Travel & Team Experiences</h3>
@@ -134,20 +136,21 @@ export const blogPosts = [
       </ul>
 
       <p>Let's plan your perfect Ghana adventure together!</p>
-    `
-    },
-    {
-        id: 3,
-        title: "CEO Nathaniel Anane on Turning 'Detty December' Into Revenue",
-        excerpt: "Our CEO shares insights on transforming Ghana's festive season into sustainable business opportunities on Univers FM's Talking Business.",
-        category: "culture",
-        categoryLabel: "Company News",
-        image: "./img/blog/business-talk.jpg",
-        date: "2025-12-05",
-        readTime: "3 min read",
-        slug: "ceo-detty-december-univers-fm-interview",
-        featured: false,
-        content: `
+    `,
+  },
+  {
+    id: 3,
+    title: "CEO Nathaniel Anane on Turning 'Detty December' Into Revenue",
+    excerpt:
+      "Our CEO shares insights on transforming Ghana's festive season into sustainable business opportunities on Univers FM's Talking Business.",
+    category: "culture",
+    categoryLabel: "Company News",
+    image: "./img/blog/business-talk.jpg",
+    date: "2025-12-05",
+    readTime: "3 min read",
+    slug: "ceo-detty-december-univers-fm-interview",
+    featured: false,
+    content: `
       <p>Our CEO, <strong>Nathaniel Anane</strong>, recently appeared on Univers FM's <em>Talking Business</em> program to discuss how creatives, entrepreneurs, and small businesses can transform "Detty December" into real revenue.</p>
 
       <h3>What is Detty December?</h3>
@@ -187,6 +190,6 @@ export const blogPosts = [
       <i class="ri-mail-send-line"></i> Email: bbordersgh@gmail.com</p>
 
       <p class="post-signature">Let's make this Detty December your best one yet! 🎉</p>
-    `
-    }
+    `,
+  },
 ];

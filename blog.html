@@ -1,216 +1,279 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>News & Blogs - Beyond Borders</title>
 
-    <link rel="shortcut icon" href="./img/logo/favicon.ico" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="./img/logo/favicon.ico"
+      type="image/x-icon"
+    />
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 
     <link rel="stylesheet" href="./styles/styles.css" />
     <link rel="stylesheet" href="./styles/blog.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+  </head>
 
-<body>
+  <body>
     <header class="header bg-header" id="header">
-        <nav class="nav container">
-            <a href="index.html" class="back-to-home">
-                <i class="ri-arrow-left-line"></i>
-                <img src="./img/logo/bb full black.png" alt="image logo" />
-            </a>
-        </nav>
+      <nav class="nav container">
+        <a href="index.html" class="back-to-home">
+          <i class="ri-arrow-left-line"></i>
+          <img src="./img/logo/bb full black.png" alt="image logo" />
+        </a>
+      </nav>
     </header>
 
     <main class="main">
-        <!-- Blog Hero Section -->
-        <section class="blog-hero section">
-            <div class="container">
-                <h1 class="blog-hero-title">Travel Stories & Guides</h1>
-                <p class="blog-hero-description">Discover Ghana through our eyes - tips, stories, and insider knowledge
-                </p>
-            </div>
-        </section>
+      <!-- Blog Hero Section -->
+      <section class="blog-hero section">
+        <div class="container">
+          <h1 class="blog-hero-title">Travel Stories & Guides</h1>
+          <p class="blog-hero-description">
+            Discover Ghana through our eyes - tips, stories, and insider
+            knowledge
+          </p>
+        </div>
+      </section>
 
-        <!-- Featured Post -->
-        <section class="blog-featured section" id="featured-section" style="display: none;">
-            <div class="container">
-                <h2 class="section_title">Featured Story</h2>
-                <article class="featured-post" id="featured-post">
-                    <!-- Featured post will be rendered here by JavaScript -->
-                </article>
-            </div>
-        </section>
+      <!-- Featured Post -->
+      <section
+        class="blog-featured section"
+        id="featured-section"
+        style="display: none"
+      >
+        <div class="container">
+          <h2 class="section_title">Featured Story</h2>
+          <article class="featured-post" id="featured-post">
+            <!-- Featured post will be rendered here by JavaScript -->
+          </article>
+        </div>
+      </section>
 
-        <!-- Categories Filter -->
-        <section class="blog-categories">
-            <div class="container">
-                <div class="category-filters">
-                    <button class="category-btn active" data-category="all">All Posts</button>
-                    <button class="category-btn" data-category="travel-tips">Travel Tips</button>
-                    <button class="category-btn" data-category="destination">Destinations</button>
-                    <button class="category-btn" data-category="culture">Culture</button>
-                    <button class="category-btn" data-category="adventure">Adventure</button>
-                    <button class="category-btn" data-category="food">Food & Dining</button>
-                </div>
-            </div>
-        </section>
+      <!-- Categories Filter -->
+      <section class="blog-categories">
+        <div class="container">
+          <div class="category-filters">
+            <button class="category-btn active" data-category="all">
+              All Posts
+            </button>
+            <button class="category-btn" data-category="travel-tips">
+              Travel Tips
+            </button>
+            <button class="category-btn" data-category="destination">
+              Destinations
+            </button>
+            <button class="category-btn" data-category="culture">
+              Culture
+            </button>
+            <button class="category-btn" data-category="adventure">
+              Adventure
+            </button>
+            <button class="category-btn" data-category="food">
+              Food & Dining
+            </button>
+          </div>
+        </div>
+      </section>
 
-        <!-- Blog Posts Grid -->
-        <section class="blog-posts section">
-            <div class="container">
-                <div class="blog-grid" id="blog-grid">
-                    <!-- Blog posts will be rendered here by JavaScript -->
-                </div>
+      <!-- Blog Posts Grid -->
+      <section class="blog-posts section">
+        <div class="container">
+          <div class="blog-grid" id="blog-grid">
+            <!-- Blog posts will be rendered here by JavaScript -->
+          </div>
 
-                <!-- Coming Soon Message (shown when no posts) -->
-                <div class="coming-soon" id="coming-soon">
-                    <div class="coming-soon-content">
-                        <div class="coming-soon-icon"><i class="ri-newspaper-line"></i></div>
-                        <h3>More Stories Coming Soon!</h3>
-                        <p>We're working on bringing you exciting travel stories, destination guides, and insider tips
-                            about exploring Ghana and beyond.</p>
-                        <p>In the meantime, follow us on social media for daily updates:</p>
-                        <div class="social-links">
-                            <a href="https://www.instagram.com/beyondbordersgh/" target="_blank"
-                                class="social-btn instagram">
-                                <i class="ri-instagram-line"></i>
-                                Instagram
-                            </a>
-                            <a href="https://www.tiktok.com/@beyondborders.gh" target="_blank"
-                                class="social-btn tiktok">
-                                <i class="ri-tiktok-fill"></i>
-                                TikTok
-                            </a>
-                        </div>
-                    </div>
-                </div>
+          <!-- Coming Soon Message (shown when no posts) -->
+          <div class="coming-soon" id="coming-soon">
+            <div class="coming-soon-content">
+              <div class="coming-soon-icon">
+                <i class="ri-newspaper-line"></i>
+              </div>
+              <h3>More Stories Coming Soon!</h3>
+              <p>
+                We're working on bringing you exciting travel stories,
+                destination guides, and insider tips about exploring Ghana and
+                beyond.
+              </p>
+              <p>
+                In the meantime, follow us on social media for daily updates:
+              </p>
+              <div class="social-links">
+                <a
+                  href="https://www.instagram.com/beyondbordersgh/"
+                  target="_blank"
+                  class="social-btn instagram"
+                >
+                  <i class="ri-instagram-line"></i>
+                  Instagram
+                </a>
+                <a
+                  href="https://www.tiktok.com/@beyondborders.gh"
+                  target="_blank"
+                  class="social-btn tiktok"
+                >
+                  <i class="ri-tiktok-fill"></i>
+                  TikTok
+                </a>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <!-- Newsletter Section -->
-        <section class="newsletter-section section">
-            <div class="container">
-                <div class="newsletter-box">
-                    <div class="newsletter-content">
-                        <h3>Stay Updated</h3>
-                        <p>Subscribe to get travel tips, destination guides, and exclusive offers delivered to your
-                            inbox.</p>
-                    </div>
-                    <form class="newsletter-form" id="newsletter-form">
-                        <input type="email" placeholder="Enter your email" required>
-                        <button type="submit" class="button">Subscribe</button>
-                    </form>
-                </div>
+      <!-- Newsletter Section -->
+      <section class="newsletter-section section">
+        <div class="container">
+          <div class="newsletter-box">
+            <div class="newsletter-content">
+              <h3>Stay Updated</h3>
+              <p>
+                Subscribe to get travel tips, destination guides, and exclusive
+                offers delivered to your inbox.
+              </p>
             </div>
-        </section>
+            <form class="newsletter-form" id="newsletter-form">
+              <input type="email" placeholder="Enter your email" required />
+              <button type="submit" class="button">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="footer" id="footer">
-        <div class="footer_container container grid">
-            <a href="#" class="footer_logo">
-                <img src="./img/logo/bb full.png" alt="image">
-            </a>
+      <div class="footer_container container grid">
+        <a href="#" class="footer_logo">
+          <img src="./img/logo/bb full.png" alt="image" />
+        </a>
 
-            <div class="footer_content grid">
-                <div>
-                    <h3 class="footer_title">About</h3>
+        <div class="footer_content grid">
+          <div>
+            <h3 class="footer_title">About</h3>
 
-                    <ul class="footer_links">
-                        <li>
-                            <a href="#about" class="footer_link">Who We Are?</a>
-                        </li>
+            <ul class="footer_links">
+              <li>
+                <a href="#about" class="footer_link">Who We Are?</a>
+              </li>
 
-                        <li>
-                            <a href="#packages" class="footer_link">Our Packages</a>
-                        </li>
+              <li>
+                <a href="#packages" class="footer_link">Our Packages</a>
+              </li>
 
-                        <li>
-                            <a href="./blog.html" class="footer_link">News & Blogs</a>
-                        </li>
-                    </ul>
-                </div>
+              <li>
+                <a href="./blog.html" class="footer_link">News & Blogs</a>
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="footer_title">Contact</h3>
+          <div>
+            <h3 class="footer_title">Contact</h3>
 
-                    <ul class="footer_links">
-                        <li>
-                            <a href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F"
-                                target="_blank" class="footer_link">WhatsApp Us</a>
-                        </li>
+            <ul class="footer_links">
+              <li>
+                <a
+                  href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F"
+                  target="_blank"
+                  class="footer_link"
+                  >WhatsApp Us</a
+                >
+              </li>
 
-                        <li>
-                            <a href="#booking" class="footer_link">Book A Trip</a>
-                        </li>
+              <li>
+                <a href="#booking" class="footer_link">Book A Trip</a>
+              </li>
 
-                        <li>
-                            <a href="#" class="footer_link" data-modal="faq">FAQ</a>
-                        </li>
-                    </ul>
-                </div>
+              <li>
+                <a href="#" class="footer_link" data-modal="faq">FAQ</a>
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="footer_title">Legal</h3>
+          <div>
+            <h3 class="footer_title">Legal</h3>
 
-                    <ul class="footer_links">
-                        <li>
-                            <a href="#" class="footer_link" data-modal="Privacy">Privacy Policy</a>
-                        </li>
+            <ul class="footer_links">
+              <li>
+                <a href="#" class="footer_link" data-modal="Privacy"
+                  >Privacy Policy</a
+                >
+              </li>
 
-                        <li>
-                            <a href="#" class="footer_link" data-modal="terms">Terms & Services</a>
-                        </li>
+              <li>
+                <a href="#" class="footer_link" data-modal="terms"
+                  >Terms & Services</a
+                >
+              </li>
 
-                        <li>
-                            <a href="#" class="footer_link" data-modal="payments">Payments</a>
-                        </li>
-                    </ul>
-                </div>
+              <li>
+                <a href="#" class="footer_link" data-modal="payments"
+                  >Payments</a
+                >
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="footer_title">Social</h3>
+          <div>
+            <h3 class="footer_title">Social</h3>
 
-                    <div class="footer_social">
-                        <a href="https://www.instagram.com/beyondbordersgh/" target="_blank" class="footer_social-link"
-                            aria-label="Instagram">
-                            <i class="ri-instagram-fill"></i>
-                        </a>
-                        <a href="https://www.tiktok.com/@beyondborders.gh" target="_blank" class="footer_social-link"
-                            aria-label="TikTok">
-                            <i class="ri-tiktok-fill"></i>
-                        </a>
-                        <a href=" mailto:bbordersgh@gmail.com?subject=How%20can%20we%20help%3F"
-                            class="footer_social-link" aria-label="Email">
-                            <i class="ri-mail-send-fill"></i>
-                        </a>
-                    </div>
-                </div>
+            <div class="footer_social">
+              <a
+                href="https://www.instagram.com/beyondbordersgh/"
+                target="_blank"
+                class="footer_social-link"
+                aria-label="Instagram"
+              >
+                <i class="ri-instagram-fill"></i>
+              </a>
+              <a
+                href="https://www.tiktok.com/@beyondborders.gh"
+                target="_blank"
+                class="footer_social-link"
+                aria-label="TikTok"
+              >
+                <i class="ri-tiktok-fill"></i>
+              </a>
+              <a
+                href=" mailto:bbordersgh@gmail.com?subject=How%20can%20we%20help%3F"
+                class="footer_social-link"
+                aria-label="Email"
+              >
+                <i class="ri-mail-send-fill"></i>
+              </a>
             </div>
+          </div>
         </div>
+      </div>
 
-        <span class="footer_copy">
-            &#169; 2025 BeyondBorders. All Rights Reserved.
-        </span>
+      <span class="footer_copy">
+        &#169; 2025 BeyondBorders. All Rights Reserved.
+      </span>
     </footer>
 
-    <a href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F" target="_blank"
-        class="whatsapp_btn">
-        <i class="ri-whatsapp-fill"></i>
+    <a
+      href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F"
+      target="_blank"
+      class="whatsapp_btn"
+    >
+      <i class="ri-whatsapp-fill"></i>
     </a>
 
     <script type="module" src="./scripts/blog.js"></script>
-
-</body>
-
+  </body>
 </html>
