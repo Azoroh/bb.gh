@@ -44,7 +44,7 @@ onAuthStateChanged(auth, async (user) => {
 
     const userData = userDoc.data();
 
-    if (userData.role !== "admin") {
+    if (userData.role !== "admin" && userData.role !== "super") {
       alert("Access denied. Admin privileges required.");
       await signOut(auth);
       window.location.href = "admin.html";
@@ -54,6 +54,19 @@ onAuthStateChanged(auth, async (user) => {
     // User is authenticated and authorized
     document.getElementById("user-name").textContent =
       userData.name || user.email;
+
+    // Update role label
+    const roleLabel = document.querySelector(".user-role");
+    if (roleLabel) {
+      roleLabel.textContent =
+        userData.role === "super" ? "SUPER" : "Admin";
+    }
+
+    // Show/Hide Manage Admins link
+    const adminLink = document.querySelector(".admin-link");
+    if (adminLink) {
+      adminLink.style.display = userData.role === "super" ? "flex" : "none";
+    }
 
     // Load dashboard data
     initDashboard();

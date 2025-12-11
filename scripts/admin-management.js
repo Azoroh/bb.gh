@@ -6,21 +6,36 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   collection,
-  addDoc,
+  setDoc,
   getDocs,
   deleteDoc,
+  getDoc,
   doc,
   query,
+  where,
   orderBy,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Check if user is authenticated
-onAuthStateChanged(auth, (user) => {
+// Check if user is authenticated and is super admin
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
-  } else {
+    return;
+  }
+
+  try {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (!userDoc.exists() || userDoc.data().role !== "super") {
+      alert("Access denied. Super Admin privileges required.");
+      window.location.href = "admin-dashboard.html";
+      return;
+    }
     loadAdmins();
+  } catch (error) {
+    console.error("Auth check error:", error);
+    window.location.href = "admin-dashboard.html";
   }
 });
 
@@ -50,8 +65,8 @@ addAdminForm.addEventListener("submit", async (e) => {
     );
     const uid = userCredential.user.uid;
 
-    // Add to Firestore admins collection
-    await addDoc(collection(db, "admins"), {
+    // Add to Firestore users collection
+    await setDoc(doc(db, "users", uid), {
       uid: uid,
       email: email,
       name: name,
@@ -87,7 +102,10 @@ async function loadAdmins() {
   const container = document.getElementById("admins-list-container");
 
   try {
-    const q = query(collection(db, "admins"), orderBy("createdAt", "desc"));
+    const q = query(
+      collection(db, "users"),
+      where("role", "in", ["admin", "super"]),
+    );
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
@@ -105,45 +123,54 @@ async function loadAdmins() {
       admins.push({ id: doc.id, ...doc.data() });
     });
 
+    // Sort by createdAt desc (client-side to avoid index requirement)
+    admins.sort((a, b) => {
+      const dateA = a.createdAt?.seconds || 0;
+      const dateB = b.createdAt?.seconds || 0;
+      return dateB - dateA;
+    });
+
     container.innerHTML = `
-            <table class="admins-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Added</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${admins
-                      .map(
-                        (admin) => `
+            <div class="table-wrapper">
+                <table class="admins-table">
+                    <thead>
                         <tr>
-                            <td>${admin.name || "N/A"}</td>
-                            <td>${admin.email}</td>
-                            <td>
-                                <span class="role-badge ${admin.role}">
-                                    ${admin.role === "super" ? "Super Admin" : "Admin"}
-                                </span>
-                            </td>
-                            <td>${admin.createdAt ? formatDate(admin.createdAt.toDate()) : "N/A"}</td>
-                            <td>
-                                <button
-                                    class="delete-btn"
-                                    onclick="deleteAdmin('${admin.id}', '${admin.email}')"
-                                    ${admin.email === auth.currentUser.email ? "disabled" : ""}
-                                >
-                                    <i class="ri-delete-bin-line"></i> Delete
-                                </button>
-                            </td>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Added</th>
+                            <th>Action</th>
                         </tr>
-                    `,
-                      )
-                      .join("")}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        ${admins
+        .map(
+          (admin) => `
+                            <tr>
+                                <td>${admin.name || "N/A"}</td>
+                                <td>${admin.email}</td>
+                                <td>
+                                    <span class="role-badge ${admin.role}">
+                                        ${admin.role === "super" ? "Super Admin" : "Admin"}
+                                    </span>
+                                </td>
+                                <td>${admin.createdAt ? formatDate(admin.createdAt.toDate()) : "N/A"}</td>
+                                <td>
+                                    <button
+                                        class="delete-btn"
+                                        onclick="deleteAdmin('${admin.id}', '${admin.email}')"
+                                        ${admin.id === auth.currentUser.uid ? "disabled title='You cannot delete your own account'" : ""}
+                                    >
+                                        <i class="ri-delete-bin-line"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `,
+        )
+        .join("")}
+                    </tbody>
+                </table>
+            </div>
         `;
   } catch (error) {
     console.error("Error loading admins:", error);
@@ -162,7 +189,7 @@ window.deleteAdmin = async function (adminId, email) {
   }
 
   try {
-    await deleteDoc(doc(db, "admins", adminId));
+    await deleteDoc(doc(db, "users", adminId));
 
     // Note: This only removes from Firestore
     // To fully delete from Firebase Auth, you'd need Firebase Admin SDK (backend)

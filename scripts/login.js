@@ -57,7 +57,8 @@ loginForm.addEventListener("submit", async (e) => {
     sessionStorage.setItem("userName", userData.name || email);
 
     // Redirect based on role
-    if (role === "admin") {
+    // Redirect based on role
+    if (role === "admin" || role === "super") {
       window.location.href = "admin-dashboard.html";
     } else if (role === "driver") {
       window.location.href = "driver-dashboard.html";
@@ -102,7 +103,7 @@ auth.onAuthStateChanged(async (user) => {
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const role = userDoc.data().role;
-        if (role === "admin") {
+        if (role === "admin" || role === "super") {
           window.location.href = "admin-dashboard.html";
         } else if (role === "driver") {
           window.location.href = "driver-dashboard.html";
@@ -114,9 +115,9 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
-// Add to login.js to check disabled status:
-if (userData.status === "disabled") {
-  alert("Your account has been disabled.");
-  await signOut(auth);
-  return;
-}
+// // Add to login.js to check disabled status:
+// if (userData.status === "disabled") {
+//   alert("Your account has been disabled.");
+//   await signOut(auth);
+//   return;
+// }
