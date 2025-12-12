@@ -57,12 +57,39 @@ addAdminForm.addEventListener("submit", async (e) => {
     const name = document.getElementById("admin-name").value.trim();
     const role = document.getElementById("admin-role").value;
 
+    // Use a secondary app to create the user so we don't get logged out
+    const { initializeApp, getApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
+    const { getAuth, createUserWithEmailAndPassword: createSecondaryUser, signOut: signSecondaryOut, setPersistence, inMemoryPersistence } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+    const { firebaseConfig } = await import("./firebase-config.js");
+
+    // Initialize secondary app with a unique name
+    const secondaryAppName = "secondaryAppAdmin";
+    let secondaryApp;
+
+    // Check if already initialized
+    const existingApps = getApps();
+    const foundApp = existingApps.find(app => app.name === secondaryAppName);
+
+    if (foundApp) {
+      secondaryApp = foundApp;
+    } else {
+      secondaryApp = initializeApp(firebaseConfig, secondaryAppName);
+    }
+
+    const secondaryAuth = getAuth(secondaryApp);
+
+    // CRITICAL: Set persistence to NONE (in-memory) so it doesn't affect the main auth session
+    await setPersistence(secondaryAuth, inMemoryPersistence);
+
     // Create Firebase Auth user
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
+    const userCredential = await createSecondaryUser(
+      secondaryAuth,
       email,
       password,
     );
+
+    // Sign out the secondary user immediately
+    await signSecondaryOut(secondaryAuth);
     const uid = userCredential.user.uid;
 
     // Add to Firestore users collection

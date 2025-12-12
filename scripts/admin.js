@@ -26,6 +26,12 @@ import {
 // Check authentication and authorization
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
+    // If we are in the middle of creating a user (driver/admin), ignore the temporary logout
+    if (window.isCreatingUser) {
+      console.log("Ignoring auth state change during user creation");
+      return;
+    }
+
     // Not logged in, redirect to login
     window.location.href = "admin.html";
     return;
@@ -125,7 +131,9 @@ async function initDashboard() {
 async function loadOverviewData() {
   try {
     // Load bookings
-    const bookingsSnapshot = await getDocs(collection(db, "bookings"));
+    // Load bookings sorted by creation time
+    const q = query(collection(db, "bookings"), orderBy("createdAt", "desc"));
+    const bookingsSnapshot = await getDocs(q);
     const bookings = bookingsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -142,6 +150,7 @@ async function loadOverviewData() {
     const driversQuery = query(
       collection(db, "users"),
       where("role", "==", "driver"),
+      orderBy("createdAt", "desc")
     );
     const driversSnapshot = await getDocs(driversQuery);
     document.getElementById("total-drivers").textContent = driversSnapshot.size;
@@ -230,7 +239,8 @@ let allBookings = [];
 
 async function loadAllBookings() {
   try {
-    const bookingsSnapshot = await getDocs(collection(db, "bookings"));
+    const q = query(collection(db, "bookings"), orderBy("createdAt", "desc"));
+    const bookingsSnapshot = await getDocs(q);
     allBookings = bookingsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -299,7 +309,9 @@ let allClients = [];
 
 async function loadClients() {
   try {
-    const bookingsSnapshot = await getDocs(collection(db, "bookings"));
+    // Load bookings sorted by date for client history
+    const q = query(collection(db, "bookings"), orderBy("createdAt", "desc"));
+    const bookingsSnapshot = await getDocs(q);
     const bookings = bookingsSnapshot.docs.map((doc) => doc.data());
 
     // Group by email
@@ -313,12 +325,23 @@ async function loadClients() {
             ? booking.phoneCountryCode + " " + booking.phoneLocalNumber
             : booking.phoneLocalNumber || booking.phone || "N/A",
           bookingCount: 0,
+          lastBookingDate: booking.createdAt
         };
       }
       clientsMap[booking.email].bookingCount++;
     });
 
+    // Sort clients by most recent booking (using lastBookingDate)
     allClients = Object.values(clientsMap);
+
+    allClients = Object.values(clientsMap);
+    // Sort by lastBookingDate desc
+    allClients.sort((a, b) => {
+      const dateA = a.lastBookingDate ? (a.lastBookingDate.seconds || 0) : 0;
+      const dateB = b.lastBookingDate ? (b.lastBookingDate.seconds || 0) : 0;
+      return dateB - dateA;
+    });
+
     renderClients(allClients);
   } catch (error) {
     console.error("Error loading clients:", error);
@@ -391,10 +414,21 @@ let allDrivers = [];
 
 async function loadDrivers() {
   try {
+    // Show loading state
+    const tbody = document.getElementById("drivers-table");
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 2rem;">
+          <div class="spinner"></div>
+        </td>
+      </tr>
+    `;
+
     // Query users collection where role = 'driver'
     const driversQuery = query(
       collection(db, "users"),
       where("role", "==", "driver"),
+      orderBy("createdAt", "desc")
     );
 
     const driversSnapshot = await getDocs(driversQuery);
@@ -406,6 +440,19 @@ async function loadDrivers() {
     renderDrivers(allDrivers);
   } catch (error) {
     console.error("Error loading drivers:", error);
+    const tbody = document.getElementById("drivers-table");
+    if (error.message.includes("index")) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; color: #e74c3c; padding: 2rem;">
+            <i class="ri-error-warning-line" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+            <p><strong>Missing Database Index</strong></p>
+            <p>To sort by date, a Firestore index is required.</p>
+            <p>Please open the browser console (F12) and click the link provided by Firebase to create it.</p>
+          </td>
+        </tr>
+      `;
+    }
   }
 }
 
@@ -623,6 +670,15 @@ let allTasks = [];
 
 async function loadTasks() {
   try {
+    const tbody = document.getElementById("tasks-table");
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 2rem;">
+          <div class="spinner"></div>
+        </td>
+      </tr>
+    `;
+
     const tasksSnapshot = await getDocs(collection(db, "tasks"));
     allTasks = tasksSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -709,7 +765,17 @@ let allPayments = [];
 
 async function loadPayments() {
   try {
-    const paymentsSnapshot = await getDocs(collection(db, "payments"));
+    const tbody = document.getElementById("payments-table");
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align: center; padding: 2rem;">
+          <div class="spinner"></div>
+        </td>
+      </tr>
+    `;
+
+    const q = query(collection(db, "payments"), orderBy("date", "desc"));
+    const paymentsSnapshot = await getDocs(q);
     allPayments = paymentsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -935,6 +1001,15 @@ let allSubscribers = []; // Store for search filtering
 
 async function loadNewsletter() {
   try {
+    const tbody = document.getElementById("newsletter-table");
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="3" style="text-align: center; padding: 2rem;">
+          <div class="spinner"></div>
+        </td>
+      </tr>
+    `;
+
     const subscribersSnapshot = await getDocs(collection(db, "subscribers"));
     allSubscribers = subscribersSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -1510,24 +1585,46 @@ document
         throw new Error("Password must be at least 6 characters");
       }
 
-      // CRITICAL FIX: Save current admin auth state
-      const currentAdmin = auth.currentUser;
-      console.log("Current admin:", currentAdmin.email);
+      // Use a secondary app to create the user so we don't get logged out
+      const { initializeApp, getApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
+      const { getAuth, createUserWithEmailAndPassword: createSecondaryUser, signOut: signSecondaryOut, setPersistence, inMemoryPersistence } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+      const { firebaseConfig } = await import("./firebase-config.js");
 
-      // Create Firebase Authentication user
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        driverData.email,
-        driverData.password,
-      );
+      // Initialize secondary app with a unique name
+      const secondaryAppName = "secondaryApp";
+      let secondaryApp;
 
-      const driverId = userCredential.user.uid;
-      console.log("Driver created with ID:", driverId);
+      // Check if already initialized
+      const existingApps = getApps();
+      const foundApp = existingApps.find(app => app.name === secondaryAppName);
 
-      // IMMEDIATELY create driver profile in Firestore BEFORE redirect
-      // Use Promise.all to ensure both complete
-      await Promise.all([
-        setDoc(doc(db, "users", driverId), {
+      if (foundApp) {
+        secondaryApp = foundApp;
+      } else {
+        secondaryApp = initializeApp(firebaseConfig, secondaryAppName);
+      }
+
+      const secondaryAuth = getAuth(secondaryApp);
+
+      // CRITICAL: Set persistence to NONE (in-memory) so it doesn't affect the main auth session
+      await setPersistence(secondaryAuth, inMemoryPersistence);
+
+      // Set flag to prevent redirect
+      window.isCreatingUser = true;
+
+      try {
+        // Create user using the secondary auth instance
+        const userCredential = await createSecondaryUser(
+          secondaryAuth,
+          driverData.email,
+          driverData.password
+        );
+
+        const driverId = userCredential.user.uid;
+        console.log("Driver created with ID:", driverId);
+
+        // Save to Firestore using the MAIN app's db (which has the admin authenticated)
+        await setDoc(doc(db, "users", driverId), {
           role: "driver",
           name: driverData.name,
           email: driverData.email,
@@ -1537,24 +1634,16 @@ document
           notes: driverData.notes,
           status: "active",
           createdAt: serverTimestamp(),
-        }),
-        setDoc(doc(db, "drivers", driverId), {
-          name: driverData.name,
-          email: driverData.email,
-          phone: driverData.phone,
-          license: driverData.license,
-          vehicle: driverData.vehicle,
-          notes: driverData.notes,
-          status: "active",
-          createdAt: serverTimestamp(),
-        }),
-      ]);
+        });
 
-      console.log("Driver profile saved to Firestore");
+        console.log("Driver profile saved to Firestore");
 
-      // Now sign out the newly created driver
-      await signOut(auth);
-      console.log("Driver signed out");
+        // Sign out the secondary user to clean up
+        await signSecondaryOut(secondaryAuth);
+      } finally {
+        // Reset flag
+        window.isCreatingUser = false;
+      }
 
       // Close modal and show instructions
       closeModal("add-driver-modal");
