@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /admin-dashboard.html
+Disallow: /admin-management.html
+Disallow: /driver-dashboard.html
+Disallow: /scripts/admin.js
+Disallow: /scripts/admin-management.js
+Disallow: /styles/admin-dashboard.css
