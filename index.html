@@ -1,392 +1,401 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Beyond Borders - It’s the journey, not the destination</title>
 
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beyond Borders - It’s the journey, not the destination</title>
 
-    <link
-      rel="shortcut icon"
-      href="./img/logo/favicon.ico"
-      type="image/x-icon"
-    />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" />
 
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="shortcut icon" href="./img/logo/favicon.ico" type="image/x-icon" />
 
-    <!-- Preload critical resources -->
-    <link
-      rel="preload"
-      as="image"
-      href="./img/landing-bg.webp"
-      fetchpriority="high"
-    />
-    <link rel="preload" href="./styles/swiper-bundle.min.css" as="style" />
-    <link rel="preload" href="./scripts/swiper-bundle.min.js" as="script" />
+  <!-- Preconnect to external domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 
-    <!-- Critical CSS inline -->
-    <style>
-      /* Critical above-the-fold CSS */
-      :root {
-        --header-height: 3.5rem;
-        --title-color: hsl(220, 8%, 10%);
-        --text-color: hsl(220, 8%, 40%);
-        --white-color: hsl(0, 0%, 100%);
-        --black-color: hsl(220, 8%, 6%);
-        --body-color: hsl(220, 8%, 99%);
-        --opacity-color-30: hsla(0, 0%, 90%, 0.3);
-        --opacity-color-20: hsla(0, 0%, 90%, 0.2);
-        --font-semi-bold: 600;
-        --font-bold: 700;
-        --biggest-font-size: 3rem;
-        --z-fixed: 100;
-      }
+  <!-- Preload critical resources -->
+  <link rel="preload" as="image" href="./img/landing-bg.webp" fetchpriority="high" />
+  <link rel="preload" href="./styles/swiper-bundle.min.css" as="style" />
+  <link rel="preload" href="./scripts/swiper-bundle.min.js" as="script" />
 
-      * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        text-decoration: none;
-        list-style: none;
-      }
+  <!-- Critical CSS inline -->
+  <style>
+    /* Critical above-the-fold CSS */
+    :root {
+      --header-height: 3.5rem;
+      --title-color: hsl(220, 8%, 10%);
+      --text-color: hsl(220, 8%, 40%);
+      --white-color: hsl(0, 0%, 100%);
+      --black-color: hsl(220, 8%, 6%);
+      --body-color: hsl(220, 8%, 99%);
+      --opacity-color-30: hsla(0, 0%, 90%, 0.3);
+      --opacity-color-20: hsla(0, 0%, 90%, 0.2);
+      --font-semi-bold: 600;
+      --font-bold: 700;
+      --biggest-font-size: 3rem;
+      --z-fixed: 100;
+    }
 
-      body {
-        margin: 0;
-        font-family: "Zalando Sans", sans-serif;
-        background-color: #fcf5eb;
-      }
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      list-style: none;
+    }
 
-      .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: transparent;
-        z-index: var(--z-fixed);
-        transition: background-color 0.4s;
-      }
+    body {
+      margin: 0;
+      font-family: "Zalando Sans", sans-serif;
+      background-color: #fcf5eb;
+    }
 
-      .home {
-        position: relative;
-        min-height: 100vh;
-      }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: transparent;
+      z-index: var(--z-fixed);
+      transition: background-color 0.4s;
+    }
 
-      .home_bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-      }
+    .home {
+      position: relative;
+      min-height: 100vh;
+    }
 
-      .home_blur {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--opacity-color-20);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-      }
-    </style>
+    .home_bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
 
-    <!-- Load Swiper CSS -->
-    <link rel="stylesheet" href="./styles/swiper-bundle.min.css" />
+    .home_blur {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--opacity-color-20);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+    }
+  </style>
 
-    <!-- Load main CSS with media="print" trick for async loading -->
-    <link
-      rel="preload"
-      href="./styles/styles.css"
-      as="style"
-      onload="
+  <!-- Load Swiper CSS -->
+  <link rel="stylesheet" href="./styles/swiper-bundle.min.css" />
+
+  <!-- Load main CSS with media="print" trick for async loading -->
+  <link rel="preload" href="./styles/styles.css" as="style" onload="
         this.onload = null;
         this.rel = 'stylesheet';
-      "
-    />
-    <noscript>
-      <link rel="stylesheet" href="./styles/styles.css" />
-    </noscript>
+      " />
+  <noscript>
+    <link rel="stylesheet" href="./styles/styles.css" />
+  </noscript>
 
-    <!-- RemixIcon -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
-    />
-  </head>
+  <!-- RemixIcon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+</head>
 
-  <body>
-    <header class="header" id="header">
-      <nav class="nav container">
-        <a href="index.html" class="nav_logo">
-          <img src="./img/logo/bb full.png" alt="image logo" />
-        </a>
-        <div class="nav_menu" id="nav-menu">
-          <ul class="menu">
-            <li><a href="#home" class="nav_link active-link">Home</a></li>
-            <li><a href="#about" class="nav_link">About</a></li>
-            <li><a href="#packages" class="nav_link">Explore</a></li>
+<body>
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="index.html" class="nav_logo">
+        <img src="./img/logo/bb full.png" alt="image logo" />
+      </a>
+      <div class="nav_menu" id="nav-menu">
+        <ul class="menu">
+          <li><a href="#home" class="nav_link active-link">Home</a></li>
+          <li><a href="#about" class="nav_link">About</a></li>
+          <li><a href="#packages" class="nav_link">Explore</a></li>
 
-            <li><a href="#footer" class="nav_link">Contact</a></li>
-          </ul>
+          <li><a href="#footer" class="nav_link">Contact</a></li>
+        </ul>
 
-          <!-- close button -->
-          <div class="nav_close" id="nav-close">
-            <i class="ri-close-large-line"></i>
+        <!-- close button -->
+        <div class="nav_close" id="nav-close">
+          <i class="ri-close-large-line"></i>
+        </div>
+      </div>
+
+      <!-- nav buttons -->
+      <div class="nav_buttons">
+        <!-- toggle button -->
+        <div class="nav_toggle" id="nav-toggle">
+          <i class="ri-menu-5-line" id="burger-menu"></i>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="home section" id="home">
+      <picture>
+        <source src="./img/landing-bg.webp" type="image/webp" />
+        <img src="./img/landing-bg.webp" alt="home bg img" class="home_bg" fetchpriority="high" decoding="async" />
+      </picture>
+      <div class="home_blur"></div>
+
+      <div class="home_container container grid">
+        <div class="home_data">
+          <h1 class="home_title">It’s the journey, not the destination</h1>
+
+          <p class="home_description">
+            Discover the world with our curated travel experiences that
+            connect you to cultures, landscapes, and adventures like never
+            before.
+          </p>
+
+          <div class="home_btn_grid">
+            <a href="#booking" class="button button_opa-30">
+              Plan Your Trip
+              <i class="ri-arrow-right-long-line"></i>
+            </a>
+            <a href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F" target="_blank"
+              class="button button_opa-30 contact-button">
+              Contact Us
+              <i class="ri-whatsapp-line"></i>
+            </a>
           </div>
         </div>
 
-        <!-- nav buttons -->
-        <div class="nav_buttons">
-          <!-- toggle button -->
-          <div class="nav_toggle" id="nav-toggle">
-            <i class="ri-menu-5-line" id="burger-menu"></i>
+        <div class="home_swiper swiper">
+          <div class="swiper-wrapper">
+            <article class="home_article swiper-slide">
+              <img loading="lazy" src="./img/IMG_0153.JPG" alt="home image" class="home_img" />
+            </article>
+
+            <article class="home_article swiper-slide">
+              <img loading="lazy" src="./img/IMG_2283.jpg" alt="home image" class="home_img" />
+            </article>
+
+            <article class="home_article swiper-slide">
+              <img loading="lazy" src="./img/IMG_3334.jpg" alt="home image" class="home_img" />
+            </article>
+
+            <article class="home_article swiper-slide">
+              <img loading="lazy" src="./img/IMG_3439.jpg" alt="home image" class="home_img" />
+            </article>
+
+            <article class="home_article swiper-slide">
+              <img loading="lazy" src="./img/IMG_4904.jpg" alt="home image" class="home_img" />
+            </article>
+
+            <article class="home_article swiper-slide">
+              <img loading="lazy" src="./img/IMG_4910.jpg" alt="home image" class="home_img" />
+            </article>
           </div>
         </div>
-      </nav>
-    </header>
+      </div>
+    </section>
 
-    <main class="main">
-      <section class="home section" id="home">
-        <picture>
-          <source src="./img/landing-bg.webp" type="image/webp" />
-          <img
-            src="./img/landing-bg.webp"
-            alt="home bg img"
-            class="home_bg"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </picture>
-        <div class="home_blur"></div>
+    <section class="about section" id="about">
+      <h2 class="section_title">Who Are We?</h2>
+      <p class="about_bio">
+        Beyond Borders is a Ghana based travel agency that handles logistics,
+        bookings, and on-ground support for visitors. From arrival to
+        departure, our team coordinates accommodation, transport, and curated
+        experiences so clients can focus on enjoying their trip.
+      </p>
 
-        <div class="home_container container grid">
-          <div class="home_data">
-            <h1 class="home_title">It’s the journey, not the destination</h1>
+      <div class="services">
+        <div>
+          <i class="ri-24-hours-line"></i>
+          <div class="service_info">
+            <h4>24/7 On-Ground Support</h4>
+            <p>Dedicated support throughout your entire journey</p>
+          </div>
+        </div>
 
-            <p class="home_description">
-              Discover the world with our curated travel experiences that
-              connect you to cultures, landscapes, and adventures like never
-              before.
+        <div>
+          <i class="ri-earth-line"></i>
+          <div class="service_info">
+            <h4>Local Expertise</h4>
+            <p>
+              Deep knowledge of Ghana's hidden gems and cultural experiences
             </p>
-
-            <div class="home_btn_grid">
-              <a href="#booking" class="button button_opa-30">
-                Plan Your Trip
-                <i class="ri-arrow-right-long-line"></i>
-              </a>
-              <a
-                href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F"
-                target="_blank"
-                class="button button_opa-30 contact-button"
-              >
-                Contact Us
-                <i class="ri-whatsapp-line"></i>
-              </a>
-            </div>
-          </div>
-
-          <div class="home_swiper swiper">
-            <div class="swiper-wrapper">
-              <article class="home_article swiper-slide">
-                <img
-                  loading="lazy"
-                  src="./img/IMG_0153.JPG"
-                  alt="home image"
-                  class="home_img"
-                />
-              </article>
-
-              <article class="home_article swiper-slide">
-                <img
-                  loading="lazy"
-                  src="./img/IMG_2283.jpg"
-                  alt="home image"
-                  class="home_img"
-                />
-              </article>
-
-              <article class="home_article swiper-slide">
-                <img
-                  loading="lazy"
-                  src="./img/IMG_3334.jpg"
-                  alt="home image"
-                  class="home_img"
-                />
-              </article>
-
-              <article class="home_article swiper-slide">
-                <img
-                  loading="lazy"
-                  src="./img/IMG_3439.jpg"
-                  alt="home image"
-                  class="home_img"
-                />
-              </article>
-
-              <article class="home_article swiper-slide">
-                <img
-                  loading="lazy"
-                  src="./img/IMG_4904.jpg"
-                  alt="home image"
-                  class="home_img"
-                />
-              </article>
-
-              <article class="home_article swiper-slide">
-                <img
-                  loading="lazy"
-                  src="./img/IMG_4910.jpg"
-                  alt="home image"
-                  class="home_img"
-                />
-              </article>
-            </div>
           </div>
         </div>
-      </section>
 
-      <section class="about section" id="about">
-        <h2 class="section_title">Who Are We?</h2>
-        <p class="about_bio">
-          Beyond Borders is a Ghana based travel agency that handles logistics,
-          bookings, and on-ground support for visitors. From arrival to
-          departure, our team coordinates accommodation, transport, and curated
-          experiences so clients can focus on enjoying their trip.
-        </p>
-
-        <div class="services">
-          <div>
-            <i class="ri-24-hours-line"></i>
-            <div class="service_info">
-              <h4>24/7 On-Ground Support</h4>
-              <p>Dedicated support throughout your entire journey</p>
-            </div>
+        <div>
+          <i class="ri-group-3-line"></i>
+          <div class="service_info">
+            <h4>Personalized Services</h4>
+            <p>
+              Each client gets a dedicated Journey Partner from booking to
+              departure
+            </p>
           </div>
+        </div>
+      </div>
 
-          <div>
-            <i class="ri-earth-line"></i>
-            <div class="service_info">
-              <h4>Local Expertise</h4>
-              <p>
-                Deep knowledge of Ghana's hidden gems and cultural experiences
+      <div class="video-container">
+        <video muted loop preload="none" poster="./img/video-poster.webp">
+          <source src="./img/vid/ghana.mp4" type="video/mp4" />
+          Sorry, your browser doesn’t support embedded videos.
+        </video>
+      </div>
+    </section>
+
+    <section class="packages section packages_wrapper" id="packages">
+      <h2 class="section_title">Packages</h2>
+
+      <div class="packages_container container grid"></div>
+
+      <!-- horizontal scroll indication dot -->
+      <div class="indicator_dots"></div>
+    </section>
+
+    <!-- Testimonial  -->
+    <section class="testimonial section" id="testimonial">
+      <h2 class="section_title">
+        What Are <br />
+        They Saying
+      </h2>
+      <div class="testimonial_container container grid">
+        <img src="https://images.pexels.com/photos/2787815/pexels-photo-2787815.jpeg" alt="image"
+          class="testimonial_img" />
+
+        <div class="testimonial_swiper swiper">
+          <div class="swiper-wrapper">
+            <div class="testimonial_card swiper-slide">
+              <h2 class="testimonial_title">Mole National Park</h2>
+              <p class="testimonial_description">
+                "Beyond Borders crafted our honeymoon itinerary with such
+                attention to detail. Every moment was magical, from private
+                beach dinners to sunrise volcano hikes."
               </p>
-            </div>
-          </div>
 
-          <div>
-            <i class="ri-group-3-line"></i>
-            <div class="service_info">
-              <h4>Personalized Services</h4>
-              <p>
-                Each client gets a dedicated Journey Partner from booking to
-                departure
+              <div class="testimonial_profile">
+                <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg" loading="lazy"
+                  alt="image" />
+
+                <div class="testimonial_info">
+                  <h3>Micheal</h3>
+                  <p>Accountant</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="testimonial_card swiper-slide">
+              <h2 class="testimonial_title">Cape Coast</h2>
+              <p class="testimonial_description">
+                "As a solo traveler, I appreciated how the team connected me
+                with amazing local guides. I experienced Ghana in ways I never
+                could have planned myself."
               </p>
+
+              <div class="testimonial_profile">
+                <img src="https://images.pexels.com/photos/19209281/pexels-photo-19209281.jpeg" loading="lazy"
+                  alt="image" />
+
+                <div class="testimonial_info">
+                  <h3>Sofia</h3>
+                  <p>Photographer</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="testimonial_card swiper-slide">
+              <h2 class="testimonial_title">Mount Afadja</h2>
+              <p class="testimonial_description">
+                "The Getaway exceeded all expectations. From the waterfalls to
+                the riverside resort, every detail was perfectly planned.
+                Highly recommend!"
+              </p>
+
+              <div class="testimonial_profile">
+                <img src="https://images.pexels.com/photos/17988646/pexels-photo-17988646.jpeg" loading="lazy"
+                  alt="image" />
+
+                <div class="testimonial_info">
+                  <h3>Adwoa</h3>
+                  <p>Writer</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="video-container">
-          <video muted loop preload="none" poster="./img/video-poster.webp">
-            <source src="./img/vid/ghana.mp4" type="video/mp4" />
-            Sorry, your browser doesn’t support embedded videos.
-          </video>
-        </div>
-      </section>
-
-      <section class="packages section packages_wrapper" id="packages">
-        <h2 class="section_title">Packages</h2>
-
-        <div class="packages_container container grid"></div>
-
-        <!-- horizontal scroll indication dot -->
-        <div class="indicator_dots"></div>
-      </section>
-
-      <!-- Testimonial  -->
-      <section class="testimonial section" id="testimonial">
-        <h2 class="section_title">
-          What Are <br />
-          They Saying
-        </h2>
-        <div class="testimonial_container container grid">
+      <div class="testimonial_container testimonial-lg">
+        <div class="testimonial-card-lg">
           <img
-            src="https://images.pexels.com/photos/2787815/pexels-photo-2787815.jpeg"
-            alt="image"
-            class="testimonial_img"
-          />
-
-          <div class="testimonial_swiper swiper">
-            <div class="swiper-wrapper">
-              <div class="testimonial_card swiper-slide">
+            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSztWPgTPMtKlkyH439XOD8il4rApMYXMXXAOtRmCXnhcxRo1uWhqBkPkQ5kWtp2-X2k69nBq16qORDUIdF92TpKLXwQMR2rcnY9ZTythS68R3gP2UWTZt69CtT_9ZM5CGbT4jREvQ=s680-w680-h510-rw"
+            alt="image" class="testimonial_img" />
+          <div class="testimonial_swiper-lg">
+            <div>
+              <div class="testimonial_card">
                 <h2 class="testimonial_title">Mole National Park</h2>
                 <p class="testimonial_description">
                   "Beyond Borders crafted our honeymoon itinerary with such
                   attention to detail. Every moment was magical, from private
                   beach dinners to sunrise volcano hikes."
                 </p>
-
                 <div class="testimonial_profile">
-                  <img
-                    src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg"
-                    loading="lazy"
-                    alt="image"
-                  />
-
+                  <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg" loading="lazy"
+                    alt="image" />
                   <div class="testimonial_info">
                     <h3>Micheal</h3>
                     <p>Accountant</p>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
 
-              <div class="testimonial_card swiper-slide">
+        <div class="testimonial-card-lg">
+          <img
+            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzVLe2seRnbSkGDih-xeuxKIHMD9qNSWz1O5blkcu_vECGQ1BYSGMs0Hyl7uf2eMqwO7lSx86cKLgOuW5fLj5fS9YTlyXhzGngEvcHEMw3d63dzjESu3CPzZjbfekbfeK5X-2Ud=s680-w680-h510-rw"
+            alt="image" class="testimonial_img" />
+          <div class="testimonial_swiper-lg">
+            <div>
+              <div class="testimonial_card">
                 <h2 class="testimonial_title">Cape Coast</h2>
                 <p class="testimonial_description">
-                  "As a solo traveler, I appreciated how the team connected me
-                  with amazing local guides. I experienced Ghana in ways I never
-                  could have planned myself."
+                  "Beyond Borders crafted our honeymoon itinerary with such
+                  have planned myself."
                 </p>
-
                 <div class="testimonial_profile">
-                  <img
-                    src="https://images.pexels.com/photos/19209281/pexels-photo-19209281.jpeg"
-                    loading="lazy"
-                    alt="image"
-                  />
-
+                  <img src="https://images.pexels.com/photos/19209281/pexels-photo-19209281.jpeg" loading="lazy"
+                    alt="image" />
                   <div class="testimonial_info">
                     <h3>Sofia</h3>
                     <p>Photographer</p>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
 
-              <div class="testimonial_card swiper-slide">
+        <div class="testimonial-card-lg">
+          <img
+            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyFE9JZmz-RNFoVPUv1Omv-Ztj3rBO49GObjgmm8ZswjjNCcihfOVmI_Vkn5DxJnDZmIV2krdZ90gJNSBxyjXDzDdsJANmz8hYV1kggn06BpLsfzqvb29Mjfbx_43hIBnCneJRz=s680-w680-h510-rw"
+            alt="image" class="testimonial_img" />
+          <div class="testimonial_swiper-lg">
+            <div>
+              <div class="testimonial_card">
                 <h2 class="testimonial_title">Mount Afadja</h2>
                 <p class="testimonial_description">
-                  "The Getaway exceeded all expectations. From the waterfalls to
-                  the riverside resort, every detail was perfectly planned.
+                  "The Getaway exceeded all expectations. From the waterfalls
+                  to the riverside resort, every detail was perfectly planned.
                   Highly recommend!"
                 </p>
-
                 <div class="testimonial_profile">
-                  <img
-                    src="https://images.pexels.com/photos/17988646/pexels-photo-17988646.jpeg"
-                    loading="lazy"
-                    alt="image"
-                  />
-
+                  <img src="https://images.pexels.com/photos/17988646/pexels-photo-17988646.jpeg" loading="lazy"
+                    alt="image" />
                   <div class="testimonial_info">
                     <h3>Adwoa</h3>
                     <p>Writer</p>
@@ -396,419 +405,268 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="testimonial_container testimonial-lg">
-          <div class="testimonial-card-lg">
-            <img
-              src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSztWPgTPMtKlkyH439XOD8il4rApMYXMXXAOtRmCXnhcxRo1uWhqBkPkQ5kWtp2-X2k69nBq16qORDUIdF92TpKLXwQMR2rcnY9ZTythS68R3gP2UWTZt69CtT_9ZM5CGbT4jREvQ=s680-w680-h510-rw"
-              alt="image"
-              class="testimonial_img"
-            />
-            <div class="testimonial_swiper-lg">
-              <div>
-                <div class="testimonial_card">
-                  <h2 class="testimonial_title">Mole National Park</h2>
-                  <p class="testimonial_description">
-                    "Beyond Borders crafted our honeymoon itinerary with such
-                    attention to detail. Every moment was magical, from private
-                    beach dinners to sunrise volcano hikes."
-                  </p>
-                  <div class="testimonial_profile">
-                    <img
-                      src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg"
-                      loading="lazy"
-                      alt="image"
-                    />
-                    <div class="testimonial_info">
-                      <h3>Micheal</h3>
-                      <p>Accountant</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- IMAGE GALLERY STACK -->
+    <section class="gallery-stack-section section" id="gallery">
+      <h2 class="section_title">Explore Our Adventures</h2>
 
-          <div class="testimonial-card-lg">
-            <img
-              src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzVLe2seRnbSkGDih-xeuxKIHMD9qNSWz1O5blkcu_vECGQ1BYSGMs0Hyl7uf2eMqwO7lSx86cKLgOuW5fLj5fS9YTlyXhzGngEvcHEMw3d63dzjESu3CPzZjbfekbfeK5X-2Ud=s680-w680-h510-rw"
-              alt="image"
-              class="testimonial_img"
-            />
-            <div class="testimonial_swiper-lg">
-              <div>
-                <div class="testimonial_card">
-                  <h2 class="testimonial_title">Cape Coast</h2>
-                  <p class="testimonial_description">
-                    "Beyond Borders crafted our honeymoon itinerary with such
-                    have planned myself."
-                  </p>
-                  <div class="testimonial_profile">
-                    <img
-                      src="https://images.pexels.com/photos/19209281/pexels-photo-19209281.jpeg"
-                      loading="lazy"
-                      alt="image"
-                    />
-                    <div class="testimonial_info">
-                      <h3>Sofia</h3>
-                      <p>Photographer</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="stack-wrapper" id="stackSection">
+        <div class="stack-meta">
+          <div class="stack-counter" id="counter">1 / 7</div>
+          <p class="stack-description" id="description">
+            Discover Ghana's beauty
+          </p>
 
-          <div class="testimonial-card-lg">
-            <img
-              src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyFE9JZmz-RNFoVPUv1Omv-Ztj3rBO49GObjgmm8ZswjjNCcihfOVmI_Vkn5DxJnDZmIV2krdZ90gJNSBxyjXDzDdsJANmz8hYV1kggn06BpLsfzqvb29Mjfbx_43hIBnCneJRz=s680-w680-h510-rw"
-              alt="image"
-              class="testimonial_img"
-            />
-            <div class="testimonial_swiper-lg">
-              <div>
-                <div class="testimonial_card">
-                  <h2 class="testimonial_title">Mount Afadja</h2>
-                  <p class="testimonial_description">
-                    "The Getaway exceeded all expectations. From the waterfalls
-                    to the riverside resort, every detail was perfectly planned.
-                    Highly recommend!"
-                  </p>
-                  <div class="testimonial_profile">
-                    <img
-                      src="https://images.pexels.com/photos/17988646/pexels-photo-17988646.jpeg"
-                      loading="lazy"
-                      alt="image"
-                    />
-                    <div class="testimonial_info">
-                      <h3>Adwoa</h3>
-                      <p>Writer</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="stack-controls">
+            <button class="stack-btn" id="prev" aria-label="previous">
+              <i class="ri-arrow-left-line"></i>
+            </button>
+            <button class="stack-btn" id="next" aria-label="next">
+              <i class="ri-arrow-right-line"></i>
+            </button>
           </div>
         </div>
-      </section>
 
-      <!-- IMAGE GALLERY STACK -->
-      <section class="gallery-stack-section section" id="gallery">
-        <h2 class="section_title">Explore Our Adventures</h2>
+        <div class="stack-container" id="stack">
+          <article class="stack-card" data-i="0" style="--a: -5deg">
+            <img src="./img/gallery/gallery-image (1)2.webp" alt="Ghana adventure" loading="lazy" />
+            <div class="stack-info">
+              <h3>Beyond the Beach Experience</h3>
+            </div>
+          </article>
 
-        <div class="stack-wrapper" id="stackSection">
-          <div class="stack-meta">
-            <div class="stack-counter" id="counter">1 / 7</div>
-            <p class="stack-description" id="description">
-              Discover Ghana's beauty
-            </p>
+          <article class="stack-card" data-i="1" style="--a: 6deg">
+            <img src="./img/gallery/gallery-image (3).webp" alt="Ghana landscape" loading="lazy" />
+            <div class="stack-info">
+              <h3>Beyond the Beach Experience</h3>
+            </div>
+          </article>
 
-            <div class="stack-controls">
-              <button class="stack-btn" id="prev" aria-label="previous">
-                <i class="ri-arrow-left-line"></i>
+          <article class="stack-card" data-i="2" style="--a: -12deg">
+            <img src="./img/gallery/gallery-image (4).webp" alt="Ghana culture" loading="lazy" />
+            <div class="stack-info">
+              <h3>Beyond the Beach Experience</h3>
+            </div>
+          </article>
+
+          <article class="stack-card" data-i="3" style="--a: 4deg">
+            <img src="./img/gallery/gallery-image (5).webp" alt="Ghana beaches" loading="lazy" />
+            <div class="stack-info">
+              <h3>Beyond the Woods Experience</h3>
+            </div>
+          </article>
+
+          <article class="stack-card" data-i="4" style="--a: -8deg">
+            <img src="./img/gallery/gallery-image (6).webp" alt="Accra city" loading="lazy" />
+            <div class="stack-info">
+              <h3>Beyond the Woods Experience</h3>
+            </div>
+          </article>
+
+          <article class="stack-card" data-i="5" style="--a: 7deg">
+            <img src="./img/gallery/gallery-image (7).webp" alt="Traditional dance" loading="lazy" />
+            <div class="stack-info">
+              <h3>Beyond the Woods Experience</h3>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Booking  -->
+    <section class="booking section" id="booking">
+      <h2 class="section_title">
+        Plan Your <br />
+        Dream trip
+      </h2>
+      <div class="booking_container container grid">
+        <div class="booking_data">
+          <p class="booking_description">
+            Fill out the form below and we'll assign you a dedicated Journey
+            Partner
+          </p>
+
+          <form class="booking_form" id="booking-form">
+            <div>
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" required />
+            </div>
+
+            <div>
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" required />
+            </div>
+
+            <div>
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div>
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" required />
+            </div>
+
+            <div>
+              <label for="country">Country</label>
+              <select name="country" id="country" class="dropdown-options" required>
+                <!-- render country options here -->
+              </select>
+            </div>
+
+            <div>
+              <label for="destination-dropdown">Destination</label>
+              <select name="destination-dropdown" id="destination-dropdown" class="dropdown-options" required>
+                <!-- render options list here -->
+              </select>
+            </div>
+
+            <div class="start-end-date">
+              <div>
+                <label for="start-date">Start Date</label>
+                <input type="date" id="start-date" name="start-date" required />
+              </div>
+              <div>
+                <label for="end-date">End Date</label>
+                <input type="date" id="end-date" name="end-date" required />
+              </div>
+            </div>
+
+            <div>
+              <label for="travelers">Number of Travelers</label>
+              <input type="number" id="travelers" name="travelers" required />
+            </div>
+
+            <div>
+              <label for="message">Special Requests or Questions</label>
+              <textarea id="message" rows="4" name="message"
+                placeholder="Tell us your special requirements, dietary restrictions, or request additional information..."></textarea>
+            </div>
+
+            <!-- submit  -->
+            <div>
+              <button type="submit" class="button">
+                Book Now
+                <i class="ri-send-plane-fill"></i>
               </button>
-              <button class="stack-btn" id="next" aria-label="next">
-                <i class="ri-arrow-right-line"></i>
-              </button>
             </div>
-          </div>
-
-          <div class="stack-container" id="stack">
-            <article class="stack-card" data-i="0" style="--a: -5deg">
-              <img
-                src="./img/gallery/gallery-image (1)2.webp"
-                alt="Ghana adventure"
-                loading="lazy"
-              />
-              <div class="stack-info">
-                <h3>Beyond the Beach Experience</h3>
-              </div>
-            </article>
-
-            <article class="stack-card" data-i="1" style="--a: 6deg">
-              <img
-                src="./img/gallery/gallery-image (3).webp"
-                alt="Ghana landscape"
-                loading="lazy"
-              />
-              <div class="stack-info">
-                <h3>Beyond the Beach Experience</h3>
-              </div>
-            </article>
-
-            <article class="stack-card" data-i="2" style="--a: -12deg">
-              <img
-                src="./img/gallery/gallery-image (4).webp"
-                alt="Ghana culture"
-                loading="lazy"
-              />
-              <div class="stack-info">
-                <h3>Beyond the Beach Experience</h3>
-              </div>
-            </article>
-
-            <article class="stack-card" data-i="3" style="--a: 4deg">
-              <img
-                src="./img/gallery/gallery-image (5).webp"
-                alt="Ghana beaches"
-                loading="lazy"
-              />
-              <div class="stack-info">
-                <h3>Beyond the Woods Experience</h3>
-              </div>
-            </article>
-
-            <article class="stack-card" data-i="4" style="--a: -8deg">
-              <img
-                src="./img/gallery/gallery-image (6).webp"
-                alt="Accra city"
-                loading="lazy"
-              />
-              <div class="stack-info">
-                <h3>Beyond the Woods Experience</h3>
-              </div>
-            </article>
-
-            <article class="stack-card" data-i="5" style="--a: 7deg">
-              <img
-                src="./img/gallery/gallery-image (7).webp"
-                alt="Traditional dance"
-                loading="lazy"
-              />
-              <div class="stack-info">
-                <h3>Beyond the Woods Experience</h3>
-              </div>
-            </article>
-          </div>
+          </form>
         </div>
-      </section>
 
-      <!-- Booking  -->
-      <section class="booking section" id="booking">
-        <h2 class="section_title">
-          Plan Your <br />
-          Dream trip
-        </h2>
-        <div class="booking_container container grid">
-          <div class="booking_data">
-            <p class="booking_description">
-              Fill out the form below and we'll assign you a dedicated Journey
-              Partner
-            </p>
+        <img src="https://i.pinimg.com/736x/f0/e6/e9/f0e6e92d4e90aa73b2d284a193990c7e.jpg" alt="image"
+          class="booking-img" loading="lazy" />
+      </div>
+    </section>
+  </main>
 
-            <form class="booking_form" id="booking-form">
-              <div>
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="firstName" required />
-              </div>
+  <footer class="footer" id="footer">
+    <div class="footer_container container grid">
+      <a href="#" class="footer_logo">
+        <img src="./img/logo/bb full.png" alt="image" />
+      </a>
 
-              <div>
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="lastName" required />
-              </div>
+      <div class="footer_content grid">
+        <div>
+          <h3 class="footer_title">About</h3>
 
-              <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required />
-              </div>
+          <ul class="footer_links">
+            <li>
+              <a href="#about" class="footer_link">Who We Are?</a>
+            </li>
 
-              <div>
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" required />
-              </div>
+            <li>
+              <a href="#packages" class="footer_link">Our Packages</a>
+            </li>
 
-              <div>
-                <label for="destination-dropdown">Destination</label>
-                <select
-                  name="destination-dropdown"
-                  id="destination-dropdown"
-                  class="dropdown-options"
-                  required
-                >
-                  <!-- render options list here -->
-                </select>
-              </div>
-
-              <div class="start-end-date">
-                <div>
-                  <label for="start-date">Start Date</label>
-                  <input
-                    type="date"
-                    id="start-date"
-                    name="start-date"
-                    required
-                  />
-                </div>
-                <div>
-                  <label for="end-date">End Date</label>
-                  <input type="date" id="end-date" name="end-date" required />
-                </div>
-              </div>
-
-              <div>
-                <label for="travelers">Number of Travelers</label>
-                <input type="number" id="travelers" name="travelers" required />
-              </div>
-
-              <div>
-                <label for="message">Special Requests or Questions</label>
-                <textarea
-                  id="message"
-                  rows="4"
-                  name="message"
-                  placeholder="Tell us your special requirements, dietary restrictions, or request additional information..."
-                ></textarea>
-              </div>
-
-              <!-- submit  -->
-              <div>
-                <button type="submit" class="button">
-                  Book Now
-                  <i class="ri-send-plane-fill"></i>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <img
-            src="https://i.pinimg.com/736x/f0/e6/e9/f0e6e92d4e90aa73b2d284a193990c7e.jpg"
-            alt="image"
-            class="booking-img"
-            loading="lazy"
-          />
+            <li>
+              <a href="./blog.html" class="footer_link">News & Blogs</a>
+            </li>
+          </ul>
         </div>
-      </section>
-    </main>
 
-    <footer class="footer" id="footer">
-      <div class="footer_container container grid">
-        <a href="#" class="footer_logo">
-          <img src="./img/logo/bb full.png" alt="image" />
-        </a>
+        <div>
+          <h3 class="footer_title">Contact</h3>
 
-        <div class="footer_content grid">
-          <div>
-            <h3 class="footer_title">About</h3>
+          <ul class="footer_links">
+            <li>
+              <a href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F" target="_blank"
+                class="footer_link">WhatsApp Us</a>
+            </li>
 
-            <ul class="footer_links">
-              <li>
-                <a href="#about" class="footer_link">Who We Are?</a>
-              </li>
+            <li>
+              <a href="#booking" class="footer_link">Book A Trip</a>
+            </li>
 
-              <li>
-                <a href="#packages" class="footer_link">Our Packages</a>
-              </li>
+            <li>
+              <a href="#" class="footer_link" data-modal="faq">FAQ</a>
+            </li>
+          </ul>
+        </div>
 
-              <li>
-                <a href="./blog.html" class="footer_link">News & Blogs</a>
-              </li>
-            </ul>
-          </div>
+        <div>
+          <h3 class="footer_title">Legal</h3>
 
-          <div>
-            <h3 class="footer_title">Contact</h3>
+          <ul class="footer_links">
+            <li>
+              <a href="#" class="footer_link" data-modal="privacy">Privacy Policy</a>
+            </li>
 
-            <ul class="footer_links">
-              <li>
-                <a
-                  href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F"
-                  target="_blank"
-                  class="footer_link"
-                  >WhatsApp Us</a
-                >
-              </li>
+            <li>
+              <a href="#" class="footer_link" data-modal="terms">Terms & Services</a>
+            </li>
 
-              <li>
-                <a href="#booking" class="footer_link">Book A Trip</a>
-              </li>
+            <li>
+              <a href="#" class="footer_link" data-modal="payments">Payments</a>
+            </li>
+          </ul>
+        </div>
 
-              <li>
-                <a href="#" class="footer_link" data-modal="faq">FAQ</a>
-              </li>
-            </ul>
-          </div>
+        <div>
+          <h3 class="footer_title">Social</h3>
 
-          <div>
-            <h3 class="footer_title">Legal</h3>
-
-            <ul class="footer_links">
-              <li>
-                <a href="#" class="footer_link" data-modal="privacy"
-                  >Privacy Policy</a
-                >
-              </li>
-
-              <li>
-                <a href="#" class="footer_link" data-modal="terms"
-                  >Terms & Services</a
-                >
-              </li>
-
-              <li>
-                <a href="#" class="footer_link" data-modal="payments"
-                  >Payments</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="footer_title">Social</h3>
-
-            <div class="footer_social">
-              <a
-                href="https://www.instagram.com/beyondbordersgh/"
-                target="_blank"
-                class="footer_social-link"
-                aria-label="Instagram"
-              >
-                <i class="ri-instagram-fill"></i>
-              </a>
-              <a
-                href="https://www.tiktok.com/@beyondborders.gh"
-                target="_blank"
-                class="footer_social-link"
-                aria-label="TikTok"
-              >
-                <i class="ri-tiktok-fill"></i>
-              </a>
-              <a
-                href=" mailto:bbordersgh@gmail.com?subject=How%20can%20we%20help%3F"
-                class="footer_social-link"
-                aria-label="Email"
-              >
-                <i class="ri-mail-send-fill"></i>
-              </a>
-            </div>
+          <div class="footer_social">
+            <a href="https://www.instagram.com/beyondbordersgh/" target="_blank" class="footer_social-link"
+              aria-label="Instagram">
+              <i class="ri-instagram-fill"></i>
+            </a>
+            <a href="https://www.tiktok.com/@beyondborders.gh" target="_blank" class="footer_social-link"
+              aria-label="TikTok">
+              <i class="ri-tiktok-fill"></i>
+            </a>
+            <a href=" mailto:bbordersgh@gmail.com?subject=How%20can%20we%20help%3F" class="footer_social-link"
+              aria-label="Email">
+              <i class="ri-mail-send-fill"></i>
+            </a>
           </div>
         </div>
       </div>
+    </div>
 
-      <span class="footer_copy">
-        &#169; 2025 BeyondBorders. All Rights Reserved.
-      </span>
-    </footer>
+    <span class="footer_copy">
+      &#169; 2025 BeyondBorders. All Rights Reserved.
+    </span>
+  </footer>
 
-    <a
-      href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F"
-      target="_blank"
-      class="whatsapp_btn"
-    >
-      <i class="ri-whatsapp-fill"></i>
-    </a>
+  <a href="https://wa.me/233245302636?text=Hello%2C%20how%20may%20we%20help%20you%3F" target="_blank"
+    class="whatsapp_btn">
+    <i class="ri-whatsapp-fill"></i>
+  </a>
 
-    <link rel="modulepreload" href="./scripts//index.js" />
+  <link rel="modulepreload" href="./scripts//index.js" />
 
-    <!-- SCROLL REVEAL -->
-    <script src="./scripts/scrollreveal.min.js" defer></script>
+  <!-- SCROLL REVEAL -->
+  <script src="./scripts/scrollreveal.min.js" defer></script>
 
-    <!-- SWIPER -->
-    <script src="./scripts/swiper-bundle.min.js" defer></script>
+  <!-- SWIPER -->
+  <script src="./scripts/swiper-bundle.min.js" defer></script>
 
-    <!-- intl-tel-input scripts -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/intlTelInput.min.js"></script> -->
+  <!-- intl-tel-input scripts -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.5/build/js/intlTelInput.min.js"></script> -->
 
-    <!-- Main script -->
-    <script type="module" src="./scripts/index.js"></script>
-  </body>
+  <!-- Main script -->
+  <script type="module" src="./scripts/index.js"></script>
+</body>
+
 </html>

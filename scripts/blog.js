@@ -144,8 +144,7 @@ function initializeNewsletterForm() {
       submitBtn.disabled = true;
 
       // 1. Submit to Formspree
-      // REPLACE WITH YOUR ACTUAL FORMSPREE ENDPOINT
-      const formspreeUrl = "https://formspree.io/f/YOUR_FORM_ID";
+      const formspreeUrl = "https://formspree.io/f/xblnqpod";
 
       const formspreeResponse = await fetch(formspreeUrl, {
         method: "POST",

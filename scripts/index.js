@@ -1,4 +1,4 @@
-import { packages, addons, destinations } from "./data.js";
+import { packages, addons, destinations, countries } from "./data.js";
 import { modalContent } from "./modal-content.js";
 
 let itiInstance = null;
@@ -24,6 +24,7 @@ async function saveToDashboard(formData) {
       phoneCountry: formData.phoneCountry || "",
       phoneCountryCode: formData.phoneCountryCode || "",
       phoneLocalNumber: formData.phoneLocalNumber || "",
+      country: formData.country || "",
       packageName: formData["destination-dropdown"] || formData.packageName,
       startDate: formData["start-date"] || formData.startDate,
       endDate: formData["end-date"] || formData.endDate,
@@ -257,6 +258,42 @@ function renderDestinationDropdown() {
   });
 }
 
+function renderCountryDropdown() {
+  const dropdown = document.getElementById("country");
+  if (!dropdown) return;
+
+  dropdown.innerHTML = "";
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Select Your Country";
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  dropdown.appendChild(defaultOption);
+
+  countries.forEach((country) => {
+    const option = document.createElement("option");
+    option.value = country;
+    option.textContent = country;
+    dropdown.appendChild(option);
+  });
+}
+
+function renderModalCountryDropdown() {
+  const dropdown = document.getElementById("modal-country");
+  if (!dropdown) return;
+
+  // Clear existing options except the default one
+  dropdown.innerHTML = '<option value="" disabled selected>Select Your Country</option>';
+
+  countries.forEach((country) => {
+    const option = document.createElement("option");
+    option.value = country;
+    option.textContent = country;
+    dropdown.appendChild(option);
+  });
+}
+
+
 function createPackageModal() {
   const modalHTML = `
     <div class="modal-overlay" id="package-modal">
@@ -278,6 +315,7 @@ function createPackageModal() {
               <div><label for="modal-lastName">Last Name</label><input type="text" id="modal-lastName" name="lastName" required></div>
               <div><label for="modal-email">Email</label><input type="email" id="modal-email" name="email" required></div>
               <div><label for="modal-phone">Phone Number</label><input type="tel" id="modal-phone" name="phone" required></div>
+              <div><label for="modal-country">Country</label><select id="modal-country" name="country" class="dropdown-options" required><option value="" disabled selected>Select Your Country</option></select></div>
               <div class="start-end-date">
                 <div><label for="modal-start-date">Start Date</label><input type="date" id="modal-start-date" name="startDate" required></div>
                 <div><label for="modal-end-date">End Date</label><input type="date" id="modal-end-date" name="endDate" required></div>
@@ -310,6 +348,7 @@ function initializeModal() {
     btn.addEventListener("click", () => switchTab(btn.dataset.tab));
   });
 
+  renderModalCountryDropdown();
   setupModalPhoneInput();
   initializeModalForm();
 }
@@ -408,6 +447,7 @@ function initializeModalForm() {
         "lastName",
         "email",
         "phone",
+        "country",
         "startDate",
         "endDate",
         "travelers",
@@ -480,6 +520,7 @@ function bookingFormHandler() {
         "lastName",
         "email",
         "phone",
+        "country",
         "destination-dropdown",
         "start-date",
         "end-date",
@@ -799,6 +840,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Phase 2: Important (slight delay)
   requestIdleCallback(() => {
     renderDestinationDropdown();
+    renderCountryDropdown();
     renderAddons();
     initializeScrollActive();
   });
