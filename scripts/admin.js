@@ -219,28 +219,41 @@ async function loadSectionData(section) {
     case "payments":
       await loadPayments();
       break;
+    case "newsletter":
+      await loadNewsletter();
+      break;
   }
 }
 
 // Load all bookings
+let allBookings = [];
+
 async function loadAllBookings() {
   try {
     const bookingsSnapshot = await getDocs(collection(db, "bookings"));
-    const bookings = bookingsSnapshot.docs.map((doc) => ({
+    allBookings = bookingsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    const tbody = document.getElementById("bookings-table");
+    renderBookings(allBookings);
+  } catch (error) {
+    console.error("Error loading bookings:", error);
+    showEmptyState("bookings-table", "Error loading bookings");
+  }
+}
 
-    if (bookings.length === 0) {
-      showEmptyState("bookings-table", "No bookings yet");
-      return;
-    }
+function renderBookings(bookings) {
+  const tbody = document.getElementById("bookings-table");
 
-    tbody.innerHTML = bookings
-      .map(
-        (booking) => `
+  if (bookings.length === 0) {
+    showEmptyState("bookings-table", "No bookings found");
+    return;
+  }
+
+  tbody.innerHTML = bookings
+    .map(
+      (booking) => `
       <tr>
         <td><strong>${booking.firstName} ${booking.lastName}</strong></td>
         <td>${booking.email}</td>
@@ -256,18 +269,34 @@ async function loadAllBookings() {
           <button class="action-btn" onclick="editBooking('${booking.id}')" title="Edit">
             <i class="ri-edit-line"></i>
           </button>
+          <button class="action-btn" onclick="deleteBooking('${booking.id}')" title="Delete" style="color: #e74c3c;">
+            <i class="ri-delete-bin-line"></i>
+          </button>
         </td>
       </tr>
     `,
-      )
-      .join("");
-  } catch (error) {
-    console.error("Error loading bookings:", error);
-    showEmptyState("bookings-table", "Error loading bookings");
-  }
+    )
+    .join("");
 }
 
+// Delete Booking
+window.deleteBooking = async function (id) {
+  if (confirm("Are you sure you want to delete this booking? This action cannot be undone.")) {
+    try {
+      await deleteDoc(doc(db, "bookings", id));
+      allBookings = allBookings.filter(b => b.id !== id);
+      renderBookings(allBookings);
+      showToast("Booking deleted successfully", true);
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+      alert("Error deleting booking");
+    }
+  }
+};
+
 // Load clients
+let allClients = [];
+
 async function loadClients() {
   try {
     const bookingsSnapshot = await getDocs(collection(db, "bookings"));
@@ -289,17 +318,25 @@ async function loadClients() {
       clientsMap[booking.email].bookingCount++;
     });
 
-    const clients = Object.values(clientsMap);
-    const tbody = document.getElementById("clients-table");
+    allClients = Object.values(clientsMap);
+    renderClients(allClients);
+  } catch (error) {
+    console.error("Error loading clients:", error);
+    showEmptyState("clients-table", "Error loading clients");
+  }
+}
 
-    if (clients.length === 0) {
-      showEmptyState("clients-table", "No clients yet");
-      return;
-    }
+function renderClients(clients) {
+  const tbody = document.getElementById("clients-table");
 
-    tbody.innerHTML = clients
-      .map(
-        (client) => `
+  if (clients.length === 0) {
+    showEmptyState("clients-table", "No clients found");
+    return;
+  }
+
+  tbody.innerHTML = clients
+    .map(
+      (client) => `
       <tr>
         <td><strong>${client.name}</strong></td>
         <td>${client.email}</td>
@@ -309,18 +346,49 @@ async function loadClients() {
           <button class="action-btn" onclick="viewClient('${client.email}')" title="View">
             <i class="ri-eye-line"></i>
           </button>
+          <button class="action-btn" onclick="deleteClient('${client.email}')" title="Delete" style="color: #e74c3c;">
+            <i class="ri-delete-bin-line"></i>
+          </button>
         </td>
       </tr>
     `,
-      )
-      .join("");
-  } catch (error) {
-    console.error("Error loading clients:", error);
-    showEmptyState("clients-table", "Error loading clients");
-  }
+    )
+    .join("");
 }
 
+// Search Clients
+document.getElementById("clients-search")?.addEventListener("input", (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  const filtered = allClients.filter((client) =>
+    client.name.toLowerCase().includes(searchTerm) ||
+    client.email.toLowerCase().includes(searchTerm)
+  );
+  renderClients(filtered);
+});
+
+// Delete Client (Deletes all bookings for this client)
+window.deleteClient = async function (email) {
+  if (confirm(`Are you sure you want to delete client ${email}? This will DELETE ALL BOOKINGS associated with this email.`)) {
+    try {
+      const q = query(collection(db, "bookings"), where("email", "==", email));
+      const snapshot = await getDocs(q);
+
+      const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+      await Promise.all(deletePromises);
+
+      allClients = allClients.filter(c => c.email !== email);
+      renderClients(allClients);
+      showToast("Client and associated bookings deleted", true);
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      alert("Error deleting client");
+    }
+  }
+};
+
 // Updated loadDrivers function with Edit and Delete buttons
+let allDrivers = [];
+
 async function loadDrivers() {
   try {
     // Query users collection where role = 'driver'
@@ -330,57 +398,71 @@ async function loadDrivers() {
     );
 
     const driversSnapshot = await getDocs(driversQuery);
-    const drivers = driversSnapshot.docs.map((doc) => ({
+    allDrivers = driversSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    const tbody = document.getElementById("drivers-table");
-
-    if (drivers.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="5">
-            <div class="empty-state">
-              <i class="ri-car-line"></i>
-              <p>No drivers yet. Click "Add Driver" to create one.</p>
-            </div>
-          </td>
-        </tr>
-      `;
-      return;
-    }
-
-    tbody.innerHTML = drivers
-      .map(
-        (driver) => `
-      <tr>
-        <td>
-          <strong>${driver.name}</strong>
-          ${driver.vehicle ? `<br><small style="color: #718096;">${driver.vehicle}</small>` : ""}
-        </td>
-        <td>${driver.email}</td>
-        <td>${driver.phone || "N/A"}</td>
-        <td><span class="status-badge status-${driver.status || "active"}">${capitalizeFirst(driver.status || "active")}</span></td>
-        <td>
-          <button class="action-btn" onclick="editDriver('${driver.id}')" title="Edit Driver">
-            <i class="ri-edit-line"></i>
-          </button>
-          <button class="action-btn" onclick="viewDriverDetails('${driver.id}')" title="View Details" style="color: #2ecc71;">
-            <i class="ri-eye-line"></i>
-          </button>
-          <button class="action-btn" onclick="deleteDriver('${driver.id}')" title="Delete Driver" style="color: #e74c3c;">
-            <i class="ri-delete-bin-line"></i>
-          </button>
-        </td>
-      </tr>
-    `,
-      )
-      .join("");
+    renderDrivers(allDrivers);
   } catch (error) {
     console.error("Error loading drivers:", error);
   }
 }
+
+function renderDrivers(drivers) {
+  const tbody = document.getElementById("drivers-table");
+
+  if (drivers.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5">
+          <div class="empty-state">
+            <i class="ri-car-line"></i>
+            <p>No drivers found.</p>
+          </div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = drivers
+    .map(
+      (driver) => `
+    <tr>
+      <td>
+        <strong>${driver.name}</strong>
+        ${driver.vehicle ? `<br><small style="color: #718096;">${driver.vehicle}</small>` : ""}
+      </td>
+      <td>${driver.email}</td>
+      <td>${driver.phone || "N/A"}</td>
+      <td><span class="status-badge status-${driver.status || "active"}">${capitalizeFirst(driver.status || "active")}</span></td>
+      <td>
+        <button class="action-btn" onclick="editDriver('${driver.id}')" title="Edit Driver">
+          <i class="ri-edit-line"></i>
+        </button>
+        <button class="action-btn" onclick="viewDriverDetails('${driver.id}')" title="View Details" style="color: #2ecc71;">
+          <i class="ri-eye-line"></i>
+        </button>
+        <button class="action-btn" onclick="deleteDriver('${driver.id}')" title="Delete Driver" style="color: #e74c3c;">
+          <i class="ri-delete-bin-line"></i>
+        </button>
+      </td>
+    </tr>
+  `,
+    )
+    .join("");
+}
+
+// Search Drivers
+document.getElementById("drivers-search")?.addEventListener("input", (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  const filtered = allDrivers.filter((driver) =>
+    driver.name.toLowerCase().includes(searchTerm) ||
+    driver.email.toLowerCase().includes(searchTerm)
+  );
+  renderDrivers(filtered);
+});
 
 // ==================== VIEW DRIVER DETAILS FUNCTIONALITY ====================
 
@@ -537,29 +619,15 @@ document
   });
 
 // Load tasks
+let allTasks = [];
+
 async function loadTasks() {
   try {
     const tasksSnapshot = await getDocs(collection(db, "tasks"));
-    const tasks = tasksSnapshot.docs.map((doc) => ({
+    allTasks = tasksSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-
-    const tbody = document.getElementById("tasks-table");
-
-    if (tasks.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="6">
-            <div class="empty-state">
-              <i class="ri-task-line"></i>
-              <p>No tasks yet. Click "Create Task" to assign work to drivers.</p>
-            </div>
-          </td>
-        </tr>
-      `;
-      return;
-    }
 
     // Get all drivers to show names instead of IDs
     const driversQuery = query(
@@ -572,63 +640,80 @@ async function loadTasks() {
       driversMap[doc.id] = doc.data().name;
     });
 
-    // Display tasks
-    tbody.innerHTML = tasks
-      .map(
-        (task) => `
-      <tr>
-        <td><strong>${task.title}</strong></td>
-        <td>${driversMap[task.driverId] || "Unknown Driver"}</td>
-        <td>
-          ${task.clientName || "N/A"}<br>
-          <small style="color: #718096;">${task.pickupLocation} → ${task.destination}</small>
-        </td>
-        <td>${formatDate(task.date)} ${task.time}</td>
-        <td><span class="status-badge status-${task.status}">${capitalizeFirst(task.status)}</span></td>
-        <td>
-          <button class="action-btn" onclick="viewTask('${task.id}')" title="View">
-            <i class="ri-eye-line"></i>
-          </button>
-          <button class="action-btn" onclick="editTask('${task.id}')" title="Edit">
-            <i class="ri-edit-line"></i>
-          </button>
-        </td>
-      </tr>
-    `,
-      )
-      .join("");
+    renderTasks(allTasks, driversMap);
   } catch (error) {
     console.error("Error loading tasks:", error);
     showEmptyState("tasks-table", "Error loading tasks");
   }
 }
 
+function renderTasks(tasks, driversMap) {
+  const tbody = document.getElementById("tasks-table");
+
+  if (tasks.length === 0) {
+    showEmptyState("tasks-table", "No tasks found");
+    return;
+  }
+
+  tbody.innerHTML = tasks
+    .map(
+      (task) => `
+    <tr>
+      <td><strong>${task.title}</strong></td>
+      <td>${driversMap[task.driverId] || "Unknown Driver"}</td>
+      <td>
+        ${task.clientName || "N/A"}<br>
+        <small style="color: #718096;">${task.pickupLocation} → ${task.destination}</small>
+      </td>
+      <td>${formatDate(task.date)} ${task.time}</td>
+      <td><span class="status-badge status-${task.status}">${capitalizeFirst(task.status)}</span></td>
+      <td>
+        <button class="action-btn" onclick="viewTask('${task.id}')" title="View">
+          <i class="ri-eye-line"></i>
+        </button>
+        <button class="action-btn" onclick="editTask('${task.id}')" title="Edit">
+          <i class="ri-edit-line"></i>
+        </button>
+        <button class="action-btn" onclick="deleteTask('${task.id}')" title="Delete" style="color: #e74c3c;">
+          <i class="ri-delete-bin-line"></i>
+        </button>
+      </td>
+    </tr>
+  `,
+    )
+    .join("");
+}
+
+// Delete Task
+window.deleteTask = async function (id) {
+  if (confirm("Are you sure you want to delete this task?")) {
+    try {
+      await deleteDoc(doc(db, "tasks", id));
+      allTasks = allTasks.filter(t => t.id !== id);
+      // We need to re-fetch drivers map or store it globally. 
+      // For simplicity, let's just reload the section or store driversMap globally.
+      // Reloading section is safer.
+      loadTasks();
+      showToast("Task deleted successfully", true);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      alert("Error deleting task");
+    }
+  }
+};
+
 // ==================== PAYMENT MANAGEMENT FUNCTIONALITY ====================
 
 // Load payments function
+let allPayments = [];
+
 async function loadPayments() {
   try {
     const paymentsSnapshot = await getDocs(collection(db, "payments"));
-    const payments = paymentsSnapshot.docs.map((doc) => ({
+    allPayments = paymentsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-
-    const tbody = document.getElementById("payments-table");
-
-    if (payments.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="7">
-            <div class="empty-state">
-              <i class="ri-money-dollar-circle-line"></i>
-              <p>No payment records yet. Click "Record Payment" to add one.</p>
-            </div>
-          </td>
-        </tr>
-      `;
-      return;
-    }
 
     // Get all bookings to show booking details
     const bookingsSnapshot = await getDocs(collection(db, "bookings"));
@@ -641,39 +726,75 @@ async function loadPayments() {
       };
     });
 
-    // Display payments
-    tbody.innerHTML = payments
-      .map((payment) => {
-        const booking = bookingsMap[payment.bookingId] || {
-          clientName: "Unknown",
-          packageName: "N/A",
-        };
-
-        return `
-        <tr>
-          <td><strong>${booking.packageName}</strong></td>
-          <td>${booking.clientName}</td>
-          <td style="font-weight: 700; color: #2ecc71;">${payment.currency} ${parseFloat(payment.amount).toFixed(2)}</td>
-          <td>${payment.method}</td>
-          <td>${formatDate(payment.date)}</td>
-          <td><span class="status-badge status-${payment.status}">${capitalizeFirst(payment.status)}</span></td>
-          <td>
-            <button class="action-btn" onclick="viewPayment('${payment.id}')" title="View">
-              <i class="ri-eye-line"></i>
-            </button>
-            <button class="action-btn" onclick="deletePayment('${payment.id}')" title="Delete" style="color: #e74c3c;">
-              <i class="ri-delete-bin-line"></i>
-            </button>
-          </td>
-        </tr>
-      `;
-      })
-      .join("");
+    renderPayments(allPayments, bookingsMap);
   } catch (error) {
     console.error("Error loading payments:", error);
     showEmptyState("payments-table", "Error loading payments");
   }
 }
+
+function renderPayments(payments, bookingsMap) {
+  const tbody = document.getElementById("payments-table");
+
+  if (payments.length === 0) {
+    showEmptyState("payments-table", "No payments found");
+    return;
+  }
+
+  tbody.innerHTML = payments
+    .map((payment) => {
+      const booking = bookingsMap[payment.bookingId] || {
+        clientName: "Unknown",
+        packageName: "N/A",
+      };
+
+      return `
+      <tr>
+        <td><strong>${booking.packageName}</strong></td>
+        <td>${booking.clientName}</td>
+        <td style="font-weight: 700; color: #2ecc71;">${payment.currency} ${parseFloat(payment.amount).toFixed(2)}</td>
+        <td>${payment.method}</td>
+        <td>${formatDate(payment.date)}</td>
+        <td><span class="status-badge status-${payment.status}">${capitalizeFirst(payment.status)}</span></td>
+        <td>
+          <button class="action-btn" onclick="viewPayment('${payment.id}')" title="View">
+            <i class="ri-eye-line"></i>
+          </button>
+          <button class="action-btn" onclick="deletePayment('${payment.id}')" title="Delete" style="color: #e74c3c;">
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+    })
+    .join("");
+}
+
+// Search Payments
+document.getElementById("payments-search")?.addEventListener("input", async (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+
+  // We need bookingsMap for filtering by client name
+  const bookingsSnapshot = await getDocs(collection(db, "bookings"));
+  const bookingsMap = {};
+  bookingsSnapshot.docs.forEach((doc) => {
+    const data = doc.data();
+    bookingsMap[doc.id] = {
+      clientName: `${data.firstName} ${data.lastName}`,
+      packageName: data.packageName,
+    };
+  });
+
+  const filtered = allPayments.filter((payment) => {
+    const booking = bookingsMap[payment.bookingId] || { clientName: "" };
+    return (
+      booking.clientName.toLowerCase().includes(searchTerm) ||
+      payment.amount.toString().includes(searchTerm) ||
+      payment.method.toLowerCase().includes(searchTerm)
+    );
+  });
+  renderPayments(filtered, bookingsMap);
+});
 
 // Add Payment Button Handler - Replace the placeholder
 document
@@ -799,21 +920,151 @@ document
 
         // Reload payments list
         loadPayments();
-
-        showToast("Payment recorded successfully!", true);
       }, 2000);
     } catch (error) {
-      console.error("Error recording payment:", error);
-
-      const errorDiv = document.getElementById("add-payment-error");
-      errorDiv.textContent =
-        "✗ " + (error.message || "Failed to record payment. Please try again.");
-      errorDiv.classList.add("show");
-    } finally {
-      submitBtn.disabled = false;
+      console.error("Error adding payment:", error);
       submitBtn.innerHTML = originalHTML;
+      submitBtn.disabled = false;
+      alert(error.message);
     }
   });
+
+// ==================== NEWSLETTER MANAGEMENT FUNCTIONALITY ====================
+
+let allSubscribers = []; // Store for search filtering
+
+async function loadNewsletter() {
+  try {
+    const subscribersSnapshot = await getDocs(collection(db, "subscribers"));
+    allSubscribers = subscribersSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    // Sort by date (newest first)
+    allSubscribers.sort((a, b) => {
+      const dateA = a.date ? (a.date.toDate ? a.date.toDate() : new Date(a.date)) : new Date(0);
+      const dateB = b.date ? (b.date.toDate ? b.date.toDate() : new Date(b.date)) : new Date(0);
+      return dateB - dateA;
+    });
+
+    document.getElementById("total-subscribers").textContent = allSubscribers.length;
+
+    renderSubscribers(allSubscribers);
+  } catch (error) {
+    console.error("Error loading subscribers:", error);
+    showEmptyState("newsletter-table", "Error loading subscribers");
+  }
+}
+
+function renderSubscribers(subscribers) {
+  const tbody = document.getElementById("newsletter-table");
+
+  if (subscribers.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="3">
+          <div class="empty-state">
+            <i class="ri-mail-line"></i>
+            <p>No subscribers found.</p>
+          </div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = subscribers
+    .map((sub) => {
+      let dateStr = "N/A";
+      if (sub.date) {
+        if (sub.date.toDate) {
+          dateStr = formatDate(sub.date.toDate());
+        } else {
+          dateStr = formatDate(sub.date);
+        }
+      }
+
+      return `
+      <tr>
+        <td><strong>${sub.email}</strong></td>
+        <td>${dateStr}</td>
+        <td>
+          <button class="action-btn" onclick="deleteSubscriber('${sub.id}')" title="Delete" style="color: #e74c3c;">
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+    })
+    .join("");
+}
+
+// Search functionality
+document.getElementById("newsletter-search")?.addEventListener("input", (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  const filtered = allSubscribers.filter((sub) =>
+    sub.email.toLowerCase().includes(searchTerm)
+  );
+  renderSubscribers(filtered);
+});
+
+// Download CSV functionality
+document.getElementById("download-csv-btn")?.addEventListener("click", () => {
+  if (allSubscribers.length === 0) {
+    alert("No subscribers to download.");
+    return;
+  }
+
+  const headers = ["Email", "Date Joined"];
+  const csvContent = [
+    headers.join(","),
+    ...allSubscribers.map((sub) => {
+      let dateStr = "";
+      if (sub.date) {
+        if (sub.date.toDate) {
+          dateStr = sub.date.toDate().toISOString();
+        } else {
+          dateStr = new Date(sub.date).toISOString();
+        }
+      }
+      return [sub.email, dateStr].join(",");
+    }),
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", `newsletter_subscribers_${new Date().toISOString().split('T')[0]}.csv`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
+
+// Delete Subscriber
+window.deleteSubscriber = async function (id) {
+  if (confirm("Are you sure you want to delete this subscriber?")) {
+    try {
+      await deleteDoc(doc(db, "subscribers", id));
+
+      // Remove from local array
+      allSubscribers = allSubscribers.filter(s => s.id !== id);
+
+      // Re-render
+      renderSubscribers(allSubscribers);
+
+      // Update count
+      document.getElementById("total-subscribers").textContent = allSubscribers.length;
+
+    } catch (error) {
+      console.error("Error deleting subscriber:", error);
+      alert("Error deleting subscriber. Please try again.");
+    }
+  }
+};
+
 
 // View Payment Details
 let currentPaymentId = null;

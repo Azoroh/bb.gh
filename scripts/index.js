@@ -28,7 +28,7 @@ async function saveToDashboard(formData) {
       startDate: formData["start-date"] || formData.startDate,
       endDate: formData["end-date"] || formData.endDate,
       travelers: parseInt(formData.travelers),
-      addon: formData["add-on-dropdown"] || formData.addon || "None",
+      travelers: parseInt(formData.travelers),
       message: formData.message || "",
       status: "pending",
       createdAt: serverTimestamp(),
@@ -203,11 +203,14 @@ function initializeSwiperAndHeader() {
   }
 
   const header = document.getElementById("header");
+  const menuToggle = document.getElementById("burger-menu");
   if (header) {
     window.addEventListener(
       "scroll",
       () => {
         header.classList.toggle("bg-header", window.scrollY >= 50);
+
+        menuToggle.classList.toggle("dark-toggle-menu", window.scrollY >= 50);
       },
       { passive: true },
     );
@@ -254,37 +257,6 @@ function renderDestinationDropdown() {
   });
 }
 
-function renderAddons() {
-  const addonBody = document.querySelector(".add-on_body");
-  if (addonBody) {
-    addons.forEach((addon) => {
-      const div = document.createElement("div");
-      div.classList.add("add-on_option");
-      div.id = addon.id;
-      div.innerHTML = `<p>${addon.label}</p>`;
-      addonBody.appendChild(div);
-    });
-  }
-
-  const addonDropdown = document.querySelector("#add-on-dropdown");
-  if (addonDropdown) {
-    const defaultAddon = document.createElement("option");
-    defaultAddon.textContent = "Add-on (Optional)";
-    defaultAddon.value = "";
-    defaultAddon.disabled = true;
-    defaultAddon.selected = true;
-    defaultAddon.hidden = true;
-    addonDropdown.appendChild(defaultAddon);
-
-    addons.forEach((addon) => {
-      const option = document.createElement("option");
-      option.textContent = addon.label;
-      option.value = addon.id;
-      addonDropdown.appendChild(option);
-    });
-  }
-}
-
 function createPackageModal() {
   const modalHTML = `
     <div class="modal-overlay" id="package-modal">
@@ -311,7 +283,7 @@ function createPackageModal() {
                 <div><label for="modal-end-date">End Date</label><input type="date" id="modal-end-date" name="endDate" required></div>
               </div>
               <div><label for="modal-travelers">Number of Travelers</label><input type="number" id="modal-travelers" name="travelers" min="1" value="1" required></div>
-              <div><label for="modal-addon">Add-on (Optional)</label><select name="addon" id="modal-addon"><option value="">Select an add-on (Optional)</option></select></div>
+
               <div><label for="modal-message">Special Requests</label><textarea id="modal-message" rows="4" name="message" placeholder="Tell us your requirements..."></textarea></div>
               <div><button type="submit" class="button">Book Now<i class="ri-send-plane-fill"></i></button></div>
             </form>
@@ -337,7 +309,7 @@ function initializeModal() {
   document.querySelectorAll(".tab-button").forEach((btn) => {
     btn.addEventListener("click", () => switchTab(btn.dataset.tab));
   });
-  populateModalAddons();
+
   setupModalPhoneInput();
   initializeModalForm();
 }
@@ -355,17 +327,6 @@ async function setupModalPhoneInput() {
     },
     { once: true },
   );
-}
-
-function populateModalAddons() {
-  const dropdown = document.getElementById("modal-addon");
-  if (!dropdown) return;
-  addons.forEach((addon) => {
-    const option = document.createElement("option");
-    option.value = addon.id;
-    option.textContent = addon.label;
-    dropdown.appendChild(option);
-  });
 }
 
 function switchTab(tabName) {

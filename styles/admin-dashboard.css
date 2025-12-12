@@ -854,3 +854,38 @@ tbody tr:hover {
         justify-content: center;
     }
 }
+
+/* Newsletter Controls Responsive Styles */
+.newsletter-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.newsletter-controls .search-box {
+    position: relative;
+    flex: 1 1 250px;
+}
+
+.newsletter-controls .search-box input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    font-size: 0.95rem;
+}
+
+.newsletter-controls .search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #718096;
+    font-size: 1.1rem;
+}
+
+.newsletter-controls button {
+    flex: 1 1 250px;
+    justify-content: center;
+    /* Center content when expanded */
+}

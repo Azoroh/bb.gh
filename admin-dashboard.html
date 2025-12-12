@@ -73,6 +73,10 @@
             <i class="ri-money-dollar-circle-line"></i>
             <span>Payments</span>
           </div>
+          <div class="nav-item" data-section="newsletter">
+            <i class="ri-mail-send-line"></i>
+            <span>Newsletter</span>
+          </div>
         </div>
       </nav>
     </aside>
@@ -188,6 +192,12 @@
       <section id="clients-section" class="content-section">
         <div class="section-header">
           <h2 class="section-title">Clients</h2>
+          <div class="header-actions newsletter-controls">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" id="clients-search" placeholder="Search clients...">
+            </div>
+          </div>
         </div>
 
         <div class="table-container">
@@ -216,10 +226,16 @@
       <section id="drivers-section" class="content-section">
         <div class="section-header">
           <h2 class="section-title">Drivers</h2>
-          <button class="btn-primary" id="add-driver-btn">
-            <i class="ri-add-line"></i>
-            Add Driver
-          </button>
+          <div class="header-actions newsletter-controls">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" id="drivers-search" placeholder="Search drivers...">
+            </div>
+            <button class="btn-primary" id="add-driver-btn">
+              <i class="ri-add-line"></i>
+              Add Driver
+            </button>
+          </div>
         </div>
 
         <div class="table-container">
@@ -290,10 +306,16 @@
       <section id="payments-section" class="content-section">
         <div class="section-header">
           <h2 class="section-title">Payments</h2>
-          <button class="btn-primary" id="add-payment-btn">
-            <i class="ri-add-line"></i>
-            Record Payment
-          </button>
+          <div class="header-actions newsletter-controls">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" id="payments-search" placeholder="Search payments...">
+            </div>
+            <button class="btn-primary" id="add-payment-btn">
+              <i class="ri-add-line"></i>
+              Record Payment
+            </button>
+          </div>
         </div>
 
         <div class="table-container">
@@ -315,6 +337,57 @@
                   <div class="empty-state">
                     <i class="ri-money-dollar-circle-line"></i>
                     <p>No payment records yet.</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Newsletter Section -->
+      <section id="newsletter-section" class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">Newsletter Subscribers</h2>
+          <div class="header-actions newsletter-controls">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" id="newsletter-search" placeholder="Search email...">
+            </div>
+            <button class="btn-primary" id="download-csv-btn" style="background-color: #2ecc71;">
+              <i class="ri-download-line"></i>
+              Download
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(1, 1fr); margin-bottom: 2rem;">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h3>Total Subscribers</h3>
+              <div class="value" id="total-subscribers">0</div>
+            </div>
+            <div class="stat-icon icon-blue">
+              <i class="ri-mail-send-line"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Email Address</th>
+                <th>Date Subscribed</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="newsletter-table">
+              <tr>
+                <td colspan="3">
+                  <div class="empty-state">
+                    <i class="ri-mail-line"></i>
+                    <p>No subscribers yet.</p>
                   </div>
                 </td>
               </tr>
