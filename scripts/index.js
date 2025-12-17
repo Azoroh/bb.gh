@@ -283,7 +283,8 @@ function renderModalCountryDropdown() {
   if (!dropdown) return;
 
   // Clear existing options except the default one
-  dropdown.innerHTML = '<option value="" disabled selected>Select Your Country</option>';
+  dropdown.innerHTML =
+    '<option value="" disabled selected>Select Your Country</option>';
 
   countries.forEach((country) => {
     const option = document.createElement("option");
@@ -292,7 +293,6 @@ function renderModalCountryDropdown() {
     dropdown.appendChild(option);
   });
 }
-
 
 function createPackageModal() {
   const modalHTML = `
@@ -836,26 +836,36 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeNavigation();
   renderPackageCards();
   initializeSwiperAndHeader();
+  createPackageModal();
+  initializeModal();
+  initializePackageButtons();
+  bookingFormHandler();
 
   // Phase 2: Important (slight delay)
-  requestIdleCallback(() => {
+  // Use setTimeout which is safer than requestIdleCallback on old iOS
+  setTimeout(() => {
     renderDestinationDropdown();
     renderCountryDropdown();
     renderAddons();
     initializeScrollActive();
-  });
-
-  // Phase 3: Below fold (lazy)
-  requestIdleCallback(() => {
-    initializeVideo();
-    initializeScrollReveal();
-    createPackageModal();
-    initializeModal();
-    initializePackageButtons();
     dateValidation();
     travelerValidation();
-    bookingFormHandler();
-    initializeInfoModals();
-    initializeGalleryStack();
-  });
+  }, 100);
+
+  // Phase 3: Below fold / Heavy helpers (lazy)
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+      initializeVideo();
+      initializeScrollReveal();
+      initializeInfoModals();
+      initializeGalleryStack();
+    });
+  } else {
+    setTimeout(() => {
+      initializeVideo();
+      initializeScrollReveal();
+      initializeInfoModals();
+      initializeGalleryStack();
+    }, 500);
+  }
 });

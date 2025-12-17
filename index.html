@@ -263,76 +263,93 @@
         They Saying
       </h2>
       <div class="testimonial_container container grid">
-        <img src="https://images.pexels.com/photos/2787815/pexels-photo-2787815.jpeg" alt="image"
-          class="testimonial_img" />
 
         <div class="testimonial_swiper swiper">
           <div class="swiper-wrapper">
+            <!-- Review 1 -->
             <div class="testimonial_card swiper-slide">
-              <h2 class="testimonial_title">Mole National Park</h2>
-              <p class="testimonial_description">
-                "Beyond Borders crafted our honeymoon itinerary with such
-                attention to detail. Every moment was magical, from private
-                beach dinners to sunrise volcano hikes."
-              </p>
+              <img src="./img/reviews/Mole National Park, Ghana.jpg" alt="Mole National Park"
+                class="testimonial_img_card" />
+              <div class="testimonial_content">
+                <h2 class="testimonial_title">Mole National Park</h2>
+                <p class="testimonial_description">
+                  "Beyond Borders crafted our honeymoon itinerary with such
+                  attention to detail. Every moment was magical, from private
+                  beach dinners to sunrise volcano hikes."
+                </p>
 
-              <div class="testimonial_profile">
-                <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg" loading="lazy"
-                  alt="image" />
-
-                <div class="testimonial_info">
-                  <h3>Micheal</h3>
-                  <p>Accountant</p>
+                <div class="testimonial_profile">
+                  <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg" loading="lazy"
+                    alt="image" />
+                  <div class="testimonial_info">
+                    <h3>Micheal</h3>
+                    <p>Accountant</p>
+                  </div>
                 </div>
               </div>
             </div>
 
+            <!-- Review 2 -->
             <div class="testimonial_card swiper-slide">
-              <h2 class="testimonial_title">Cape Coast</h2>
-              <p class="testimonial_description">
-                "As a solo traveler, I appreciated how the team connected me
-                with amazing local guides. I experienced Ghana in ways I never
-                could have planned myself."
-              </p>
+              <img src="./img/reviews/Cape Coast Castle.jpg" alt="Cape Coast" class="testimonial_img_card" />
+              <div class="testimonial_content">
+                <h2 class="testimonial_title">Cape Coast</h2>
+                <p class="testimonial_description">
+                  "As a solo traveler, I appreciated how the team connected me
+                  with amazing local guides. I experienced Ghana in ways I never
+                  could have planned myself."
+                </p>
 
-              <div class="testimonial_profile">
-                <img src="https://images.pexels.com/photos/19209281/pexels-photo-19209281.jpeg" loading="lazy"
-                  alt="image" />
+                <div class="testimonial_profile">
+                  <img src="https://images.pexels.com/photos/19209281/pexels-photo-19209281.jpeg" loading="lazy"
+                    alt="image" />
 
-                <div class="testimonial_info">
-                  <h3>Sofia</h3>
-                  <p>Photographer</p>
+                  <div class="testimonial_info">
+                    <h3>Sofia</h3>
+                    <p>Photographer</p>
+                  </div>
                 </div>
               </div>
             </div>
 
+            <!-- Review 3 -->
             <div class="testimonial_card swiper-slide">
-              <h2 class="testimonial_title">Mount Afadja</h2>
-              <p class="testimonial_description">
-                "The Getaway exceeded all expectations. From the waterfalls to
-                the riverside resort, every detail was perfectly planned.
-                Highly recommend!"
-              </p>
+              <img src="./img/reviews/Mount Afadja, highest point in Ghana.jpg" alt="Mount Afadja"
+                class="testimonial_img_card" />
+              <div class="testimonial_content">
+                <h2 class="testimonial_title">Mount Afadja</h2>
+                <p class="testimonial_description">
+                  "The Getaway exceeded all expectations. From the waterfalls to
+                  the riverside resort, every detail was perfectly planned.
+                  Highly recommend!"
+                </p>
 
-              <div class="testimonial_profile">
-                <img src="https://images.pexels.com/photos/17988646/pexels-photo-17988646.jpeg" loading="lazy"
-                  alt="image" />
+                <div class="testimonial_profile">
+                  <img src="https://images.pexels.com/photos/17988646/pexels-photo-17988646.jpeg" loading="lazy"
+                    alt="image" />
 
-                <div class="testimonial_info">
-                  <h3>Adwoa</h3>
-                  <p>Writer</p>
+                  <div class="testimonial_info">
+                    <h3>Adwoa</h3>
+                    <p>Writer</p>
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
+          <!-- Add Pagination/Navigation if needed in future, currently using arrows outside or none? existing code had none visible in html but js initialized nav buttons that might be missing in html structure?
+               Wait, existing HTML had no nav buttons inside .testimonial_swiper, but JS initialized them...
+               Checking JS: navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+               But they were not in the HTML for testimonial_swiper. They were for home_swiper. 
+               The JS config for testimonial_swiper DOES have nav buttons but they probably weren't rendering or working blindly.
+               The user didn't ask for buttons, just auto swipe.
+          -->
         </div>
       </div>
 
       <div class="testimonial_container testimonial-lg">
         <div class="testimonial-card-lg">
-          <img
-            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSztWPgTPMtKlkyH439XOD8il4rApMYXMXXAOtRmCXnhcxRo1uWhqBkPkQ5kWtp2-X2k69nBq16qORDUIdF92TpKLXwQMR2rcnY9ZTythS68R3gP2UWTZt69CtT_9ZM5CGbT4jREvQ=s680-w680-h510-rw"
-            alt="image" class="testimonial_img" />
+          <img src="./img/reviews/Mole National Park, Ghana.jpg" alt="image" class="testimonial_img" />
           <div class="testimonial_swiper-lg">
             <div>
               <div class="testimonial_card">
@@ -356,16 +373,15 @@
         </div>
 
         <div class="testimonial-card-lg">
-          <img
-            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzVLe2seRnbSkGDih-xeuxKIHMD9qNSWz1O5blkcu_vECGQ1BYSGMs0Hyl7uf2eMqwO7lSx86cKLgOuW5fLj5fS9YTlyXhzGngEvcHEMw3d63dzjESu3CPzZjbfekbfeK5X-2Ud=s680-w680-h510-rw"
-            alt="image" class="testimonial_img" />
+          <img src="./img/reviews/Cape Coast Castle.jpg" alt="image" class="testimonial_img" />
           <div class="testimonial_swiper-lg">
             <div>
               <div class="testimonial_card">
                 <h2 class="testimonial_title">Cape Coast</h2>
                 <p class="testimonial_description">
                   "Beyond Borders crafted our honeymoon itinerary with such
-                  have planned myself."
+                  attention to detail. Every moment was magical, from private
+                  beach dinners to sunrise volcano hikes."
                 </p>
                 <div class="testimonial_profile">
                   <img src="https://images.pexels.com/photos/19209281/pexels-photo-19209281.jpeg" loading="lazy"
@@ -381,9 +397,7 @@
         </div>
 
         <div class="testimonial-card-lg">
-          <img
-            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyFE9JZmz-RNFoVPUv1Omv-Ztj3rBO49GObjgmm8ZswjjNCcihfOVmI_Vkn5DxJnDZmIV2krdZ90gJNSBxyjXDzDdsJANmz8hYV1kggn06BpLsfzqvb29Mjfbx_43hIBnCneJRz=s680-w680-h510-rw"
-            alt="image" class="testimonial_img" />
+          <img src="./img/reviews/Mount Afadja, highest point in Ghana.jpg" alt="image" class="testimonial_img" />
           <div class="testimonial_swiper-lg">
             <div>
               <div class="testimonial_card">

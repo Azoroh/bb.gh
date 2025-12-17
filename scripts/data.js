@@ -52,7 +52,7 @@ export const packages = [
       "Stay at a riverside resort (The Royal Senchi / Afrikiko)",
       "Family-friendly activities & bonfire night",
     ],
-    img: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyA4_O3ZgXYE-trnN88dp9YcDNS7ilnojTSVqkxGJtYOqXJQ9GGChK3v3nKRchOC9hSstk_bAmDlD8bZoAj-3OoUOFDsJ3nn2oR5NfSEL-hg33rE9IGV5jlsDCzEVvvMddbQBp_cg=s680-w680-h510-rw",
+    img: "https://i.pinimg.com/1200x/c5/25/e1/c525e132af15645ce2ed063b92e389a8.jpg",
     fullDescription:
       "Escape to Ghana's most peaceful region. Experience the calm of the Volta River, hike Ghana's highest mountain, and visit the country's tallest waterfall — all wrapped in mid-luxury comfort.",
   },
