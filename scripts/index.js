@@ -1,4 +1,4 @@
-import { packages, addons, destinations, countries } from "./data.js";
+import { packages, addons, destinations, countries, adventures } from "./data.js";
 import { modalContent } from "./modal-content.js";
 
 let itiInstance = null;
@@ -717,6 +717,63 @@ function initializeInfoModals() {
 // ============================================
 // GALLERY STACK
 // ============================================
+function createAdventureModal() {
+  const modalHTML = `
+    <div class="modal-overlay" id="adventure-modal">
+      <div class="modal-content adventure-modal-content">
+        <div class="modal-header">
+          <h2 id="adventure-modal-title"></h2>
+          <button class="modal-close" id="adventure-modal-close">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <div class="modal-body adventure-modal-body">
+          <div class="adventure-images" id="adventure-images"></div>
+          <div class="adventure-itinerary">
+            <h3>Experience Itinerary</h3>
+            <ul id="adventure-itinerary-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Event Listeners
+  const modal = document.getElementById("adventure-modal");
+  const closeBtn = document.getElementById("adventure-modal-close");
+
+  closeBtn.addEventListener("click", closeAdventureModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeAdventureModal();
+  });
+}
+
+function openAdventureModal(id) {
+  const adventure = adventures.find(a => a.id === id);
+  if (!adventure) return;
+
+  document.getElementById("adventure-modal-title").textContent = adventure.title;
+
+  const imagesContainer = document.getElementById("adventure-images");
+  imagesContainer.innerHTML = adventure.images.map(img =>
+    `<img src="${img}" alt="${adventure.title}" loading="lazy">`
+  ).join("");
+
+  const listContainer = document.getElementById("adventure-itinerary-list");
+  listContainer.innerHTML = adventure.itinerary.map(item =>
+    `<li><i class="ri-checkbox-circle-line"></i> ${item}</li>`
+  ).join("");
+
+  document.getElementById("adventure-modal").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeAdventureModal() {
+  document.getElementById("adventure-modal").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
 function initializeGalleryStack() {
   const section = document.getElementById("stackSection");
   if (!section) return;
@@ -824,7 +881,24 @@ function initializeGalleryStack() {
   prevBtn.addEventListener("click", () => updateTo(k - 1, -1));
   nextBtn.addEventListener("click", () => updateTo(k + 1, 1));
 
+  // Click event for modal
+  stack.addEventListener("click", (e) => {
+    const card = e.target.closest(".stack-card");
+    console.log("Stack click detected", e.target);
+    if (!card) return;
+
+    const cardIndex = +card.dataset.i;
+    console.log("Card clicked:", cardIndex, "Current k:", k);
+
+    if (cardIndex === k) {
+      const adventureId = cardIndex % adventures.length;
+      console.log("Opening adventure:", adventureId);
+      openAdventureModal(adventureId);
+    }
+  });
+
   // Initialize immediately
+  createAdventureModal();
   init();
 }
 
@@ -846,7 +920,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     renderDestinationDropdown();
     renderCountryDropdown();
-    renderAddons();
+    // renderAddons();
     initializeScrollActive();
     dateValidation();
     travelerValidation();

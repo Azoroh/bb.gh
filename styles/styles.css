@@ -2081,3 +2081,111 @@ option {
     right: 1rem;
   }
 }
+
+/* ADVENTURE MODAL STYLES */
+.stack-card {
+  cursor: pointer;
+}
+
+.stack-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 40%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.stack-card:hover .view-details {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.view-details {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: background-color 0.3s ease;
+  width: fit-content;
+}
+
+.view-details i {
+  font-size: 1rem;
+}
+
+.adventure-modal-content {
+  max-width: 900px;
+  width: 95%;
+}
+
+.adventure-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem 2rem;
+}
+
+.adventure-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.adventure-images img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.adventure-itinerary h3 {
+  font-size: 1.25rem;
+  color: var(--title-color);
+  margin-bottom: 1rem;
+  font-family: var(--second-font);
+}
+
+.adventure-itinerary ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.adventure-itinerary li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.adventure-itinerary li i {
+  color: var(--first-color);
+  /* Fallback */
+  color: #d97706;
+  font-size: 1.2rem;
+}
+
+@media (min-width: 768px) {
+  .adventure-modal-body {
+    flex-direction: row;
+  }
+
+  .adventure-images {
+    flex: 1;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .adventure-itinerary {
+    flex: 1;
+  }
+}

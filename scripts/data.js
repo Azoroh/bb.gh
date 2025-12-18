@@ -141,3 +141,36 @@ export const countries = [
   "Zambia", "Zimbabwe"
 ];
 
+export const adventures = [
+  {
+    id: 0,
+    title: "Beyond the Beach Experience",
+    images: [
+      "./img/gallery/gallery-image (1)2.webp",
+      "./img/IMG_0153.JPG"
+    ],
+    itinerary: [
+      "Morning Yoga on the Beach",
+      "Traditional Drumming Lesson",
+      "Fresh Seafood Lunch",
+      "Sunset Boat Ride",
+      "Bonfire Night with Storytelling"
+    ]
+  },
+  {
+    id: 1,
+    title: "Beyond the Woods Experience",
+    images: [
+      "./img/gallery/gallery-image (5).webp",
+      "./img/gallery/gallery-image (4).webp"
+    ],
+    itinerary: [
+      "Forest Canopy Walk",
+      "Waterfall Hike",
+      "Picnic by the River",
+      "Bird Watching Tour",
+      "Village Cultural Exchange"
+    ]
+  }
+];
+
