@@ -1966,8 +1966,7 @@ document
       let errorMessage = "Failed to create driver. ";
 
       if (error.code === "auth/email-already-in-use") {
-        errorMessage +=
-          "This email is already registered. Please use a different email.";
+        errorMessage += "This email exists in Firebase Authentication. Go to Firebase Console > Authentication to delete it completely.";
       } else if (error.code === "auth/invalid-email") {
         errorMessage += "Invalid email address.";
       } else if (error.code === "auth/weak-password") {
@@ -2973,7 +2972,7 @@ document
 window.deleteDriver = async function (id) {
   if (
     !confirm(
-      "Are you sure you want to delete this driver? This will also remove all their assigned tasks.",
+      "Are you sure? This deletes the Driver Data but NOT their Login Account.\n\nTo re-register this email later, you MUST also delete them in the Firebase Console.",
     )
   ) {
     return;

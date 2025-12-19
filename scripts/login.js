@@ -4,6 +4,7 @@ import {
   doc,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 // Toggle password visibility
 const togglePassword = document.getElementById("toggle-password");
@@ -46,6 +47,7 @@ loginForm.addEventListener("submit", async (e) => {
     const userDoc = await getDoc(doc(db, "users", user.uid));
 
     if (!userDoc.exists()) {
+      await signOut(auth);
       throw new Error("User profile not found. Please contact admin.");
     }
 

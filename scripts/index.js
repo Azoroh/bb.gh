@@ -718,12 +718,14 @@ function initializeInfoModals() {
 // GALLERY STACK
 // ============================================
 function createAdventureModal() {
+  if (document.getElementById("adventure-modal")) return;
+
   const modalHTML = `
     <div class="modal-overlay" id="adventure-modal">
       <div class="modal-content adventure-modal-content">
         <div class="modal-header">
           <h2 id="adventure-modal-title"></h2>
-          <button class="modal-close" id="adventure-modal-close">
+          <button class="modal-close" id="adventure-modal-close" type="button" aria-label="Close">
             <i class="ri-close-line"></i>
           </button>
         </div>
@@ -743,10 +745,27 @@ function createAdventureModal() {
   const modal = document.getElementById("adventure-modal");
   const closeBtn = document.getElementById("adventure-modal-close");
 
+  const closeHandler = (e) => {
+    e.preventDefault(); // Prevent double-firing on devices that fire both
+    closeAdventureModal();
+  };
+
+  const overlayHandler = (e) => {
+    if (e.target === modal) {
+      e.preventDefault();
+      closeAdventureModal();
+    }
+  };
+
+  // Close Button
   closeBtn.addEventListener("click", closeAdventureModal);
+  closeBtn.addEventListener("touchstart", closeHandler, { passive: false });
+
+  // Overlay Click
   modal.addEventListener("click", (e) => {
     if (e.target === modal) closeAdventureModal();
   });
+  modal.addEventListener("touchstart", overlayHandler, { passive: false });
 }
 
 function openAdventureModal(id) {
