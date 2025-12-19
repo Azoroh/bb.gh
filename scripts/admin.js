@@ -23,36 +23,257 @@ import {
   deleteDoc,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// Initialize EmailJS (REPLACE WITH YOUR PUBLIC KEY)
+// Example: emailjs.init("YOUR_PUBLIC_KEY");
+// functionality wraps in a robust try-catch block so absence of keys won't break app
+const EMAILJS_PUBLIC_KEY = "pUWgkHt03tRmdHViF";
+const EMAILJS_SERVICE_ID = "service_87qli4u";
+const EMAILJS_TEMPLATE_ID = "template_kokdvvm";
+
+try {
+  if (typeof emailjs !== "undefined") {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }
+} catch (e) {
+  console.warn("EmailJS not initialized:", e);
+}
+
+// Helper: Send Email Notification
+async function sendTaskEmail(taskData, driverId, actionType = "assigned") {
+  try {
+    if (typeof emailjs === "undefined" || EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY_HERE") {
+      console.log("EmailJS not configured, skipping email.");
+      return false;
+    }
+
+    // 1. Get Driver Details
+    const driverDoc = await getDoc(doc(db, "users", driverId));
+    if (!driverDoc.exists()) return false;
+
+    const driverData = driverDoc.data();
+
+    // 2. Prepare Template Params
+    const templateParams = {
+      driver_name: driverData.name,
+      driver_email: driverData.email,
+      title: taskData.title,
+      date: taskData.date,
+      time: taskData.time,
+      pickup: taskData.pickupLocation,
+      destination: taskData.destination,
+      client_name: taskData.clientName || "N/A",
+      notes: taskData.notes || "None",
+      action_type: actionType // Optional: Use in template if you want to distinguish "New" vs "Update"
+    };
+
+    // 3. Send Email
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+    console.log(`Email (${actionType}) sent to:`, driverData.email);
+    return true;
+
+  } catch (error) {
+    console.error("Email sending failed:", error);
+    return false;
+  }
+}
+
 // Import countries list
 const countries = [
-  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
-  "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
-  "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
-  "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso",
-  "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic",
-  "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia",
-  "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
-  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini",
-  "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana",
-  "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras",
-  "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
-  "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait",
-  "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein",
-  "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta",
-  "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco",
-  "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal",
-  "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia",
-  "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay",
-  "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda",
-  "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa",
-  "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles",
-  "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia",
-  "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname",
-  "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand",
-  "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
-  "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
-  "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen",
-  "Zambia", "Zimbabwe"
+  "Afghanistan",
+  "Albania",
+  "Algeria",
+  "Andorra",
+  "Angola",
+  "Antigua and Barbuda",
+  "Argentina",
+  "Armenia",
+  "Australia",
+  "Austria",
+  "Azerbaijan",
+  "Bahamas",
+  "Bahrain",
+  "Bangladesh",
+  "Barbados",
+  "Belarus",
+  "Belgium",
+  "Belize",
+  "Benin",
+  "Bhutan",
+  "Bolivia",
+  "Bosnia and Herzegovina",
+  "Botswana",
+  "Brazil",
+  "Brunei",
+  "Bulgaria",
+  "Burkina Faso",
+  "Burundi",
+  "Cabo Verde",
+  "Cambodia",
+  "Cameroon",
+  "Canada",
+  "Central African Republic",
+  "Chad",
+  "Chile",
+  "China",
+  "Colombia",
+  "Comoros",
+  "Congo",
+  "Costa Rica",
+  "Croatia",
+  "Cuba",
+  "Cyprus",
+  "Czech Republic",
+  "Denmark",
+  "Djibouti",
+  "Dominica",
+  "Dominican Republic",
+  "Ecuador",
+  "Egypt",
+  "El Salvador",
+  "Equatorial Guinea",
+  "Eritrea",
+  "Estonia",
+  "Eswatini",
+  "Ethiopia",
+  "Fiji",
+  "Finland",
+  "France",
+  "Gabon",
+  "Gambia",
+  "Georgia",
+  "Germany",
+  "Ghana",
+  "Greece",
+  "Grenada",
+  "Guatemala",
+  "Guinea",
+  "Guinea-Bissau",
+  "Guyana",
+  "Haiti",
+  "Honduras",
+  "Hungary",
+  "Iceland",
+  "India",
+  "Indonesia",
+  "Iran",
+  "Iraq",
+  "Ireland",
+  "Israel",
+  "Italy",
+  "Jamaica",
+  "Japan",
+  "Jordan",
+  "Kazakhstan",
+  "Kenya",
+  "Kiribati",
+  "Kosovo",
+  "Kuwait",
+  "Kyrgyzstan",
+  "Laos",
+  "Latvia",
+  "Lebanon",
+  "Lesotho",
+  "Liberia",
+  "Libya",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "Madagascar",
+  "Malawi",
+  "Malaysia",
+  "Maldives",
+  "Mali",
+  "Malta",
+  "Marshall Islands",
+  "Mauritania",
+  "Mauritius",
+  "Mexico",
+  "Micronesia",
+  "Moldova",
+  "Monaco",
+  "Mongolia",
+  "Montenegro",
+  "Morocco",
+  "Mozambique",
+  "Myanmar",
+  "Namibia",
+  "Nauru",
+  "Nepal",
+  "Netherlands",
+  "New Zealand",
+  "Nicaragua",
+  "Niger",
+  "Nigeria",
+  "North Korea",
+  "North Macedonia",
+  "Norway",
+  "Oman",
+  "Pakistan",
+  "Palau",
+  "Palestine",
+  "Panama",
+  "Papua New Guinea",
+  "Paraguay",
+  "Peru",
+  "Philippines",
+  "Poland",
+  "Portugal",
+  "Qatar",
+  "Romania",
+  "Russia",
+  "Rwanda",
+  "Saint Kitts and Nevis",
+  "Saint Lucia",
+  "Saint Vincent and the Grenadines",
+  "Samoa",
+  "San Marino",
+  "Sao Tome and Principe",
+  "Saudi Arabia",
+  "Senegal",
+  "Serbia",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapore",
+  "Slovakia",
+  "Slovenia",
+  "Solomon Islands",
+  "Somalia",
+  "South Africa",
+  "South Korea",
+  "South Sudan",
+  "Spain",
+  "Sri Lanka",
+  "Sudan",
+  "Suriname",
+  "Sweden",
+  "Switzerland",
+  "Syria",
+  "Taiwan",
+  "Tajikistan",
+  "Tanzania",
+  "Thailand",
+  "Timor-Leste",
+  "Togo",
+  "Tonga",
+  "Trinidad and Tobago",
+  "Tunisia",
+  "Turkey",
+  "Turkmenistan",
+  "Tuvalu",
+  "Uganda",
+  "Ukraine",
+  "United Arab Emirates",
+  "United Kingdom",
+  "United States",
+  "Uruguay",
+  "Uzbekistan",
+  "Vanuatu",
+  "Vatican City",
+  "Venezuela",
+  "Vietnam",
+  "Yemen",
+  "Zambia",
+  "Zimbabwe",
 ];
 
 // Function to populate country dropdown in admin booking form
@@ -70,7 +291,6 @@ function renderAdminCountryDropdown() {
     dropdown.appendChild(option);
   });
 }
-
 
 // Check authentication and authorization
 onAuthStateChanged(auth, async (user) => {
@@ -113,8 +333,7 @@ onAuthStateChanged(auth, async (user) => {
     // Update role label
     const roleLabel = document.querySelector(".user-role");
     if (roleLabel) {
-      roleLabel.textContent =
-        userData.role === "super" ? "SUPER" : "Admin";
+      roleLabel.textContent = userData.role === "super" ? "SUPER" : "Admin";
     }
 
     // Show/Hide Manage Admins link
@@ -199,7 +418,7 @@ async function loadOverviewData() {
     const driversQuery = query(
       collection(db, "users"),
       where("role", "==", "driver"),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
     );
     const driversSnapshot = await getDocs(driversQuery);
     document.getElementById("total-drivers").textContent = driversSnapshot.size;
@@ -340,10 +559,14 @@ function renderBookings(bookings) {
 
 // Delete Booking
 window.deleteBooking = async function (id) {
-  if (confirm("Are you sure you want to delete this booking? This action cannot be undone.")) {
+  if (
+    confirm(
+      "Are you sure you want to delete this booking? This action cannot be undone.",
+    )
+  ) {
     try {
       await deleteDoc(doc(db, "bookings", id));
-      allBookings = allBookings.filter(b => b.id !== id);
+      allBookings = allBookings.filter((b) => b.id !== id);
       renderBookings(allBookings);
       showToast("Booking deleted successfully", true);
     } catch (error) {
@@ -374,7 +597,7 @@ async function loadClients() {
             ? booking.phoneCountryCode + " " + booking.phoneLocalNumber
             : booking.phoneLocalNumber || booking.phone || "N/A",
           bookingCount: 0,
-          lastBookingDate: booking.createdAt
+          lastBookingDate: booking.createdAt,
         };
       }
       clientsMap[booking.email].bookingCount++;
@@ -386,8 +609,8 @@ async function loadClients() {
     allClients = Object.values(clientsMap);
     // Sort by lastBookingDate desc
     allClients.sort((a, b) => {
-      const dateA = a.lastBookingDate ? (a.lastBookingDate.seconds || 0) : 0;
-      const dateB = b.lastBookingDate ? (b.lastBookingDate.seconds || 0) : 0;
+      const dateA = a.lastBookingDate ? a.lastBookingDate.seconds || 0 : 0;
+      const dateB = b.lastBookingDate ? b.lastBookingDate.seconds || 0 : 0;
       return dateB - dateA;
     });
 
@@ -431,24 +654,29 @@ function renderClients(clients) {
 // Search Clients
 document.getElementById("clients-search")?.addEventListener("input", (e) => {
   const searchTerm = e.target.value.toLowerCase();
-  const filtered = allClients.filter((client) =>
-    client.name.toLowerCase().includes(searchTerm) ||
-    client.email.toLowerCase().includes(searchTerm)
+  const filtered = allClients.filter(
+    (client) =>
+      client.name.toLowerCase().includes(searchTerm) ||
+      client.email.toLowerCase().includes(searchTerm),
   );
   renderClients(filtered);
 });
 
 // Delete Client (Deletes all bookings for this client)
 window.deleteClient = async function (email) {
-  if (confirm(`Are you sure you want to delete client ${email}? This will DELETE ALL BOOKINGS associated with this email.`)) {
+  if (
+    confirm(
+      `Are you sure you want to delete client ${email}? This will DELETE ALL BOOKINGS associated with this email.`,
+    )
+  ) {
     try {
       const q = query(collection(db, "bookings"), where("email", "==", email));
       const snapshot = await getDocs(q);
 
-      const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+      const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
       await Promise.all(deletePromises);
 
-      allClients = allClients.filter(c => c.email !== email);
+      allClients = allClients.filter((c) => c.email !== email);
       renderClients(allClients);
       showToast("Client and associated bookings deleted", true);
     } catch (error) {
@@ -477,7 +705,7 @@ async function loadDrivers() {
     const driversQuery = query(
       collection(db, "users"),
       where("role", "==", "driver"),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
     );
 
     const driversSnapshot = await getDocs(driversQuery);
@@ -553,9 +781,10 @@ function renderDrivers(drivers) {
 // Search Drivers
 document.getElementById("drivers-search")?.addEventListener("input", (e) => {
   const searchTerm = e.target.value.toLowerCase();
-  const filtered = allDrivers.filter((driver) =>
-    driver.name.toLowerCase().includes(searchTerm) ||
-    driver.email.toLowerCase().includes(searchTerm)
+  const filtered = allDrivers.filter(
+    (driver) =>
+      driver.name.toLowerCase().includes(searchTerm) ||
+      driver.email.toLowerCase().includes(searchTerm),
   );
   renderDrivers(filtered);
 });
@@ -794,8 +1023,8 @@ window.deleteTask = async function (id) {
   if (confirm("Are you sure you want to delete this task?")) {
     try {
       await deleteDoc(doc(db, "tasks", id));
-      allTasks = allTasks.filter(t => t.id !== id);
-      // We need to re-fetch drivers map or store it globally. 
+      allTasks = allTasks.filter((t) => t.id !== id);
+      // We need to re-fetch drivers map or store it globally.
       // For simplicity, let's just reload the section or store driversMap globally.
       // Reloading section is safer.
       loadTasks();
@@ -886,30 +1115,32 @@ function renderPayments(payments, bookingsMap) {
 }
 
 // Search Payments
-document.getElementById("payments-search")?.addEventListener("input", async (e) => {
-  const searchTerm = e.target.value.toLowerCase();
+document
+  .getElementById("payments-search")
+  ?.addEventListener("input", async (e) => {
+    const searchTerm = e.target.value.toLowerCase();
 
-  // We need bookingsMap for filtering by client name
-  const bookingsSnapshot = await getDocs(collection(db, "bookings"));
-  const bookingsMap = {};
-  bookingsSnapshot.docs.forEach((doc) => {
-    const data = doc.data();
-    bookingsMap[doc.id] = {
-      clientName: `${data.firstName} ${data.lastName}`,
-      packageName: data.packageName,
-    };
-  });
+    // We need bookingsMap for filtering by client name
+    const bookingsSnapshot = await getDocs(collection(db, "bookings"));
+    const bookingsMap = {};
+    bookingsSnapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      bookingsMap[doc.id] = {
+        clientName: `${data.firstName} ${data.lastName}`,
+        packageName: data.packageName,
+      };
+    });
 
-  const filtered = allPayments.filter((payment) => {
-    const booking = bookingsMap[payment.bookingId] || { clientName: "" };
-    return (
-      booking.clientName.toLowerCase().includes(searchTerm) ||
-      payment.amount.toString().includes(searchTerm) ||
-      payment.method.toLowerCase().includes(searchTerm)
-    );
+    const filtered = allPayments.filter((payment) => {
+      const booking = bookingsMap[payment.bookingId] || { clientName: "" };
+      return (
+        booking.clientName.toLowerCase().includes(searchTerm) ||
+        payment.amount.toString().includes(searchTerm) ||
+        payment.method.toLowerCase().includes(searchTerm)
+      );
+    });
+    renderPayments(filtered, bookingsMap);
   });
-  renderPayments(filtered, bookingsMap);
-});
 
 // Add Payment Button Handler - Replace the placeholder
 document
@@ -1067,12 +1298,21 @@ async function loadNewsletter() {
 
     // Sort by date (newest first)
     allSubscribers.sort((a, b) => {
-      const dateA = a.date ? (a.date.toDate ? a.date.toDate() : new Date(a.date)) : new Date(0);
-      const dateB = b.date ? (b.date.toDate ? b.date.toDate() : new Date(b.date)) : new Date(0);
+      const dateA = a.date
+        ? a.date.toDate
+          ? a.date.toDate()
+          : new Date(a.date)
+        : new Date(0);
+      const dateB = b.date
+        ? b.date.toDate
+          ? b.date.toDate()
+          : new Date(b.date)
+        : new Date(0);
       return dateB - dateA;
     });
 
-    document.getElementById("total-subscribers").textContent = allSubscribers.length;
+    document.getElementById("total-subscribers").textContent =
+      allSubscribers.length;
 
     renderSubscribers(allSubscribers);
   } catch (error) {
@@ -1128,7 +1368,7 @@ function renderSubscribers(subscribers) {
 document.getElementById("newsletter-search")?.addEventListener("input", (e) => {
   const searchTerm = e.target.value.toLowerCase();
   const filtered = allSubscribers.filter((sub) =>
-    sub.email.toLowerCase().includes(searchTerm)
+    sub.email.toLowerCase().includes(searchTerm),
   );
   renderSubscribers(filtered);
 });
@@ -1160,7 +1400,10 @@ document.getElementById("download-csv-btn")?.addEventListener("click", () => {
   const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
   link.setAttribute("href", url);
-  link.setAttribute("download", `newsletter_subscribers_${new Date().toISOString().split('T')[0]}.csv`);
+  link.setAttribute(
+    "download",
+    `newsletter_subscribers_${new Date().toISOString().split("T")[0]}.csv`,
+  );
   link.style.visibility = "hidden";
   document.body.appendChild(link);
   link.click();
@@ -1174,21 +1417,20 @@ window.deleteSubscriber = async function (id) {
       await deleteDoc(doc(db, "subscribers", id));
 
       // Remove from local array
-      allSubscribers = allSubscribers.filter(s => s.id !== id);
+      allSubscribers = allSubscribers.filter((s) => s.id !== id);
 
       // Re-render
       renderSubscribers(allSubscribers);
 
       // Update count
-      document.getElementById("total-subscribers").textContent = allSubscribers.length;
-
+      document.getElementById("total-subscribers").textContent =
+        allSubscribers.length;
     } catch (error) {
       console.error("Error deleting subscriber:", error);
       alert("Error deleting subscriber. Please try again.");
     }
   }
 };
-
 
 // View Payment Details
 let currentPaymentId = null;
@@ -1640,8 +1882,15 @@ document
       }
 
       // Use a secondary app to create the user so we don't get logged out
-      const { initializeApp, getApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-      const { getAuth, createUserWithEmailAndPassword: createSecondaryUser, signOut: signSecondaryOut, setPersistence, inMemoryPersistence } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+      const { initializeApp, getApp, getApps } =
+        await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
+      const {
+        getAuth,
+        createUserWithEmailAndPassword: createSecondaryUser,
+        signOut: signSecondaryOut,
+        setPersistence,
+        inMemoryPersistence,
+      } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
       const { firebaseConfig } = await import("./firebase-config.js");
 
       // Initialize secondary app with a unique name
@@ -1650,7 +1899,9 @@ document
 
       // Check if already initialized
       const existingApps = getApps();
-      const foundApp = existingApps.find(app => app.name === secondaryAppName);
+      const foundApp = existingApps.find(
+        (app) => app.name === secondaryAppName,
+      );
 
       if (foundApp) {
         secondaryApp = foundApp;
@@ -1671,7 +1922,7 @@ document
         const userCredential = await createSecondaryUser(
           secondaryAuth,
           driverData.email,
-          driverData.password
+          driverData.password,
         );
 
         const driverId = userCredential.user.uid;
@@ -1830,8 +2081,14 @@ document
       // Create task in Firestore
       await addDoc(collection(db, "tasks"), taskData);
 
-      // Success!
-      showToast("Task created successfully!", true);
+      // SEND EMAIL NOTIFICATION
+      const emailSent = await sendTaskEmail(taskData, taskData.driverId, "assigned");
+      if (emailSent) {
+        showToast("Task created & Driver notified!", true);
+      } else {
+        showToast("Task created (Email skipped/failed)", true);
+      }
+
       closeModal("create-task-modal");
 
       // Reload tasks list
@@ -2562,9 +2819,14 @@ document
       // Update task in Firestore
       await updateDoc(doc(db, "tasks", currentEditingTaskId), updatedData);
 
+      // SEND EMAIL NOTIFICATION (Assign/Update)
+      // We pass the updated data and the assigned driver ID
+      const emailSent = await sendTaskEmail(updatedData, updatedData.driverId, "updated");
+      const successMsg = emailSent ? "Task updated & Driver notified!" : "Task updated (Email skipped)";
+
       // Show success message
       const successDiv = document.getElementById("edit-task-success");
-      successDiv.textContent = "✓ Task updated successfully!";
+      successDiv.textContent = `✓ ${successMsg}`;
       successDiv.classList.add("show");
 
       // Hide success message after 2 seconds and close modal
